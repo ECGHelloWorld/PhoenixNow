@@ -1,5 +1,10 @@
-Testing Guide
+Adding Code 
 =============
+This guide will serve to help new contributors add code under the right project style.
+
+Testing
+-------
+
 Testing is writing tests for code that you can run to make sure your code passes the test. They are simpler to write than your code and ensure a certain amount of code stability and quality. With tests, you can make a fairly rigid specification that your code adheres to and can make changes without regressing the code or adding bugs as easily.
 
 For PhoenixNow, we use py.test for testing. To run tests, just enter in 
@@ -33,15 +38,15 @@ Here's an example test. I named mine ``test_hello.py``
         return PhoenixNow.app.test_client()
 
     def test_hello(app):
-        rv = app.get('/')
+        rv = app.get('/hello')
         assert b"hello" in rv.data
 
 ``pytest.fixture`` is a decorator that you put above a function that usually sets
 up the environment for a test. The function can be passed to a test that has the
 function name as an argument.
 
-``rv = app.get('/')`` uses the ``test_client()`` function from the ``flask`` library
-to make a test request to ``/``.
+``rv = app.get('/hello')`` uses the ``test_client()`` function from the ``flask`` library
+to make a test request to ``/hello``.
 
 We use ``assert`` to assert that ``hello`` is in the data returned from the test
 request. A ``b`` is put in front of the string to match the format of
@@ -86,12 +91,20 @@ the ``__init__.py`` file and paste this into it:
 
     app = Flask(__name__)
 
-    @app.route('/')
+    @app.route('/hello')
     def hello():
+        """ Example endpoint
+
+        Returns "hello"
+        """
         return "hello"
 
-This code basically means, when something requests ``/`` on the webpage, it
+This code basically means, when something requests ``/hello`` on the webpage, it
 returns ``"hello"`` as the data in the request sent.
+
+The words encased in ``"""`` form a docstring. This is a python feature that our documentation program, sphinx, can compile into the :doc:`api`. When you write a new function or class, add a docstring.
+
+If the feature is a big concept or covers something that a new contributor would need to know, make a guide like this one.
 
 Now when we run ``py.test``, we should see that all tests have passed:
 
