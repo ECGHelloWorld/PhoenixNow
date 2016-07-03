@@ -1,5 +1,7 @@
 Testing Guide
 =============
+Testing is writing tests for code that you can run to make sure your code passes the test. They are simpler to write than your code and ensure a certain amount of code stability and quality. With tests, you can make a fairly rigid specification that your code adheres to and can make changes without regressing the code or adding bugs as easily.
+
 For PhoenixNow, we use py.test for testing. To run tests, just enter in 
 
 .. code-block:: shell
@@ -114,3 +116,41 @@ Refactoring
 
 Since our code is very simple, we don't have to refine the code, but we would
 rewrite the code to be better and more efficient after passing the test.
+
+Coverage
+--------
+Coverage is the amount of code covered by tests. We want as close as possible to 100%, so that our code has a fairly rigid specification to adhere to, and, so that we can make changes confidently that our code will work.
+
+To test the projects coverage, just `cd` into the root directory of the project and execute this:
+
+.. code-block:: shell
+
+	$ py.test --cov=PhoenixNow
+
+You should get something like this:
+
+.. code-block:: shell
+
+	nicholas@mercury:~/src/PhoenixNownicholas
+	~/src/PhoenixNow ]$ py.test --cov=PhoenixNow
+	=================================================== test session starts
+	===================================================
+	platform linux -- Python 3.5.1, pytest-2.9.2, py-1.4.31, pluggy-0.3.1
+	rootdir: /home/nicholas/src/PhoenixNow, inifile: 
+	plugins: cov-2.2.1, xdist-1.14
+
+	collected 2 items 
+
+	docs/_build/html/_sources/testingguide.txt s
+	tests/test_hello.py .
+	------------------------------------- coverage: platform linux, python
+	3.5.1-final-0 --------------------------------------
+	Name                     Stmts   Miss  Cover
+	--------------------------------------------
+	PhoenixNow/__init__.py       4      0   100%
+
+	=========================================== 1 passed, 1 skipped in 0.22 seconds
+	===========================================
+
+Because our test covers the whole codebase, we have 100% coverage.
+
