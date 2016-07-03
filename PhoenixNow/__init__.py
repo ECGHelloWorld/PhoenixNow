@@ -1,6 +1,7 @@
-def hello():
-    """ Test function for trying out testing 
+from flask import Flask
 
-    Returns "hello"
-    """
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
     return "hello"

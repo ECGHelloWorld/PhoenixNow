@@ -15,6 +15,7 @@ User's Guide
    :maxdepth: 2
 
    gettingstarted
+   testingguide
 
 API Reference
 -------------

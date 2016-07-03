@@ -1,4 +1,10 @@
-from PhoenixNow import hello
+import pytest
+import PhoenixNow
 
-def test_hello():
-    assert hello() == "hello"
+@pytest.fixture
+def app():
+    return PhoenixNow.app.test_client()
+
+def test_hello(app):
+    rv = app.get('/')
+    assert b"hello" in rv.data
