@@ -1,0 +1,17 @@
+# requirements.txt
+
+# For testing
+pytest==2.9.2
+
+# For seeing how much of the codebase is tested
+pytest-cov==2.2.1
+
+# For running tests in parallel
+pytest-xdist==1.14
+
+# Library for actual basic website stuff
+Flask==0.11.1
+
+# For documentation
+sphinx-autobuild==0.6.0
+Sphinx==1.4.4
