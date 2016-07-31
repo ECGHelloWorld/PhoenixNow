@@ -9,3 +9,5 @@ def hello():
     Returns "hello"
     """
     return "hello"
+    from PhoenixNow.model import db
+    db.init_app(app)

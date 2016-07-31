@@ -1,10 +1,15 @@
 import pytest
-import PhoenixNow
 
 @pytest.fixture
 def app():
-    return PhoenixNow.app.test_client()
+    from PhoenixNow.config import Config
+    from PhoenixNow import create_app
+
+    class TestingConfig(Config):
+        TESTING = True
+
+    return create_app(TestingConfig).test_client()
 
 def test_hello(app):
-    rv = app.get('/')
+    rv = app.get('/hello')
     assert b"hello" in rv.data

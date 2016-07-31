@@ -16,6 +16,7 @@ User's Guide
 
    gettingstarted
    addingcode
+   running
 
 API Reference
 -------------
