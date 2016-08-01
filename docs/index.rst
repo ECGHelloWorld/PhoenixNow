@@ -15,8 +15,9 @@ User's Guide
    :maxdepth: 2
 
    gettingstarted
-   addingcode
    running
+   testing
+   libraries
 
 API Reference
 -------------

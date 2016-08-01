@@ -1,9 +1,6 @@
-Adding Code 
-=============
-This guide will serve to help new contributors add code under the right project style.
-
 Testing
--------
+=======
+This guide will serve to help new contributors add code under the right project style.
 
 Testing is writing tests for code that you can run to make sure your code passes the test. They are simpler to write than your code and ensure a certain amount of code stability and quality. With tests, you can make a fairly rigid specification that your code adheres to and can make changes without regressing the code or adding bugs as easily.
 

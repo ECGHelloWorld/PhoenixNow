@@ -16,6 +16,9 @@ After we run that, we can finally run the program:
     
     flask run
 
+Code
+----
+
 In our `run.py` file we have:
 
 .. code-block:: python
