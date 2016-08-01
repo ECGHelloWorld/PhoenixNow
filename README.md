@@ -10,7 +10,7 @@ The currently planned features are
 # Setting up the dev environment
 These instructions assume that you're using a Debian-based Linux distribution
 
-`sudo apt-get install build-essential pip3-python libffi-dev python-dev`
+`sudo apt-get install build-essential pip-python libffi-dev python-dev`
 
 `sudo pip3 install -r requirements.txt`
 
