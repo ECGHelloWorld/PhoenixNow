@@ -12,6 +12,8 @@ def create_app(config_object):
     app.config.from_object(config_object)
     app.register_blueprint(regular)
 
+    app.secret_key = 'totallyrandomandtotallysecret'
+
     from PhoenixNow.model import db
     db.init_app(app)
 
