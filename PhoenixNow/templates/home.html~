@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div class = "jumbo">
+<h2> Welcome to PhoenixNow<h2>
+<h3> CSGO > </h3>
+</div>
+
+{% endblock %}  

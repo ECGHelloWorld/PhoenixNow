@@ -1,4 +1,5 @@
 from flask import Flask
+from PhoenixNow.views import regular
 
 def create_app(config_object):
     """
@@ -9,6 +10,7 @@ def create_app(config_object):
 
     app = Flask(__name__)
     app.config.from_object(config_object)
+    app.register_blueprint(regular)
 
     from PhoenixNow.model import db
     db.init_app(app)
@@ -16,7 +18,7 @@ def create_app(config_object):
     with app.app_context():
         db.create_all()
 
-    from PhoenixNow.views import regular
-    app.register_blueprint(regular)
+
+
     
     return app
