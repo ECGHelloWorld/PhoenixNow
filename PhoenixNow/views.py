@@ -1,8 +1,12 @@
 from flask import Blueprint
 from flask import Flask, render_template, request, flash, session, redirect, url_for
 from .forms import SignupForm, SigninForm
+from .model import db, User
+
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
+admins = ["admin@phoenixnow.com"]
+
 
 @regular.route('/')
 def home():
@@ -32,7 +36,7 @@ def signup():
       db.session.commit()
 
       session['email'] = newuser.email
-      return redirect(url_for('profile'))
+      return redirect(url_for('.profile'))
 
     else:   
       return render_template('signup.html', form=form)
@@ -51,9 +55,42 @@ def signin():
   if request.method == 'POST':
     if form.validate_on_submit():
       session['email'] = form.email.data
-      return redirect(url_for('profile'))
+      return redirect(url_for('.profile'))
     else:
       return render_template('signin.html', form=form)
                  
   elif request.method == 'GET':
     return render_template('signin.html', form=form)
+
+@regular.route('/profile')
+def profile():
+ 
+  if 'email' not in session:
+    return redirect(url_for('.signin'))
+
+  user = User.query.filter_by(email = session['email']).first()
+
+  if user is None:
+    session.pop('email', None)
+    return redirect(url_for('.signin'))
+  else:
+    return render_template('profile.html', user=user)
+
+@regular.route('/signout')
+def signout():
+ 
+  if 'email' not in session:
+    return redirect(url_for('.signin'))
+     
+  session.pop('email', None)
+  return redirect(url_for('.home'))
+
+@regular.route('/admin')
+def admin():
+  users = User.query.all()
+ 
+  if session['email'] in admins:
+    return render_template('admin.html', users=users)
+  else:
+    return "unauthorized access"
+

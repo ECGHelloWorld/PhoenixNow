@@ -6,7 +6,8 @@ db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+    firstname = db.Column(db.String)
+    lastname = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     pw_hash = db.Column(db.String)
     salt = db.Column(db.String)
@@ -14,8 +15,9 @@ class User(db.Model):
     timestamp = db.Column(db.DateTime)
     signins = db.relationship('Signin', backref='user', lazy='dynamic')
 
-    def __init__(self, name, email, password):
-        self.name = name
+    def __init__(self, firstname, lastname, email, password):
+        self.firstname = firstname.title()
+        self.lastname = lastname.title()
         self.email = email
         self.salt = bcrypt.gensalt()
         self.pw_hash = bcrypt.hashpw(password.encode('utf-8'), self.salt)

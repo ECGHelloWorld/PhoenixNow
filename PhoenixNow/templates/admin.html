@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+    <h2>database</h2>
+    <div class="scrollMe">
+    <table id="data">
+
+    <tr>
+    <th> First Name </th>
+    <th> Last Name </th>
+    <th> Email </th>
+    <th> timestamp </th>
+    <th> Verified </th>
+    <th> Checked In? </th>
+    </tr>
+
+    {% for user in users %}    
+    <tr>
+    <td> {{ user.firstname }} </td>
+    <td> {{ user.lastname }} </td>
+    <td> {{ user.email }} </td>
+    <td> {{ user.timestamp }} </td>
+    <td> {{ user.verified }} </td>
+    <td> {{ user.checkedin }} </td>
+    </tr>
+    {% endfor %}
+
+    </table>
+    </div>
+  </div>
+{% endblock %}
