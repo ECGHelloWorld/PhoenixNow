@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 
 {% block content %}
-	<h2>Contact</h2>
-
+	<h2>Send Email</h2>
+	<h3>configure in __init__.py and views.py</h3>
 	{% if success %}
     		<p>Thank you for your message. I'll get back to you shortly.</p>
  	{% else %}
@@ -23,7 +23,7 @@
 	  <div class="flash">{{ message }}</div>
 	{% endfor %}
 
-	<form action = "{{ url_for('contact') }}" method=post>
+	<form action = "{{ url_for('.contact') }}" method=post>
 
 	{{ form.hidden_tag() }}
 	

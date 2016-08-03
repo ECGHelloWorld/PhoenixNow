@@ -1,11 +1,13 @@
 from flask import Blueprint
 from flask import Flask, render_template, request, flash, session, redirect, url_for
-from .forms import SignupForm, SigninForm
+from .forms import SignupForm, SigninForm, ContactForm
 from .model import db, User
+from flask_mail import Message, Mail
 
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
 admins = ["admin@phoenixnow.com"]
+mail = Mail()
 
 
 @regular.route('/')
@@ -93,4 +95,25 @@ def admin():
     return render_template('admin.html', users=users)
   else:
     return "unauthorized access"
+
+@regular.route('/contact', methods=['GET','POST'])
+def contact():
+  form = ContactForm()
+
+  if request.method == 'POST':
+    if form.validate_on_submit():
+      msg = Message(form.subject.data, sender='support@chadali.me', recipients=['chaudhryam@guilford.edu', form.email.data])
+      msg.body = """
+      From: %s <%s>
+      %s
+      """ % (form.name.data, form.email.data, form.message.data)
+      mail.send(msg)
+      return render_template('contact.html', success=True)
+    else:
+      flash('All fields are required.')
+      return render_template('contact.html', form=form)
+
+
+  elif request.method == 'GET':
+    return render_template('contact.html', form=form)
 

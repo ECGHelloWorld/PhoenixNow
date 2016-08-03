@@ -44,3 +44,10 @@ class SigninForm(Form):
       self.email.errors.append("Invalid e-mail or password")
       return False
 
+class ContactForm(Form):
+  name = StringField("Name",  [InputRequired("Please enter your name.")])
+  email = StringField("Target Email",  [InputRequired("Please enter your email address."), Email("This field requires a valid email address")])
+  subject = StringField("Subject",  [InputRequired("Please enter a subject.")])
+  message = TextAreaField("Message",  [InputRequired("Please enter a message.")])
+  submit = SubmitField("Send")
+
