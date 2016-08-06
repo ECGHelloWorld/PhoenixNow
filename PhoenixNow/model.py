@@ -11,8 +11,9 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True)
     pw_hash = db.Column(db.String)
     salt = db.Column(db.String)
-    signedin = db.Column(db.Boolean)
-    timestamp = db.Column(db.DateTime)
+    checkedin = db.Column(db.Boolean)
+    creation_timestamp = db.Column(db.DateTime)
+    checkin_timestamp = db.Column(db.DateTime)
     signins = db.relationship('Signin', backref='user', lazy='dynamic')
     verified = db.Column(db.Boolean)
 
@@ -22,8 +23,8 @@ class User(db.Model):
         self.email = email
         self.salt = bcrypt.gensalt()
         self.pw_hash = bcrypt.hashpw(password.encode('utf-8'), self.salt)
-        self.timestamp = datetime.datetime.utcnow()
-        self.signedin = False
+        self.creation_timestamp = datetime.datetime.utcnow()
+        self.checkedin = False
         self.verified = False
 
     def check_password(self, password):

@@ -10,8 +10,9 @@
     <th> Last Name </th>
     <th> Email </th>
     <th> Verified </th>
-    <th> Checked In? </th>
-    <th> timestamp </th>
+    <th> Checked In </th>
+    <th> Creation </th>
+    <th> Checkin </th>
     </tr>
 
     {% for user in users %}    
@@ -21,7 +22,10 @@
     <td> {{ user.email }} </td>
     <td> {{ user.verified }} </td>
     <td> {{ user.checkedin }} </td>
-    <td> {{ user.timestamp }} </td>
+    <td> {{ user.creation_timestamp.strftime('%Y-%m-%d %H:%M:%S') }} </td>
+    {% if user.checkin_timestamp %}
+      <td> {{ user.checkin_timestamp.strftime('%Y-%m-%d %H:%M:%S') }} </td>
+    {% endif %}
     </tr>
     {% endfor %}
 

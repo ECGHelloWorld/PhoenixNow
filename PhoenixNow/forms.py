@@ -51,3 +51,5 @@ class ContactForm(Form):
   message = TextAreaField("Message",  [InputRequired("Please enter a message.")])
   submit = SubmitField("Send")
 
+class CheckinForm(Form):
+  submit = SubmitField("Check in for the day.")

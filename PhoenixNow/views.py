@@ -1,7 +1,7 @@
 from .decorators import login_required, login_notrequired, admin_required, check_verified, check_notverified
 from flask import Flask, render_template, request, flash, session, redirect, url_for
+from .forms import SignupForm, SigninForm, ContactForm, CheckinForm
 from .token import generate_confirmation_token, confirm_token
-from .forms import SignupForm, SigninForm, ContactForm
 from flask_mail import Message, Mail
 from .email import send_email
 from .model import db, User
@@ -63,6 +63,7 @@ def signin():
 @regular.route('/profile')
 @login_required
 def profile():
+  form = CheckinForm()
 
   user = User.query.filter_by(email = session['email']).first()
 
@@ -70,7 +71,7 @@ def profile():
     session.pop('email', None)
     return redirect(url_for('.signin'))
   else:
-    return render_template('profile.html', user=user)
+    return render_template('profile.html', user=user, form=form)
 
 @regular.route('/signout')
 @login_required
@@ -142,7 +143,25 @@ def resend_verification():
     flash('A new verification email has been sent.', 'success')
     return redirect(url_for('.unverified'))
 
+@regular.route('/checkin')
+@login_required
+@check_verified
+def checkin():
+    user = User.query.filter_by(email = session['email']).first()
+    user.checkedin = True
+    user.checkin_timestamp = datetime.datetime.utcnow()
+    db.session.add(user)
+    db.session.commit()
+    flash('successfully checked in')
+    return redirect(url_for('.profile'))
+
+### test pages ###
+
 @regular.route('/test')
 def test():
-  test = "test string"
-  return url_for('.profile', test=test, _external=True )
+    newuser = User("Admin", "Account", "23alic@gmail.com", "1")
+    db.session.add(newuser)
+    newuser.verified = True
+    db.session.commit()
+    session['email'] = "23alic@gmail.com"
+    return redirect(url_for('.profile'))
