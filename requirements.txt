@@ -13,3 +13,7 @@ bcrypt==2.0.0
 
 sphinx-autobuild==0.6.0
 Sphinx==1.4.4
+
+Flask-WTF==0.12
+
+Flask-Mail==0.9.1

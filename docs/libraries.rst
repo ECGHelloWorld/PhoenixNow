@@ -43,3 +43,10 @@ sphinx-autobuild
 ----------------
 For documentation
 
+Flask-WTF
+---------
+For easy and secure forms
+
+Flask-Mail
+----------
+For easy emailing in Flask
