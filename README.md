@@ -14,7 +14,7 @@ These instructions assume that you're using a Debian-based Linux distribution
 
 `sudo pip3 install -r requirements.txt`
 
-To run, execute `python app.py`
+To run, follow instructions here http://phoenixnow.readthedocs.io/en/latest/running.html
 
 # Planned Deployment Features
 

@@ -1,0 +1,52 @@
+<!DOCTYPE>
+<html>
+
+<head>
+	<title>PhoenixNow</title>
+	<link rel="stylesheet" href="{{ url_for('regular.static', filename='main.css') }}">
+</head>
+
+<body>
+
+<header>
+  <div class="container">
+    <h1 class="logo">PhoenixNow</h1>
+    <strong><nav>
+      <ul class="menu">
+        <li><a href="{{ url_for('.home') }}">Home</a></li>
+	<li><a href="{{ url_for('.contact') }}">Contact Us</a></li>
+         {% if 'email' in session %}
+         <li><a href="{{ url_for('.profile') }}">Profile</a></li>
+         <li><a href="{{ url_for('.signout') }}">Sign Out</a></li>
+         {% else %}
+         <li><a href="{{ url_for('.signup') }}">Sign Up</a></li>
+         <li><a href="{{ url_for('.signin') }}">Sign In</a></li>
+         {% endif %}
+         {% if session['email'] in ['admin@phoenixnow.com', '23alic@gmail.com'] %}
+	 <li><a href="{{ url_for('.admin') }}">Admin Page</a></li>
+	 {% endif %}
+      </ul>
+    </nav></strong>
+  </div>
+</header>
+
+	<center>
+	{% with messages = get_flashed_messages() %}
+ 	 {% if messages %}
+  	  <ul class=flash style="list-style: none;">
+  	  {% for message in messages %}
+   	   <li>{{ message }}</li>
+   	 {% endfor %}
+  	  </ul>
+ 	 {% endif %}
+	{% endwith %}
+	</center>
+
+<div class="container">
+ {% block content %}
+ {% endblock %}
+</div>
+
+</body>
+
+</html>
