@@ -8,6 +8,8 @@ from .model import db, User
 from flask import Blueprint
 import datetime
 
+from PhoenixNow.config import ProductionConfig
+
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
 
 mail = Mail()

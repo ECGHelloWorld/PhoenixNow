@@ -1,3 +1,4 @@
+from PhoenixNow.config import ProductionConfig
 from flask_mail import Message, Mail
 
 mail = Mail()
@@ -7,7 +8,7 @@ def send_email(to, subject, template):
         subject,
         recipients=[to],
         html=template,
-        #sender=app.config['MAIL_DEFAULT_SENDER']
-	sender="support@chadali.me"
+        sender=ProductionConfig.MAIL_DEFAULT_SENDER
+
     )
     mail.send(msg)

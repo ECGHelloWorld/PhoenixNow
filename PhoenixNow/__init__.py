@@ -12,8 +12,6 @@ def create_app(config_object):
     app.config.from_object(config_object)
     app.register_blueprint(regular)
 
-    #app.secret_key = 'idontknowwhatthisis'
-
     ### Configuration for flask-mail | "SMPT" Settings | This is the email account that sends emails ###
     app.config["MAIL_SERVER"] = "mail.privateemail.com" # specifies email domain. "smtp.gmail.com" for a gmail account
     app.config["MAIL_PORT"] = 465
