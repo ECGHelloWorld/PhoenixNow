@@ -46,7 +46,7 @@ class SigninForm(Form):
 
 class ContactForm(Form):
   name = StringField("Name",  [InputRequired("Please enter your name.")])
-  email = StringField("Target Email",  [InputRequired("Please enter your email address."), Email("This field requires a valid email address")])
+  email = StringField("Your Email",  [InputRequired("Please enter your email address."), Email("This field requires a valid email address")])
   subject = StringField("Subject",  [InputRequired("Please enter a subject.")])
   message = TextAreaField("Message",  [InputRequired("Please enter a message.")])
   submit = SubmitField("Send")
