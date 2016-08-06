@@ -8,12 +8,6 @@ The currently planned features are
 * Android support
 
 # Setting up the dev environment
-These instructions assume that you're using a Debian-based Linux distribution
-
-`sudo apt-get install build-essential pip-python libffi-dev python-dev`
-
-`sudo pip3 install -r requirements.txt`
-
 To run, follow instructions here http://phoenixnow.readthedocs.io/en/latest/running.html
 
 # Planned Deployment Features
