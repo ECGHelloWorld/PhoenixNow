@@ -17,7 +17,7 @@ def create_app(config_object):
     app.config["MAIL_PORT"] = 465
     app.config["MAIL_USE_SSL"] = True
     app.config["MAIL_USERNAME"] = 'support@chadali.me' # your email address
-    app.config["MAIL_PASSWORD"] = 'ask ali yo' # email password
+    app.config["MAIL_PASSWORD"] = 'koolkidklub' # email password
     ### Configuration for flask-mail | If you're using your own email, in views.py change sender='support@chadali.me' to your email ###
 
     from PhoenixNow.views import mail 

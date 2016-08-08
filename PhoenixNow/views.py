@@ -4,7 +4,7 @@ from .forms import SignupForm, SigninForm, ContactForm, CheckinForm
 from .token import generate_confirmation_token, confirm_token
 from flask_mail import Message, Mail
 from .email import send_email
-from .model import db, User
+from .model import db, User, Checkin
 from flask import Blueprint
 import datetime
 
@@ -118,7 +118,7 @@ def verify_email(token):
   user = User.query.filter_by(email = session['email']).first_or_404()
   if user.email == email:
     user.verified = True
-    db.session.add(user)
+    #db.session.add(user)
     db.session.commit()
     flash('You have confirmed your account. Thanks!', 'success')
   else:
@@ -150,9 +150,10 @@ def resend_verification():
 @check_verified
 def checkin():
     user = User.query.filter_by(email = session['email']).first()
+    checkinObject = Checkin()
+    user.checkins.append(checkinObject)
+    db.session.add(checkinObject)
     user.checkedin = True
-    user.checkin_timestamp = datetime.datetime.utcnow()
-    db.session.add(user)
     db.session.commit()
     flash('successfully checked in')
     return redirect(url_for('.profile'))
@@ -162,8 +163,14 @@ def checkin():
 @regular.route('/test')
 def test():
     newuser = User("Admin", "Account", "23alic@gmail.com", "1")
+    newuser1 = User("test", "Account", "1@gmail.com", "1")
+    newuser2 = User("test", "Account", "2@gmail.com", "1")
     db.session.add(newuser)
+    db.session.add(newuser1)
+    db.session.add(newuser2)
     newuser.verified = True
+    newuser1.verified = True
+    newuser2.verified = True
     db.session.commit()
     session['email'] = "23alic@gmail.com"
     return redirect(url_for('.profile'))
