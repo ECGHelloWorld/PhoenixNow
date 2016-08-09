@@ -16,6 +16,20 @@ After we run that, we can finally run the program:
     
     flask run
 
+If we want to run the program so that it automatically reloads when we make
+changes, all we have to do is install gunicorn:
+
+.. code-block:: shell
+
+    sudo pip install gunicorn
+
+And then run this command in the top-level folder for the source code (folder
+that has run.py in it):
+
+.. code-block:: shell
+    
+    gunicorn run:app --reload
+
 Code
 ----
 
