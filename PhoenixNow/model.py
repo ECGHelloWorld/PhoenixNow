@@ -13,8 +13,7 @@ class User(db.Model):
     salt = db.Column(db.String)
     checkedin = db.Column(db.Boolean)
     creation_timestamp = db.Column(db.DateTime)
-    checkin_timestamp = db.Column(db.DateTime)
-    signins = db.relationship('Signin', backref='user', lazy='dynamic')
+    checkins = db.relationship('Checkin', backref='user', lazy='dynamic')
     verified = db.Column(db.Boolean)
 
     def __init__(self, firstname, lastname, email, password):
@@ -45,10 +44,13 @@ class User(db.Model):
     def __repr__(self):
         return "<User(name='%s')>" % (self.name)
 
-class Signin(db.Model):
+class Checkin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    date_in = db.Column(db.DateTime)
+    checkin_timestamp = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    def __init__(self):
+      self.checkin_timestamp = datetime.datetime.utcnow()
+
     def __repr__(self):
-        return "<Signin(id='%s')>" % (self.id)
+        return "<Checkin(id='%s')>" % (self.id)

@@ -12,7 +12,7 @@ def login_required(func):
             return func(*args, **kwargs)
         else:
             flash("Error accessing page - not logged in")
-            return redirect(url_for(".signin"))
+            return redirect(url_for("regular.signin"))
     return wrap
 
 def login_notrequired(func):
@@ -22,7 +22,7 @@ def login_notrequired(func):
             return func(*args, **kwargs)
         else:
             flash("Error accessing page - already logged in")
-            return redirect(url_for(".profile"))
+            return redirect(url_for("regular.profile"))
     return wrap
 
 def admin_required(func):
@@ -32,7 +32,7 @@ def admin_required(func):
             return func(*args, **kwargs)
         else:
             flash("Error accessing page - admin priviledges needed")
-            return redirect(url_for(".profile"))
+            return redirect(url_for("regular.profile"))
     return wrap
 
 def check_verified(func):
@@ -41,7 +41,7 @@ def check_verified(func):
         user = User.query.filter_by(email = session['email']).first()
         if user.verified is False:
             flash('Please verify your account!', 'warning')
-            return redirect(url_for('.unverified'))
+            return redirect(url_for('regular.unverified'))
         return func(*args, **kwargs)
 
     return decorated_function
@@ -52,7 +52,7 @@ def check_notverified(func):
         user = User.query.filter_by(email = session['email']).first()
         if user.verified is True:
             flash("You are already verified")
-            return redirect(url_for('.profile'))
+            return redirect(url_for('regular.profile'))
         return func(*args, **kwargs)
 
     return decorated_function

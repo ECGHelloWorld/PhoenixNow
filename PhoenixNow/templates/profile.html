@@ -4,9 +4,9 @@
     <h2>u got logged in son<h2>
     <h3>This is {{ session['email'] }}'s page<h3>
     {% if not user.checkedin %}
-      <center><form action = "{{ url_for('.checkin') }}">
-      {{ form.submit }}
-    </form></center>
+      <center><form action = "{{ url_for('regular.checkin') }}">
+      {{ form.checkin }}
+      </form></center>
     {% else %}
       <center><h4> Checked In! </h4></center>
     {% endif %}

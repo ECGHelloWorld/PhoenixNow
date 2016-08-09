@@ -1,12 +1,13 @@
 from .decorators import login_required, login_notrequired, admin_required, check_verified, check_notverified
-from flask import Flask, render_template, request, flash, session, redirect, url_for
+from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint
 from .forms import SignupForm, SigninForm, ContactForm, CheckinForm
 from .token import generate_confirmation_token, confirm_token
 from flask_mail import Message, Mail
 from .email import send_email
-from .model import db, User
-from flask import Blueprint
+from .model import db, User, Checkin
 import datetime
+
+from PhoenixNow.config import ProductionConfig
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
 
@@ -80,13 +81,6 @@ def signout():
   session.pop('email', None)
   return redirect(url_for('.home'))
 
-@regular.route('/admin')
-@login_required
-@admin_required
-def admin():
-  users = User.query.all()
-  return render_template('admin.html', users=users)
-
 @regular.route('/contact', methods=['GET','POST'])
 @login_required
 def contact():
@@ -116,12 +110,12 @@ def verify_email(token):
   user = User.query.filter_by(email = session['email']).first_or_404()
   if user.email == email:
     user.verified = True
-    db.session.add(user)
+    #db.session.add(user)
     db.session.commit()
     flash('You have confirmed your account. Thanks!', 'success')
   else:
     flash('The confirmation link is invalid or has expired.', 'danger')
-  return redirect(url_for('.profile'))
+  return redirect(url_for('regular.profile'))
 
 @regular.route('/unverified')
 @login_required
@@ -136,32 +130,39 @@ def unverified():
 def resend_verification():
     user = User.query.filter_by(email = session['email']).first()
     token = generate_confirmation_token(user.email)
-    confirm_url = url_for('.verify_email', token=token, _external=True)
+    confirm_url = url_for('regular.verify_email', token=token, _external=True)
     html = render_template('activate.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
     send_email(user.email, subject, html)
     flash('A new verification email has been sent.', 'success')
-    return redirect(url_for('.unverified'))
+    return redirect(url_for('regular.unverified'))
 
 @regular.route('/checkin')
 @login_required
 @check_verified
 def checkin():
     user = User.query.filter_by(email = session['email']).first()
+    checkinObject = Checkin()
+    user.checkins.append(checkinObject)
+    db.session.add(checkinObject)
     user.checkedin = True
-    user.checkin_timestamp = datetime.datetime.utcnow()
-    db.session.add(user)
     db.session.commit()
     flash('successfully checked in')
-    return redirect(url_for('.profile'))
+    return redirect(url_for('regular.profile'))
 
 ### test pages ###
 
 @regular.route('/test')
 def test():
     newuser = User("Admin", "Account", "23alic@gmail.com", "1")
+    newuser1 = User("test", "Account", "1@gmail.com", "1")
+    newuser2 = User("test", "Account", "2@gmail.com", "1")
     db.session.add(newuser)
+    db.session.add(newuser1)
+    db.session.add(newuser2)
     newuser.verified = True
+    newuser1.verified = True
+    newuser2.verified = True
     db.session.commit()
     session['email'] = "23alic@gmail.com"
-    return redirect(url_for('.profile'))
+    return redirect(url_for('regular.profile'))

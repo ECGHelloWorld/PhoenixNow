@@ -87,3 +87,9 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Ali could not hide these files himself
+*.pyc
+*.py~
+*.html~
+*.css~
