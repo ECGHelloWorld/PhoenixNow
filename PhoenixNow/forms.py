@@ -52,4 +52,4 @@ class ContactForm(Form):
   submit = SubmitField("Send")
 
 class CheckinForm(Form):
-  submit = SubmitField("Check in for the day.")
+  checkin = SubmitField("Check in for the day.")

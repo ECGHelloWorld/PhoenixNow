@@ -1,5 +1,6 @@
 from flask import Flask
 from PhoenixNow.views import regular
+from PhoenixNow.admin.views import admin
 
 def create_app(config_object):
     """
@@ -11,6 +12,7 @@ def create_app(config_object):
     app = Flask(__name__)
     app.config.from_object(config_object)
     app.register_blueprint(regular)
+    app.register_blueprint(admin,url_prefix='/admin')
 
     ### Configuration for flask-mail | "SMPT" Settings | This is the email account that sends emails ###
     app.config["MAIL_SERVER"] = "mail.privateemail.com" # specifies email domain. "smtp.gmail.com" for a gmail account
