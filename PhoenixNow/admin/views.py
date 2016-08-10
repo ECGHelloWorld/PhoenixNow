@@ -1,6 +1,7 @@
 from flask import Flask, render_template, Blueprint
-from PhoenixNow.decorators import login_required, login_notrequired, admin_required, check_verified, check_notverified
-from PhoenixNow.model import db, User, Checkin
+from PhoenixNow.regular.decorators import login_notrequired, admin_required, check_verified, check_notverified
+from PhoenixNow.regular.model import db, User, Checkin
+from flask_login import login_required, login_user, logout_user
 from .forms import AdminForm
 
 admin = Blueprint('admin', __name__, template_folder='templates', static_folder='static')
