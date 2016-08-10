@@ -177,3 +177,7 @@ def test():
 
 
     return redirect(url_for('regular.profile'))
+
+@regular.route('/test1')
+def test1():
+    return str(current_user.is_admin())

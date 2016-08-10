@@ -7,7 +7,7 @@ from flask_login import current_user
 def login_notrequired(func):
     @wraps(func)
     def wrap(*args, **kwargs):
-        if not current_user.is_authenticated:
+        if not current_user.is_active:
             return func(*args, **kwargs)
         else:
             flash("Error accessing page - already logged in")
@@ -17,7 +17,7 @@ def login_notrequired(func):
 def admin_required(func):
     @wraps(func)
     def wrap(*args, **kwargs):
-        if current_user.is_admin:
+        if current_user.is_admin():
             return func(*args, **kwargs)
         else:
             flash("Error accessing page - admin priviledges needed")

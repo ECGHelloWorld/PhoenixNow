@@ -36,7 +36,6 @@ class User(db.Model):
         except NameError:
             return str(self.id)  # python 3
 
-    @property
     def is_authenticated(self):
         """Return True if the user is verified."""
         return self.verified
@@ -50,7 +49,7 @@ class User(db.Model):
 
     def is_admin(self):
         if self.email in ['23alic@gmail.com']:
-          return False
+          return True
         else:
           return False
 

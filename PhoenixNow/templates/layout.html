@@ -15,16 +15,17 @@
       <ul class="menu">
         <li><a href="{{ url_for('regular.home') }}">Home</a></li>
 	<li><a href="{{ url_for('regular.contact') }}">Contact Us</a></li>
-         {% if (current_user.is_active) %}
+         {% if current_user.is_active %}
          <li><a href="{{ url_for('regular.profile') }}">Profile</a></li>
          <li><a href="{{ url_for('regular.signout') }}">Sign Out</a></li>
+         {% if current_user.is_admin() %}
+	 <li><a href="{{ url_for('admin.home') }}">Admin Page</a></li>
+	 {% endif %}
          {% else %}
          <li><a href="{{ url_for('regular.signup') }}">Sign Up</a></li>
          <li><a href="{{ url_for('regular.signin') }}">Sign In</a></li>
          {% endif %}
-         {% if (current_user.is_admin) %}
-	 <li><a href="{{ url_for('admin.home') }}">Admin Page</a></li>
-	 {% endif %}
+
       </ul>
     </nav></strong>
   </div>
