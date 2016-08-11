@@ -17,6 +17,11 @@ class SignupForm(Form):
   def validate(self):
     if not Form.validate(self):
       return False
+
+    domain = self.email.data.lower().split('@')[1]
+    if domain != "guilford.edu":
+      self.email.errors.append("Must register with guilford.edu email.")
+      return False
      
     user = User.query.filter_by(email = self.email.data.lower()).first()
     if user:

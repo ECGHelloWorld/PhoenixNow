@@ -26,20 +26,32 @@ class User(db.Model):
         self.checkedin = False
         self.verified = False
 
+    def is_active(self):
+        """True, as all users are active."""
+        return True
+
+    def get_id(self):
+        try:
+            return unicode(self.id)  # python 2
+        except NameError:
+            return str(self.id)  # python 3
+
+    def is_authenticated(self):
+        """Return True if the user is verified."""
+        return self.verified
+
+    def is_anonymous(self):
+        """False, as anonymous users aren't supported."""
+        return False
+
     def check_password(self, password):
         return self.pw_hash == bcrypt.hashpw(password.encode('utf-8'), self.salt)
 
     def is_admin(self):
-        if self.email == 'daynb@guilford.edu':
-            return True
-        elif self.email == 'kiddlm@guilford.edu':
-            return True
-        elif self.email=='kerrj@guilford.edu':
-            return True
-        elif self.email=='justin.g.kerr@gmail.com':
-            return True
+        if self.email in ['23alic@gmail.com']:
+          return True
         else:
-            return False
+          return False
 
     def __repr__(self):
         return "<User(name='%s')>" % (self.name)

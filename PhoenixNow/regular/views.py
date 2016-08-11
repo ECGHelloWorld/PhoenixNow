@@ -1,10 +1,11 @@
-from .decorators import login_required, login_notrequired, admin_required, check_verified, check_notverified
+from .decorators import login_notrequired, admin_required, check_verified, check_notverified
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint
 from .forms import SignupForm, SigninForm, ContactForm, CheckinForm
 from .token import generate_confirmation_token, confirm_token
 from flask_mail import Message, Mail
 from .email import send_email
 from .model import db, User, Checkin
+from flask_login import login_required, login_user, logout_user, current_user, LoginManager
 import datetime
 
 from PhoenixNow.config import ProductionConfig
@@ -13,6 +14,13 @@ regular = Blueprint('regular', __name__, template_folder='templates', static_fol
 
 mail = Mail()
 
+login_manager = LoginManager()
+login_manager.login_view = "regular.signin"
+
+@login_manager.user_loader
+def load_user(user_id):
+    user = User.query.filter_by(id = user_id).first()
+    return user
 
 @regular.route('/')
 def home():
@@ -36,7 +44,7 @@ def signup():
       send_email(newuser.email, subject, html)
       flash('A verification email has been sent via email.', 'success')
 
-      session['email'] = newuser.email
+      login_user(newuser)
       return redirect(url_for('.unverified'))
 
     else:   
@@ -53,7 +61,8 @@ def signin():
   
   if request.method == 'POST':
     if form.validate_on_submit():
-      session['email'] = form.email.data.lower()
+      user = User.query.filter_by(email = form.email.data).first()
+      login_user(user)
       return redirect(url_for('.profile'))
     else:
       return render_template('signin.html', form=form)
@@ -66,10 +75,9 @@ def signin():
 def profile():
   form = CheckinForm()
 
-  user = User.query.filter_by(email = session['email']).first()
+  user = current_user
 
   if user is None:
-    session.pop('email', None)
     return redirect(url_for('.signin'))
   else:
     return render_template('profile.html', user=user, form=form)
@@ -77,8 +85,7 @@ def profile():
 @regular.route('/signout')
 @login_required
 def signout():
-     
-  session.pop('email', None)
+  logout_user()
   return redirect(url_for('.home'))
 
 @regular.route('/contact', methods=['GET','POST'])
@@ -107,7 +114,7 @@ def contact():
 @check_notverified
 def verify_email(token):
   email = confirm_token(token)
-  user = User.query.filter_by(email = session['email']).first_or_404()
+  user = current_user
   if user.email == email:
     user.verified = True
     #db.session.add(user)
@@ -128,7 +135,7 @@ def unverified():
 @login_required
 @check_notverified
 def resend_verification():
-    user = User.query.filter_by(email = session['email']).first()
+    user = current_user
     token = generate_confirmation_token(user.email)
     confirm_url = url_for('regular.verify_email', token=token, _external=True)
     html = render_template('activate.html', confirm_url=confirm_url)
@@ -141,7 +148,7 @@ def resend_verification():
 @login_required
 @check_verified
 def checkin():
-    user = User.query.filter_by(email = session['email']).first()
+    user = current_user
     checkinObject = Checkin()
     user.checkins.append(checkinObject)
     db.session.add(checkinObject)
@@ -164,5 +171,13 @@ def test():
     newuser1.verified = True
     newuser2.verified = True
     db.session.commit()
-    session['email'] = "23alic@gmail.com"
+
+    login_user(newuser,remember=True)
+
+
+
     return redirect(url_for('regular.profile'))
+
+@regular.route('/test1')
+def test1():
+    return str(current_user.is_admin())
