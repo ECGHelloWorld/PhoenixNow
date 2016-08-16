@@ -4,19 +4,31 @@
   <h2>Sign up</h2>
  
   {% for message in form.firstname.errors %}
-    <div class="flash">{{ message }}</div>
+    <div class="alert alert-warning alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      {{ message }}
+    </div>
   {% endfor %}
    
   {% for message in form.lastname.errors %}
-    <div class="flash">{{ message }}</div>
+    <div class="alert alert-warning alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      {{ message }}
+    </div>
   {% endfor %}
    
   {% for message in form.email.errors %}
-    <div class="flash">{{ message }}</div>
+    <div class="alert alert-warning alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      {{ message }}
+    </div>
   {% endfor %}
    
   {% for message in form.password.errors %}
-    <div class="flash">{{ message }}</div>
+    <div class="alert alert-warning alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      {{ message }}
+    </div>
   {% endfor %}
    
   <form action="{{ url_for('regular.signup') }}" method=post>
