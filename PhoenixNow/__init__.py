@@ -1,6 +1,6 @@
 from flask import Flask
-from PhoenixNow.regular.views import regular
-from PhoenixNow.admin.views import admin
+from PhoenixNow.regular import regular
+from PhoenixNow.admin import admin
 import os
 
 def create_app(config_object):
@@ -23,11 +23,11 @@ def create_app(config_object):
     app.config["MAIL_PASSWORD"] = os.environ.get('emailpass') # email password
     ### Configuration for flask-mail | If you're using your own email, in views.py change sender='support@chadali.me' to your email ###
 
-    from PhoenixNow.regular.views import mail, login_manager
+    from PhoenixNow.regular import mail, login_manager
     mail.init_app(app)
     login_manager.init_app(app)
 
-    from PhoenixNow.regular.model import db
+    from PhoenixNow.model import db
     db.init_app(app)
 
     with app.app_context():
