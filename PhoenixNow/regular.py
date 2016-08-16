@@ -139,5 +139,5 @@ def checkin():
     db.session.add(checkinObject)
     user.checkedin = True
     db.session.commit()
-    flash('successfully checked in')
+    flash('Successfully checked in')
     return redirect(url_for('.home'))
