@@ -26,7 +26,6 @@
         <li><a href="{{ url_for('regular.home') }}">Home</a></li>
          {% if current_user.is_active %}
         <li><a href="{{ url_for('regular.contact') }}">Contact Us</a></li>
-         <li><a href="{{ url_for('regular.profile') }}">Profile</a></li>
          <li><a href="{{ url_for('regular.signout') }}">Sign Out</a></li>
          {% if current_user.is_admin() %}
 	 <li><a href="{{ url_for('admin.home') }}">Admin Page</a></li>

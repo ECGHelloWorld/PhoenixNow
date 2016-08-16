@@ -2,5 +2,21 @@
 {% block content %}
 
 <h2>Welcome to PhoenixNow<h2>
+{% if user.is_active %}
+
+{% if not user.checkedin %}
+  <form action = "{{ url_for('regular.checkin') }}">
+      <div class="form-group">
+  {{ form.checkin(class_="btn btn-default") }}
+    </div>
+  </form>
+{% else %}
+<h4> Checked In! </h4>
+{% endif %}
+
+{% else %}
+<a href="{{ url_for('regular.signin') }}" class="btn btn-default">Signin</a>
+<a href="{{ url_for('regular.signup') }}" class="btn btn-default">Signup</a>
+{% endif %}
 
 {% endblock %}  

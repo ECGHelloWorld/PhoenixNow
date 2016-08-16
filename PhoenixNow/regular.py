@@ -24,7 +24,14 @@ def load_user(user_id):
 
 @regular.route('/')
 def home():
-    return render_template('home.html')
+  form = CheckinForm()
+
+  user = current_user
+
+  if user is None:
+    return redirect(url_for('.signin'))
+  else:
+    return render_template('home.html', user=user, form=form)
 
 @regular.route('/signup', methods=['GET', 'POST'])
 @login_notrequired
@@ -63,24 +70,12 @@ def signin():
     if form.validate_on_submit():
       user = User.query.filter_by(email = form.email.data).first()
       login_user(user)
-      return redirect(url_for('.profile'))
+      return redirect(url_for('.home'))
     else:
       return render_template('signin.html', form=form)
                  
   elif request.method == 'GET':
     return render_template('signin.html', form=form)
-
-@regular.route('/profile')
-@login_required
-def profile():
-  form = CheckinForm()
-
-  user = current_user
-
-  if user is None:
-    return redirect(url_for('.signin'))
-  else:
-    return render_template('profile.html', user=user, form=form)
 
 @regular.route('/signout')
 @login_required
@@ -122,7 +117,7 @@ def verify_email(token):
     flash('You have confirmed your account. Thanks!', 'success')
   else:
     flash('The confirmation link is invalid or has expired.', 'danger')
-  return redirect(url_for('regular.profile'))
+  return redirect(url_for('.home'))
 
 @regular.route('/unverified')
 @login_required
@@ -155,4 +150,4 @@ def checkin():
     user.checkedin = True
     db.session.commit()
     flash('successfully checked in')
-    return redirect(url_for('regular.profile'))
+    return redirect(url_for('.home'))
