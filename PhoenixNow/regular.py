@@ -156,28 +156,3 @@ def checkin():
     db.session.commit()
     flash('successfully checked in')
     return redirect(url_for('regular.profile'))
-
-### test pages ###
-
-@regular.route('/test')
-def test():
-    newuser = User("Admin", "Account", "23alic@gmail.com", "1")
-    newuser1 = User("test", "Account", "1@gmail.com", "1")
-    newuser2 = User("test", "Account", "2@gmail.com", "1")
-    db.session.add(newuser)
-    db.session.add(newuser1)
-    db.session.add(newuser2)
-    newuser.verified = True
-    newuser1.verified = True
-    newuser2.verified = True
-    db.session.commit()
-
-    login_user(newuser,remember=True)
-
-
-
-    return redirect(url_for('regular.profile'))
-
-@regular.route('/test1')
-def test1():
-    return str(current_user.is_admin())
