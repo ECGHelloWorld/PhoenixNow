@@ -11,7 +11,7 @@ def login_notrequired(func):
             return func(*args, **kwargs)
         else:
             flash("Error accessing page - already logged in")
-            return redirect(url_for("regular.profile"))
+            return redirect(url_for("regular.home"))
     return wrap
 
 def admin_required(func):
@@ -21,7 +21,7 @@ def admin_required(func):
             return func(*args, **kwargs)
         else:
             flash("Error accessing page - admin priviledges needed")
-            return redirect(url_for("regular.profile"))
+            return redirect(url_for("regular.home"))
     return wrap
 
 def check_verified(func):
@@ -39,7 +39,7 @@ def check_notverified(func):
     def decorated_function(*args, **kwargs):
         if current_user.verified is True:
             flash("You are already verified")
-            return redirect(url_for('regular.profile'))
+            return redirect(url_for('regular.home'))
         return func(*args, **kwargs)
 
     return decorated_function
