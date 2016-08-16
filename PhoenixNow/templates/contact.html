@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 
 {% block content %}
-	<h2>Give Feedback / Report Bug</h2>
+	<h2>Give Feedback / Report Bugs</h2>
 	{% if success %}
-    		<p>Thank you for your message. I'll get back to you shortly.</p>
+    		<p>Thank you for your message. We'll get back to you shortly.</p>
  	{% else %}
 
 	{% for message in form.name.errors %}
@@ -26,19 +26,27 @@
 
 	{{ form.hidden_tag() }}
 	
+    <div class="form-group">
 	{{ form.name.label }}
-	{{ form.name }}
+	{{ form.name(class_="form-control") }}
+    </div>
 
+    <div class="form-group">
 	{{ form.email.label }}
-	{{ form.email }}
+	{{ form.email(class_="form-control") }}
+    </div>
 
+    <div class="form-group">
 	{{ form.subject.label }}
-	{{ form.subject }}
+	{{ form.subject(class_="form-control") }}
+    </div>
 
+    <div class="form-group">
 	{{ form.message.label }}
-	{{ form.message }}
+	{{ form.message(class_="form-control") }}
+    </div>
 
-	{{ form.submit }}
+	{{ form.submit(class_="btn btn-default") }}
 	</form>
 
 	{% endif %}

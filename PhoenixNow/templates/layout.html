@@ -1,21 +1,31 @@
-<!DOCTYPE>
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 	<title>PhoenixNow</title>
-	<link rel="stylesheet" href="{{ url_for('regular.static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
-
 <body>
-
-<header>
-  <div class="container">
-    <h1 class="logo">PhoenixNow</h1>
-    <strong><nav>
-      <ul class="menu">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">PhoenixNow</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
         <li><a href="{{ url_for('regular.home') }}">Home</a></li>
-	<li><a href="{{ url_for('regular.contact') }}">Contact Us</a></li>
          {% if current_user.is_active %}
+        <li><a href="{{ url_for('regular.contact') }}">Contact Us</a></li>
          <li><a href="{{ url_for('regular.profile') }}">Profile</a></li>
          <li><a href="{{ url_for('regular.signout') }}">Sign Out</a></li>
          {% if current_user.is_admin() %}
@@ -25,29 +35,34 @@
          <li><a href="{{ url_for('regular.signup') }}">Sign Up</a></li>
          <li><a href="{{ url_for('regular.signin') }}">Sign In</a></li>
          {% endif %}
-
-      </ul>
-    </nav></strong>
-  </div>
-</header>
-
-	<center>
-	{% with messages = get_flashed_messages() %}
- 	 {% if messages %}
-  	  <ul class=flash style="list-style: none;">
-  	  {% for message in messages %}
-   	   <li>{{ message }}</li>
-   	 {% endfor %}
-  	  </ul>
- 	 {% endif %}
-	{% endwith %}
-	</center>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
 
 <div class="container">
+<div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'message' %}
+              <div class="alert alert-warning" role="alert">
+            {% else %}
+              <div class="alert alert-{{ category }}" role="alert">
+            {% endif %}
+              {{ message }}
+            </div>
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+</div>
  {% block content %}
  {% endblock %}
 </div>
 
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </body>
 
 </html>
