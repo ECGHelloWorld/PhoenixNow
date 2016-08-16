@@ -1,7 +1,7 @@
 from flask_wtf import Form
 from wtforms import SubmitField, TextAreaField, StringField, PasswordField
 from wtforms.validators import InputRequired, Email
-from .model import db, User
+from PhoenixNow.model import db, User
 
 
 class SignupForm(Form):

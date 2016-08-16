@@ -1,10 +1,10 @@
-from .decorators import login_notrequired, admin_required, check_verified, check_notverified
+from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint
-from .forms import SignupForm, SigninForm, ContactForm, CheckinForm
-from .mail import generate_confirmation_token, confirm_token
+from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm
+from PhoenixNow.mail import generate_confirmation_token, confirm_token
 from flask_mail import Message
-from .email import send_email
-from .model import db, User, Checkin
+from PhoenixNow.email import send_email
+from PhoenixNow.model import db, User, Checkin
 from flask_login import login_required, login_user, logout_user, current_user
 import datetime
 
@@ -19,7 +19,7 @@ def home():
   user = current_user
 
   if user is None:
-    return redirect(url_for('.signin'))
+    return redirect(url_for('regular.signin'))
   else:
     return render_template('home.html', user=user, form=form)
 
@@ -35,14 +35,14 @@ def signup():
       db.session.add(newuser)
       db.session.commit()
       token = generate_confirmation_token(newuser.email)
-      confirm_url = url_for('.verify_email', token=token, _external=True)
+      confirm_url = url_for('regular.verify_email', token=token, _external=True)
       html = render_template('activate.html', confirm_url=confirm_url)
       subject = "Please confirm your email"
       send_email(newuser.email, subject, html)
       flash('A verification email has been sent via email.', 'success')
 
       login_user(newuser)
-      return redirect(url_for('.unverified'))
+      return redirect(url_for('regular.unverified'))
 
     else:   
       return render_template('signup.html', form=form)
@@ -60,7 +60,7 @@ def signin():
     if form.validate_on_submit():
       user = User.query.filter_by(email = form.email.data).first()
       login_user(user)
-      return redirect(url_for('.home'))
+      return redirect(url_for('regular.home'))
     else:
       return render_template('signin.html', form=form)
                  
@@ -71,7 +71,7 @@ def signin():
 @login_required
 def signout():
   logout_user()
-  return redirect(url_for('.home'))
+  return redirect(url_for('regular.home'))
 
 @regular.route('/contact', methods=['GET','POST'])
 @login_required
@@ -102,12 +102,11 @@ def verify_email(token):
   user = current_user
   if user.email == email:
     user.verified = True
-    #db.session.add(user)
     db.session.commit()
     flash('You have confirmed your account. Thanks!', 'success')
   else:
     flash('The confirmation link is invalid or has expired.', 'danger')
-  return redirect(url_for('.home'))
+  return redirect(url_for('regular.home'))
 
 @regular.route('/unverified')
 @login_required
@@ -140,4 +139,4 @@ def checkin():
     user.checkedin = True
     db.session.commit()
     flash('Successfully checked in')
-    return redirect(url_for('.home'))
+    return redirect(url_for('regular.home'))
