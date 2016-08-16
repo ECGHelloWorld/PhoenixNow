@@ -1,3 +1,7 @@
+from flask_mail import Mail
+
+mail = Mail()
+
 from itsdangerous import URLSafeTimedSerializer
 from PhoenixNow.config import ProductionConfig
 

@@ -1,26 +1,16 @@
 from .decorators import login_notrequired, admin_required, check_verified, check_notverified
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint
 from .forms import SignupForm, SigninForm, ContactForm, CheckinForm
-from .token import generate_confirmation_token, confirm_token
-from flask_mail import Message, Mail
+from .mail import generate_confirmation_token, confirm_token
+from flask_mail import Message
 from .email import send_email
 from .model import db, User, Checkin
-from flask_login import login_required, login_user, logout_user, current_user, LoginManager
+from flask_login import login_required, login_user, logout_user, current_user
 import datetime
 
 from PhoenixNow.config import ProductionConfig
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
-
-mail = Mail()
-
-login_manager = LoginManager()
-login_manager.login_view = "regular.signin"
-
-@login_manager.user_loader
-def load_user(user_id):
-    user = User.query.filter_by(id = user_id).first()
-    return user
 
 @regular.route('/')
 def home():
