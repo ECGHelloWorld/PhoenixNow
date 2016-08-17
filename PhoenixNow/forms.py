@@ -7,7 +7,7 @@ from PhoenixNow.model import db, User
 class SignupForm(Form):
   firstname = StringField("First Name",  [InputRequired("Please enter your first name.")])
   lastname = StringField("Last Name",  [InputRequired("Please enter your last name.")])
-  grade = StringField("Grade Level")
+  grade = StringField("Grade Level", [InputRequired("Please enter your grade level.")])
   email = StringField("Email",  [InputRequired("Please enter your email address."), Email("This field requires a valid email address")])
   password = PasswordField('Password', [InputRequired("Please enter a password.")])
   submit = SubmitField("Create account")
