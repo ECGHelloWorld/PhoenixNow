@@ -7,7 +7,7 @@ from PhoenixNow.model import db, User
 class SignupForm(Form):
   firstname = StringField("First Name",  [InputRequired("Please enter your first name.")])
   lastname = StringField("Last Name",  [InputRequired("Please enter your last name.")])
-  grade = StringField("Grade Level",  [InputRequired("Please enter your grade level.")])
+  grade = StringField("Grade Level")
   email = StringField("Email",  [InputRequired("Please enter your email address."), Email("This field requires a valid email address")])
   password = PasswordField('Password', [InputRequired("Please enter a password.")])
   submit = SubmitField("Create account")
@@ -17,10 +17,6 @@ class SignupForm(Form):
  
   def validate(self):
     if not Form.validate(self):
-      return False
-    
-    if self.grade.data not in ['9','10','11','12']:
-      self.grade.errors.append("Please enter your actual grade level")
       return False
     
     domain = self.email.data.lower().split('@')[1]

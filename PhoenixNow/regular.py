@@ -27,7 +27,7 @@ def signup():
   
   if request.method == 'POST':
     if form.validate_on_submit():
-      newuser = User(form.firstname.data, form.lastname.data, form.grade.data, form.email.data, form.password.data)
+      newuser = User(form.firstname.data, form.lastname.data, request.form.get('grade'), form.email.data, form.password.data)
       db.session.add(newuser)
       db.session.commit()
       token = generate_confirmation_token(newuser.email)
