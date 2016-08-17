@@ -1,4 +1,4 @@
-from flask_mail import Mail
+from flask_mail import Mail, Message
 from PhoenixNow.config import ProductionConfig
 
 mail = Mail()

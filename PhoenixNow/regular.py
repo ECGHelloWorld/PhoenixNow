@@ -1,8 +1,7 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint
 from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm
-from PhoenixNow.mail import generate_confirmation_token, confirm_token,
-send_email
+from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from flask_mail import Message
 from PhoenixNow.model import db, User, Checkin
 from flask_login import login_required, login_user, logout_user, current_user
@@ -80,12 +79,11 @@ def contact():
 
   if request.method == 'POST':
     if form.validate_on_submit():
-      msg = Message(form.subject.data, sender='support@chadali.me', recipients=['chaudhryam@guilford.edu'])
-      msg.body = """
-      From: %s <%s>
-      %s
-      """ % (form.name.data, form.email.data, form.message.data)
-      mail.send(msg)
+      html = render_template("contact_email.html", name=form.name.data,
+              email=form.email.data, message=form.message.data)
+      subject = "PhoenixNow Contact: " + form.subject.data
+      send_email("nick@nickendo.com", subject, html)
+      flash('Your contact us email has been sent.', 'success')
       return render_template('contact.html', success=True)
     else:
       return render_template('contact.html', form=form)
