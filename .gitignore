@@ -93,3 +93,5 @@ ENV/
 *.py~
 *.html~
 *.css~
+
+data.db
