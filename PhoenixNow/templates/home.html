@@ -1,3 +1,21 @@
+{% if user.is_active %}
+{% extends 'layout.html' %}
+{% block content %}
+
+{% if not user.checkedin %}
+  <h2>Welcome to PhoenixNow<h2>
+  <form action = "{{ url_for('regular.checkin') }}">
+      <div class="form-group">
+  {{ form.checkin(class_="btn btn-default") }}
+    </div>
+  </form>
+{% else %}
+<h4> Checked In! </h4>
+{% endif %}
+{% endblock %}  
+
+{% else %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,3 +63,6 @@ $(document).ready(function(){
 
 </body>
 </html>
+
+{% endif %}
+

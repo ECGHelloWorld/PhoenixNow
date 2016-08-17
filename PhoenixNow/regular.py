@@ -17,10 +17,7 @@ def home():
 
   user = current_user
 
-  if user is None:
-    return redirect(url_for('regular.signin'))
-  else:
-    return render_template('home.html', user=user, form=form)
+  return render_template('home.html', user=user, form=form)
 
 @regular.route('/signup', methods=['GET', 'POST'])
 @login_notrequired
@@ -37,7 +34,7 @@ def signup():
       confirm_url = url_for('regular.verify_email', token=token, _external=True)
       html = render_template('activate.html', confirm_url=confirm_url)
       subject = "Please confirm your email"
-      send_email(newuser.email, subject, html)
+      #send_email(newuser.email, subject, html)
       flash('A verification email has been sent via email.', 'success')
 
       login_user(newuser)
