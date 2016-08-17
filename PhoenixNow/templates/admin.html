@@ -13,6 +13,7 @@
     <th>Last Name</th>
     <th>Email</th>
     <th>Verified</th>
+    <th>Schedule Verified</th>
     <th>Checked In</th>
     <th>Creation</th>
     <th>Checkins</th>
@@ -25,6 +26,7 @@
     <td>{{ user.lastname }}</td>
     <td>{{ user.email }}</td>
     <td>{{ user.verified }}</td>
+    <td>{{ user.schedule_verified }}</td>
     <td>{{ user.checkedin }}</td>
     <td>{{ user.creation_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
     <td>{{ user.checkins.count() }}</td>

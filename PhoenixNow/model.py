@@ -15,6 +15,14 @@ class User(db.Model):
     creation_timestamp = db.Column(db.DateTime)
     checkins = db.relationship('Checkin', backref='user', lazy='dynamic')
     verified = db.Column(db.Boolean)
+    schedule_verified = db.Column(db.Boolean)
+    monday = db.Column(db.Boolean)
+    tuesday = db.Column(db.Boolean)
+    wednesday = db.Column(db.Boolean)
+    thursday = db.Column(db.Boolean)
+    friday = db.Column(db.Boolean)
+    saturday = db.Column(db.Boolean)
+    sunday = db.Column(db.Boolean)
 
     def __init__(self, firstname, lastname, email, password):
         self.firstname = firstname.title()
@@ -25,6 +33,12 @@ class User(db.Model):
         self.creation_timestamp = datetime.datetime.utcnow()
         self.checkedin = False
         self.verified = False
+        self.schedule_verified = False
+        self.monday = False
+        self.tuesday = False
+        self.wednesday = False
+        self.thursday = False
+        self.friday = False
 
     def is_active(self):
         """True, as all users are active."""
