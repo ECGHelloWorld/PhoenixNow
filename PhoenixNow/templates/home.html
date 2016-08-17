@@ -21,23 +21,23 @@
 <form method=post action="{{ url_for('regular.schedule') }}">
     {{ form.hidden_tag() }}
     <div class="row">
-    <div class="col-xs-2 col-xs-offset-1">
+    <div class="col-sm-2 col-sm-offset-1">
         {{ schedule_form.monday.label }}
         {{ schedule_form.monday(class_="btn btn default", checked=user.monday) }}
     </div>
-    <div class="col-xs-2">
+    <div class="col-sm-2">
         {{ schedule_form.tuesday.label }}
         {{ schedule_form.tuesday(class_="btn btn default", checked=user.tuesday) }}
     </div>
-    <div class="col-xs-2">
+    <div class="col-sm-2">
         {{ schedule_form.wednesday.label }}
         {{ schedule_form.wednesday(class_="btn btn default", checked=user.wednesday) }}
     </div>
-    <div class="col-xs-2">
+    <div class="col-sm-2">
         {{ schedule_form.thursday.label }}
         {{ schedule_form.thursday(class_="btn btn default", checked=user.thursday) }}
     </div>
-    <div class="col-xs-2">
+    <div class="col-sm-2">
         {{ schedule_form.friday.label }}
         {{ schedule_form.friday(class_="btn btn default", checked=user.friday) }}
     </div>
