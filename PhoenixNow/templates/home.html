@@ -3,15 +3,46 @@
 {% block content %}
 
 {% if not user.checkedin %}
-  <h2>Welcome to PhoenixNow<h2>
+<div class="row">
+  <h2>Welcome to PhoenixNow</h2>
   <form action = "{{ url_for('regular.checkin') }}">
       <div class="form-group">
   {{ form.checkin(class_="btn btn-default") }}
     </div>
   </form>
+</div>
 {% else %}
-<h4> Checked In! </h4>
+<div class="row">
+<h4>Checked In!</h4>
+</div>
 {% endif %}
+<div class="row">
+<h2>Enter your schedule for the semester</h2>
+<form method=post action="{{ url_for('regular.schedule') }}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ schedule_form.monday.label }}
+        {{ schedule_form.monday(class_="btn btn default", checked=user.monday) }}
+    </div>
+    <div class="form-group">
+        {{ schedule_form.tuesday.label }}
+        {{ schedule_form.tuesday(class_="btn btn default", checked=user.tuesday) }}
+    </div>
+    <div class="form-group">
+        {{ schedule_form.wednesday.label }}
+        {{ schedule_form.wednesday(class_="btn btn default", checked=user.wednesday) }}
+    </div>
+    <div class="form-group">
+        {{ schedule_form.thursday.label }}
+        {{ schedule_form.thursday(class_="btn btn default", checked=user.thursday) }}
+    </div>
+    <div class="form-group">
+        {{ schedule_form.friday.label }}
+        {{ schedule_form.friday(class_="btn btn default", checked=user.friday) }}
+    </div>
+    {{ schedule_form.submit(class_="btn btn-default") }}
+</form>
+</div>
 {% endblock %}  
 
 {% else %}

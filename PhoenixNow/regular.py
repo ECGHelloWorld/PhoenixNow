@@ -1,6 +1,6 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint
-from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm
+from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from flask_mail import Message
 from PhoenixNow.model import db, User, Checkin
@@ -14,10 +14,29 @@ regular = Blueprint('regular', __name__, template_folder='templates', static_fol
 @regular.route('/')
 def home():
   form = CheckinForm()
+  schedule_form = ScheduleForm()
 
   user = current_user
 
-  return render_template('home.html', user=user, form=form)
+  return render_template('home.html', user=user, form=form, schedule_form=schedule_form)
+
+@regular.route('/schedule', methods=['POST'])
+@login_required
+def schedule():
+    form = ScheduleForm()
+
+    user = current_user
+
+    if form.validate_on_submit():
+        user.monday = form.monday.data
+        user.tuesday = form.tuesday.data
+        user.wednesday = form.wednesday.data
+        user.thursday = form.thursday.data
+        user.friday = form.friday.data
+        db.session.commit()
+        flash("Your schedule has been updated.")
+
+    return redirect(url_for('regular.home'))
 
 @regular.route('/signup', methods=['GET', 'POST'])
 @login_notrequired

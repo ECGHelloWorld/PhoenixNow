@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import SubmitField, TextAreaField, StringField, PasswordField
+from wtforms import SubmitField, TextAreaField, StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email
 from PhoenixNow.model import db, User
 
@@ -58,3 +58,11 @@ class ContactForm(Form):
 
 class CheckinForm(Form):
   checkin = SubmitField("Check in for the day.")
+
+class ScheduleForm(Form):
+  monday = BooleanField("Monday")
+  tuesday = BooleanField("Tuesday")
+  wednesday = BooleanField("Wednesday")
+  thursday = BooleanField("Thursday")
+  friday = BooleanField("Friday")
+  submit = SubmitField("Submit schedule.")
