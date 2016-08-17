@@ -30,8 +30,8 @@
 
 
 <div class="container">
-   <div class="center-home" style="display:none;">
-   <img src="http://p2cdn4static.sharpschool.com/UserFiles/Servers/Server_995699/Image/Master%20Images/School%20Logos/FHU_Phoenix.gif" alt="some_text" style="width:100px;height:100px;">
+   <div class="center-home">
+   <img src="http://p2cdn4static.sharpschool.com/UserFiles/Servers/Server_995699/Image/Master%20Images/School%20Logos/FHU_Phoenix.gif" alt="cool phoenix" style="width:100px;height:100px;">
    <h2>Welcome to PhoenixNow<h2>
    <a href="{{ url_for('regular.signin') }}" class="btn btn-default">Signin</a>
    <a href="{{ url_for('regular.signup') }}" class="btn btn-default">Signup</a>
@@ -44,7 +44,19 @@
 
 <script>
 $(document).ready(function(){
+    $(".center-home").css("display", "none");
     $(".center-home").fadeIn(3000)
+
+    $(".btn").click(function(event){
+        event.preventDefault();
+        linkLocation = this.href;
+        $("body").fadeOut(1000, redirectPage);      
+    });
+
+    function redirectPage() {
+        window.location = linkLocation;
+    }
+
 });
 </script>
 
