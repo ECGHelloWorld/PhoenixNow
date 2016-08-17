@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div>
+
+      <h2>{{ user.firstname }} {{ user.lastname }}</h2>
+
+    <div>
+    <table class="table table-striped table-responsive">
+
+    <tr>
+    <th>#</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Email</th>
+    <th>Grade</th>
+    <th>Verified</th>
+    <th>Schedule Verified</th>
+    <th>Checked In</th>
+    <th>Creation</th>
+    <th>Checkins</th>
+    </tr>
+
+    <tr>
+    <td>{{ user.id }}</td>
+    <td>{{ user.firstname }}</td>
+    <td>{{ user.lastname }}</td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.grade }}</td>
+    <td>{{ user.verified }}</td>
+    <td>{{ user.schedule_verified }}</td>
+    <td>{{ user.checkedin }}</td>
+    <td>{{ user.creation_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+    <td>{{ user.checkins.count() }}</td>
+    </tr>
+
+    </table>
+
+    <h2>Schedule</h2>
+
+    <table class="table table-striped table-responsive">
+        <tr>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Verified</th>
+            <th>Verify?</th>
+        </tr>
+        <tr>
+            <td>{{ user.monday }}</td>
+            <td>{{ user.tuesday }}</td>
+            <td>{{ user.wednesday }}</td>
+            <td>{{ user.thursday }}</td>
+            <td>{{ user.friday }}</td>
+            <td>{{ user.schedule_verified }}</td>
+            <td><a href="/admin/user/{{ user.id }}/verify_schedule">Toggle Verification</a></td>
+        </tr>
+    </table>
+
+
+    <h2>Check-ins</h2>
+    <table class="table table-striped table-responsive">
+
+    <tr>
+    <th>Timestamp</th>
+    <th>Name</th>
+    </tr>
+    
+    {% for checkin in user.checkins %}    
+    <tr>
+    <td> {{ checkin.checkin_timestamp.strftime('%Y-%m-%d %H:%M:%S') }} </td>
+    <td> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>
+    </tr>
+    {% endfor %}
+
+    </table>
+    </div>
+  </div>
+{% endblock %}
