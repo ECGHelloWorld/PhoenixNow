@@ -46,7 +46,7 @@ def signup():
   
   if request.method == 'POST':
     if form.validate_on_submit():
-      newuser = User(form.firstname.data, form.lastname.data, form.email.data, form.password.data)
+      newuser = User(form.firstname.data, form.lastname.data, request.form.get('grade'), form.email.data, form.password.data)
       db.session.add(newuser)
       db.session.commit()
       token = generate_confirmation_token(newuser.email)
@@ -73,7 +73,7 @@ def signin():
   
   if request.method == 'POST':
     if form.validate_on_submit():
-      user = User.query.filter_by(email = form.email.data).first()
+      user = User.query.filter_by(email = form.email.data.lower()).first()
       login_user(user)
       return redirect(url_for('regular.home'))
     else:
