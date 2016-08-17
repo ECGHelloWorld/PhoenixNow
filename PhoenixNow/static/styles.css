@@ -13,3 +13,14 @@ body {
 .table {
     text-align: left;
 }
+.row {
+  margin-bottom: 20px;
+}
+
+.form-control {
+  text-align: center;
+}
+
+.form-control#grade {
+  padding-left: 47%;
+}
