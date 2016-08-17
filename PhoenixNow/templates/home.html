@@ -14,13 +14,11 @@
 
 
 <div class="container">
-   <div class="js_hidden">
-   <div class="center-home">
+   <div class="center-home" style=display:none;>
    <img src="http://p2cdn4static.sharpschool.com/UserFiles/Servers/Server_995699/Image/Master%20Images/School%20Logos/FHU_Phoenix.gif" alt="cool phoenix" style="width:100px;height:100px;">
    <h2>Welcome to PhoenixNow<h2>
    <a href="/signin" class="btn btn-default">Signin</a>
    <a href="/signup" class="btn btn-default">Signup</a>
-   </div>
    </div>
 </div>
 
@@ -29,12 +27,8 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <script>
-document.write('<style>.js_hidden{display:none;}</style>');
-</script>
-
-<script>
 $(document).ready(function(){
-    $(".js_hidden").fadeIn(3000)
+    $(".center-home").fadeIn(3000)
 
     $(".btn").click(function(event){
         event.preventDefault();
