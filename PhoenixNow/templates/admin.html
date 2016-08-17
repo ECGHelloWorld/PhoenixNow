@@ -2,7 +2,7 @@
 {% block content %}
   <div>
 
-    <h2>User</h2>
+    <h2>Users</h2>
 
     <div>
     <table class="table table-striped table-responsive">
@@ -22,16 +22,16 @@
 
     {% for user in users %}    
     <tr>
-    <td>{{ user.id }}</td>
-    <td>{{ user.firstname }}</td>
-    <td>{{ user.lastname }}</td>
-    <td>{{ user.email }}</td>
-    <td>{{ user.grade }}</td>
-    <td>{{ user.verified }}</td>
-    <td>{{ user.schedule_verified }}</td>
-    <td>{{ user.checkedin }}</td>
-    <td>{{ user.creation_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-    <td>{{ user.checkins.count() }}</td>
+        <td><a href="/admin/user/{{user.id}}">{{ user.id }}</a></td>
+        <td><a href="/admin/user/{{user.id}}">{{ user.firstname }}</a></td>
+        <td><a href="/admin/user/{{user.id}}">{{ user.lastname }}</a></td>
+        <td><a href="/admin/user/{{user.id}}">{{ user.email }}</a></td>
+        <td><a href="/admin/user/{{user.id}}">{{ user.grade }}</a></td>
+        <td><a href="/admin/user/{{user.id}}">{{ user.verified }}</a></td>
+        <td><a href="/admin/user/{{user.id}}">{{ user.schedule_verified }}</a></td>
+        <td><a href="/admin/user/{{user.id}}">{{ user.checkedin }}</a></td>
+        <td><a href="/admin/user/{{user.id}}">{{ user.creation_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</a></td>
+        <td><a href="/admin/user/{{user.id}}">{{ user.checkins.count() }}</a></td>
     </tr>
     {% endfor %}
 
@@ -45,13 +45,11 @@
     <th>Name</th>
     </tr>
     
-    {% for user in users %}    
-    {% for checkin in user.checkins %}    
+    {% for checkin in checkins %}    
     <tr>
     <td> {{ checkin.checkin_timestamp.strftime('%Y-%m-%d %H:%M:%S') }} </td>
     <td> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>
     </tr>
-    {% endfor %}
     {% endfor %}
 
     </table>
