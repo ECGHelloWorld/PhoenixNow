@@ -16,6 +16,13 @@
       {{ message }}
     </div>
   {% endfor %}
+
+  {% for message in form.grade.errors %}
+    <div class="alert alert-warning alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      {{ message }}
+    </div>
+  {% endfor %}
    
   {% for message in form.email.errors %}
     <div class="alert alert-warning alert-dismissible" role="alert">
@@ -42,6 +49,11 @@
   <div class="form-group">
     {{ form.lastname.label }}
     {{ form.lastname(class_="form-control") }}
+  </div>
+
+  <div class="form-group">
+    {{ form.grade.label }}
+    {{ form.grade(class_="form-control") }}
   </div>
      
   <div class="form-group">

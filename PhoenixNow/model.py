@@ -9,6 +9,7 @@ class User(db.Model):
     firstname = db.Column(db.String(100))
     lastname = db.Column(db.String(100))
     email = db.Column(db.String(120), unique=True)
+    grade = db.Column(db.Integer)
     pw_hash = db.Column(db.String)
     salt = db.Column(db.String)
     checkedin = db.Column(db.Boolean)
@@ -24,10 +25,11 @@ class User(db.Model):
     saturday = db.Column(db.Boolean)
     sunday = db.Column(db.Boolean)
 
-    def __init__(self, firstname, lastname, email, password):
+    def __init__(self, firstname, lastname, grade, email, password):
         self.firstname = firstname.title()
         self.lastname = lastname.title()
         self.email = email
+        self.grade = grade
         self.salt = bcrypt.gensalt()
         self.pw_hash = bcrypt.hashpw(password.encode('utf-8'), self.salt)
         self.creation_timestamp = datetime.datetime.utcnow()
@@ -59,7 +61,7 @@ class User(db.Model):
         return False
 
     def check_password(self, password):
-        return self.pw_hash == bcrypt.hashpw(password.encode('utf-8'), str(self.salt))
+        return self.pw_hash == bcrypt.hashpw(password.encode('utf-8'), self.salt)
 
     def is_admin(self):
         if self.email in ['23alic@gmail.com', 'daynb@guilford.edu']:
