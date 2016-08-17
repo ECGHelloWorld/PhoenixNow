@@ -1,4 +1,5 @@
 from flask_mail import Mail
+from PhoenixNow.config import ProductionConfig
 
 mail = Mail()
 
@@ -21,3 +22,13 @@ def confirm_token(token, expiration=3600):
     except:
         return False
     return email
+
+def send_email(to, subject, template):
+    msg = Message(
+        subject,
+        recipients=[to],
+        html=template,
+        sender=ProductionConfig.MAIL_DEFAULT_SENDER
+
+    )
+    mail.send(msg)

@@ -1,9 +1,9 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint
 from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm
-from PhoenixNow.mail import generate_confirmation_token, confirm_token
+from PhoenixNow.mail import generate_confirmation_token, confirm_token,
+send_email
 from flask_mail import Message
-from PhoenixNow.email import send_email
 from PhoenixNow.model import db, User, Checkin
 from flask_login import login_required, login_user, logout_user, current_user
 import datetime
