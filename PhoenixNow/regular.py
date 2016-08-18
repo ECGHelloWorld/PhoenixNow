@@ -137,7 +137,7 @@ def resend_verification():
 
 @regular.route('/checkin')
 @login_required
-#@check_verified
+@check_verified
 def checkin():
     user = current_user
     checkin_user(user)
