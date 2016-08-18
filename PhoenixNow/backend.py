@@ -12,6 +12,12 @@ def generate_token(result):
     result['token'] = "Bearer " + token.decode('utf-8')
     return result
 
+def check_input(res, *args):
+    if all (k in res for k in args):
+        return
+    else:
+        raise InvalidUsage("You didn't input all the required information", status_code=400)
+
 class InvalidUsage(Exception):
     status_code = 400
 
@@ -36,12 +42,10 @@ def handle_invalid_usage(error):
 @backend.route('/register', methods=['POST'])
 def register():
     res = request.get_json(silent=True)
-    if all (k in res for k in ('firstname', 'lastname', 'grade', 'email', 'password')):
-        user = User.query.filter_by(email=res['email']).first()
-        if user is None:
-            newuser = create_user(res['firstname'], res['lastname'], res['grade'], res['email'], res['password'])
-            return jsonify(generate_token({"result": "success", "action": "register", "user": newuser.id}))
-        else:
-            raise InvalidUsage("This user has already been created", status_code=400)
+    check_input(res, 'firstname', 'lastname', 'grade', 'email', 'password')
+    user = User.query.filter_by(email=res['email']).first()
+    if user is None:
+        newuser = create_user(res['firstname'], res['lastname'], res['grade'], res['email'], res['password'])
+        return jsonify(generate_token({"result": "success", "action": "register", "user": newuser.id}))
     else:
-        raise InvalidUsage("You didn't input all the required information", status_code=400)
+        raise InvalidUsage("This user has already been created", status_code=400)
