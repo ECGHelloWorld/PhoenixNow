@@ -77,6 +77,9 @@ def login():
 def checkin():
     res = check_token(check_input(request.get_json(silent=True), 'lat', 'lon'))
 
+    lon = res['lon']
+    lat = res['lat']
+
     if lon >= -79.8921061:
         if lon <= -79.8833942:
             if lat <= 36.0984408:
