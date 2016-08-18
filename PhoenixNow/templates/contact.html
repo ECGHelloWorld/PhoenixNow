@@ -34,48 +34,40 @@
     </div>
 	{% endfor %}
 
+    <div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
 	<form action = "{{ url_for('regular.contact') }}" method=post>
 
 	{{ form.hidden_tag() }}
 	
-    <div class="row">
-    <div class="col-sm-4"></div>
-    <div class="col-sm-4">
+
+        <div class="form-group">
 	{{ form.name.label }}
 	{{ form.name(class_="form-control") }}
-    </div>
-    <div class="col-sm-4"></div>
-    </div>
+        </div>
 
-    <div class="row">
-    <div class="col-sm-4"></div>
-    <div class="col-sm-4">
+        <div class="form-group">
 	{{ form.email.label }}
 	{{ form.email(class_="form-control") }}
-    </div>
-    <div class="col-sm-4"></div>
-    </div>
+        </div>
 
-    <div class="row">
-    <div class="col-sm-4"></div>	
-    <div class="col-sm-4">
+        <div class="form-group">
 	{{ form.subject.label }}
 	{{ form.subject(class_="form-control") }}
-    </div>
-    <div class="col-sm-4"></div>
-    </div>
+        </div>
 
-    <div class="row">
-    <div class="col-sm-4"></div>	
-    <div class="col-sm-4">
+        <div class="form-group">
 	{{ form.message.label }}
 	{{ form.message(class_="form-control") }}
-    </div>
-    <div class="col-sm-4"></div>
-    </div>
+        </div>
 
 	{{ form.submit(class_="btn btn-default") }}
 	</form>
+
+    </div>
+    <div class="col-sm-4"></div>
+    </div>
 
 	{% endif %}
 {% endblock %}
