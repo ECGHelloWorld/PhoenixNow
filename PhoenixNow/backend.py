@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, response
+from flask import Blueprint, jsonify, request
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from PhoenixNow.user import create_user
 from flask_login import login_required, login_user, logout_user
@@ -6,7 +6,7 @@ from PhoenixNow.model import User, db
 
 backend = Blueprint('backend', __name__, template_folder='templates', static_folder='static')
 
-def generate_token(result)
+def generate_token(result):
     token = jwt.encode(result, 'habberdashery212', algorithm='HS512')
     result['token'] = "Bearer " + token.decode('utf-8')
     return result
@@ -32,13 +32,15 @@ def handle_invalid_usage(error):
     response.status_code = error.status_code
     return response
 
-@backend.route('/register')
+@backend.route('/register', methods=['POST'])
 def register():
-    res = response.get_json(silent=True)
-    if 'firstname', 'lastname', 'grade', 'email', 'password' in res: 
+    res = request.get_json(silent=True)
+    if all (k in res for k in ('firstname', 'lastname', 'grade', 'email', 'password')):
         user = User.query.filter_by(email=res['email'])
         if user is None:
             newuser = create_user(res['firstname'], res['lastname'], res['grade'], res['email'], res['password'])
-            return jsonify(generate_token({"result": "success", "action": "register", "user": newuser.id})
+            return jsonify(generate_token({"result": "success", "action": "register", "user": newuser.id}))
+        else:
+            raise InvalidUsage("This user has already been created", status_code=400)
     else:
         raise InvalidUsage("You didn't input all the required information", status_code=400)
