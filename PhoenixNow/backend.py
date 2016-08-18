@@ -71,7 +71,7 @@ def login():
         raise InvalidUsage("This user has not been created", status_code=400)
     else:
         if user.check_password(res['password']):
-            return jsonify(generate_token({"result": "success", "action": "login", "user": newuser.id}))
+            return jsonify(generate_token({"result": "success", "action": "login", "user": user.id}))
 
 @backend.route('/checkin', methods=['POST'])
 def checkin():
