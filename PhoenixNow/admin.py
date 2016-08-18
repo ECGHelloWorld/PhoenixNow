@@ -36,5 +36,6 @@ def verify_schedule(user_id):
 @admin_required
 def grade(grade):
   users = User.query.filter_by(grade=grade).all()
-  checkins = Checkin.query.filter(Checkin.checkin_timestamp >= datetime.date.today()).all()
+  checkins = Checkin.query.filter(Checkin.checkin_timestamp >=
+          datetime.date.today(), Checkin.user.has(grade=grade)).all()
   return render_template('grade.html', users=users,user=user,checkins=checkins,grade=grade)
