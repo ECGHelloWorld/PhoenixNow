@@ -90,6 +90,43 @@ def checkin():
                         raise InvalidUsage("This user is not verified", status_code=400)
                     else:
                         checkin_user(user)
-                        return jsonify(generate_token({"result": "success", "action": "checkin", "email": user.email}))
+                        return jsonify({"result": "success", "action": "checkin", token: res['token']})
 
     raise InvalidUsage("The user is not at Guilford")
+
+@backend.route('/schedule', methods=['GET', 'POST'])
+def schedule():
+    if request.method == 'POST':
+        res = check_token(check_input(request.get_json(silent=True), 'monday', 'tuesday', 'thursday', 'friday', 'saturday', 'sunday'))
+        user = res['user']
+        user.monday = res['monday']
+        user.tuesday = res['tuesday']
+        user.wednesday = res['wednesday']
+        user.thursday = res['thursday']
+        user.friday = res['friday']
+        db.session.commit()
+        return jsonify({
+            "action": "update schedule",
+            "result": "success",
+            'monday': user.monday,
+            'tuesday': user.tuesday, 
+            'wednesday': user.wednesday, 
+            'thursday': user.thursday, 
+            'friday': user.friday 
+            'verified': user.schedule_verified
+        }
+    elif request.method == "GET":
+        res = check_token(check_input(request.get_json(silent=True)))
+        user = res['user']
+        return jsonify({
+            "action": "get schedule",
+            "result": "success",
+            'monday': user.monday,
+            'tuesday': user.tuesday, 
+            'wednesday': user.wednesday, 
+            'thursday': user.thursday, 
+            'friday': user.friday 
+            'verified': user.schedule_verified
+        }
+
+        
