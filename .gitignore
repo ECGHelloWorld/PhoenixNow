@@ -94,4 +94,4 @@ ENV/
 *.html~
 *.css~
 
-data.db
+*.db
