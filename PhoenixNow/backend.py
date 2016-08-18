@@ -12,9 +12,23 @@ def generate_token(result):
     result['token'] = "Bearer " + token.decode('utf-8')
     return result
 
+def check_token(res):
+    if 'token' in res:
+        try:
+            token = res['token']
+            token = token.split()
+            decoded_token = jwt.decode(token[1], 'habberdashery212', algorithm='HS512', verify=False)
+            res['user'] = User.query.get(decoded_token['user'])
+            return res
+
+        except jwt.exceptions.DecodeError:
+            raise InvalidUsage("Your token was invalid", status_code=400)
+    else:
+        raise InvalidUsage("You didn't input all the required information", status_code=400)
+
 def check_input(res, *args):
     if all (k in res for k in args):
-        return
+        return res
     else:
         raise InvalidUsage("You didn't input all the required information", status_code=400)
 
@@ -41,8 +55,7 @@ def handle_invalid_usage(error):
 
 @backend.route('/register', methods=['POST'])
 def register():
-    res = request.get_json(silent=True)
-    check_input(res, 'firstname', 'lastname', 'grade', 'email', 'password')
+    res = check_input(request.get_json(silent=True), 'firstname', 'lastname', 'grade', 'email', 'password')
     user = User.query.filter_by(email=res['email']).first()
     if user is None:
         newuser = create_user(res['firstname'], res['lastname'], res['grade'], res['email'], res['password'])
@@ -52,9 +65,8 @@ def register():
 
 @backend.route('/checkin', methods=['POST'])
 def checkin():
-    res = request.get_json(silent=True)
-    check_input(res, 'email')
-    user = User.query.filter_by(email=res['email']).first()
+    res = check_token(check_input(request.get_json(silent=True)))
+    user = res['user']
     if user is None:
         raise InvalidUsage("This user does not exist", status_code=400)
     if user.verified == False:
@@ -62,4 +74,3 @@ def checkin():
     else:
         checkin_user(user)
         return jsonify(generate_token({"result": "success", "action": "checkin", "email": user.email}))
-
