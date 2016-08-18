@@ -36,7 +36,7 @@ def handle_invalid_usage(error):
 def register():
     res = request.get_json(silent=True)
     if all (k in res for k in ('firstname', 'lastname', 'grade', 'email', 'password')):
-        user = User.query.filter_by(email=res['email'])
+        user = User.query.filter_by(email=res['email']).first()
         if user is None:
             newuser = create_user(res['firstname'], res['lastname'], res['grade'], res['email'], res['password'])
             return jsonify(generate_token({"result": "success", "action": "register", "user": newuser.id}))
