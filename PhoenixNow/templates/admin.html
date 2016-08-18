@@ -30,7 +30,7 @@
         <td><a href="/admin/user/{{user.id}}">{{ user.verified }}</a></td>
         <td><a href="/admin/user/{{user.id}}">{{ user.schedule_verified }}</a></td>
         <td><a href="/admin/user/{{user.id}}">{{ user.checkedin }}</a></td>
-        <td><a href="/admin/user/{{user.id}}">{{ user.creation_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</a></td>
+        <td><a href="/admin/user/{{user.id}}">{{ user.creation_timestamp.strftime('%x %X%p') }}</a></td>
         <td><a href="/admin/user/{{user.id}}">{{ user.checkins.count() }}</a></td>
     </tr>
     {% endfor %}
@@ -47,7 +47,7 @@
     
     {% for checkin in checkins %}    
     <tr>
-    <td> {{ checkin.checkin_timestamp.strftime('%Y-%m-%d %H:%M:%S') }} </td>
+    <td> {{ checkin.checkin_timestamp.strftime('%x %X%p') }} </td>
     <td> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>
     </tr>
     {% endfor %}

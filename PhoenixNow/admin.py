@@ -2,6 +2,7 @@ from flask import Flask, render_template, Blueprint, redirect, url_for, flash
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
 from PhoenixNow.model import db, User, Checkin
 from flask_login import login_required, login_user, logout_user
+import datetime
 
 admin = Blueprint('admin', __name__, template_folder='templates', static_folder='static')
 
@@ -9,9 +10,9 @@ admin = Blueprint('admin', __name__, template_folder='templates', static_folder=
 @login_required
 @admin_required
 def home():
-  users = User.query.all()
-  checkins = Checkin.query.all()
-  return render_template('admin.html', users=users, checkins=checkins)
+    users = User.query.all()
+    checkins = Checkin.query.filter(Checkin.checkin_timestamp >= datetime.date.today()).all()
+    return render_template('admin.html', users=users, checkins=checkins)
 
 @admin.route('/user/<int:user_id>')
 @login_required
