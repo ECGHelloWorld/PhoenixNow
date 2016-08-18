@@ -1,7 +1,7 @@
 import jwt
 from flask import Blueprint, jsonify, request
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
-from PhoenixNow.user import create_user
+from PhoenixNow.user import create_user, checkin_user
 from flask_login import login_required, login_user, logout_user
 from PhoenixNow.model import User, db
 
@@ -49,3 +49,17 @@ def register():
         return jsonify(generate_token({"result": "success", "action": "register", "user": newuser.id}))
     else:
         raise InvalidUsage("This user has already been created", status_code=400)
+
+@backend.route('/checkin', methods=['POST'])
+def checkin():
+    res = request.get_json(silent=True)
+    check_input(res, 'email')
+    user = User.query.filter_by(email=res['email']).first()
+    if user is None:
+        raise InvalidUsage("This user does not exist", status_code=400)
+    if user.verified == False:
+        raise InvalidUsage("This user is not verified", status_code=400)
+    else:
+        checkin_user(user)
+        return jsonify(generate_token({"result": "success", "action": "checkin", "email": user.email}))
+

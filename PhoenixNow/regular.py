@@ -1,5 +1,5 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
-from PhoenixNow.user import create_user
+from PhoenixNow.user import create_user, checkin_user
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint
 from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
@@ -137,13 +137,9 @@ def resend_verification():
 
 @regular.route('/checkin')
 @login_required
-@check_verified
+#@check_verified
 def checkin():
     user = current_user
-    checkinObject = Checkin()
-    user.checkins.append(checkinObject)
-    db.session.add(checkinObject)
-    user.checkedin = True
-    db.session.commit()
+    checkin_user(user)
     flash('Successfully checked in')
     return redirect(url_for('regular.home'))
