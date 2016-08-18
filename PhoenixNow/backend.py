@@ -63,15 +63,27 @@ def register():
     else:
         raise InvalidUsage("This user has already been created", status_code=400)
 
+@backend.route('/login', methods=['POST'])
+def login():
+    res = check_input(request.get_json(silent=True), 'email', 'password')
+    user = User.query.filter_by(email=res['email'].lower()).first()
+    if user is None:
+        raise InvalidUsage("This user has not been created", status_code=400)
+    else:
+        if user.check_password(res['password']):
+            return jsonify(generate_token({"result": "success", "action": "login", "user": newuser.id}))
+
 @backend.route('/checkin', methods=['POST'])
 def checkin():
-    res = check_token(check_input(request.get_json(silent=True, 'lat', 'lon')))
+    res = check_token(check_input(request.get_json(silent=True), 'lat', 'lon'))
 
     if lon >= -79.8921061:
         if lon <= -79.8833942:
             if lat <= 36.0984408:
                 if lat >= 36.0903956:
                     user = res['user']
+                    if user.checkedin:
+                        raise InvalidUsage("You have already been checked in", status_code=400)
                     if user is None:
                         raise InvalidUsage("This user does not exist", status_code=400)
                     if user.verified == False:
