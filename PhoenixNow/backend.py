@@ -1,3 +1,4 @@
+import jwt
 from flask import Blueprint, jsonify, request
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from PhoenixNow.user import create_user
