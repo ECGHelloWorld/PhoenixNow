@@ -116,7 +116,8 @@ def schedule():
             'wednesday': user.wednesday, 
             'thursday': user.thursday, 
             'friday': user.friday ,
-            'verified': user.schedule_verified
+            'verified': user.schedule_verified,
+            'token': res['token']
         })
     elif request.method == "GET":
         res = check_token(check_input(request.get_json(silent=True)))
@@ -129,7 +130,8 @@ def schedule():
             'wednesday': user.wednesday, 
             'thursday': user.thursday, 
             'friday': user.friday,
-            'verified': user.schedule_verified
+            'verified': user.schedule_verified,
+            'token': res['token']
         })
 
         
