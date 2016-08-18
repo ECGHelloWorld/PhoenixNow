@@ -112,7 +112,7 @@ def schedule():
             'tuesday': user.tuesday, 
             'wednesday': user.wednesday, 
             'thursday': user.thursday, 
-            'friday': user.friday 
+            'friday': user.friday ,
             'verified': user.schedule_verified
         }
     elif request.method == "GET":
@@ -125,7 +125,7 @@ def schedule():
             'tuesday': user.tuesday, 
             'wednesday': user.wednesday, 
             'thursday': user.thursday, 
-            'friday': user.friday 
+            'friday': user.friday,
             'verified': user.schedule_verified
         }
 
