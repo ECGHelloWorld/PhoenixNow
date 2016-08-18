@@ -18,33 +18,52 @@
 {% endif %}
 <div class="row">
 <h2>Enter your schedule for the semester</h2>
+</div>
+
+<div class="row">
+
 <form method=post action="{{ url_for('regular.schedule') }}">
-    {{ form.hidden_tag() }}
-    <div class="row">
-    <div class="col-sm-2 col-sm-offset-1">
+        {{ form.hidden_tag() }}
+        
+        <div class="col-sm-2 col-sm-offset-1">
+        <div class="form-group">
         {{ schedule_form.monday.label }}
         {{ schedule_form.monday(class_="btn btn default", checked=user.monday) }}
-    </div>
-    <div class="col-sm-2">
+        </div>
+        </div>
+
+        <div class="col-sm-2">
+        <div class="form-group">
         {{ schedule_form.tuesday.label }}
         {{ schedule_form.tuesday(class_="btn btn default", checked=user.tuesday) }}
-    </div>
-    <div class="col-sm-2">
+        </div>
+        </div>
+
+        <div class="col-sm-2">
+        <div class="form-group">
         {{ schedule_form.wednesday.label }}
         {{ schedule_form.wednesday(class_="btn btn default", checked=user.wednesday) }}
-    </div>
-    <div class="col-sm-2">
+        </div>
+        </div>
+
+        <div class="col-sm-2">
+        <div class="form-group">
         {{ schedule_form.thursday.label }}
         {{ schedule_form.thursday(class_="btn btn default", checked=user.thursday) }}
-    </div>
-    <div class="col-sm-2">
+        </div>
+        </div>
+
+        <div class="col-sm-2">
+        <div class="form-group">
         {{ schedule_form.friday.label }}
         {{ schedule_form.friday(class_="btn btn default", checked=user.friday) }}
-    </div>
-    </div>
+        </div>
+        </div>
+
 
     {{ schedule_form.submit(class_="btn btn-default") }}
 </form>
+
 </div>
 {% endblock %}  
 
