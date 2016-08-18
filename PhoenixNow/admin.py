@@ -30,3 +30,11 @@ def verify_schedule(user_id):
   db.session.commit()
   flash("User schedule verified")
   return redirect(url_for('admin.user', user_id=user_id))
+
+@admin.route('/grade/<int:grade>')
+@login_required
+@admin_required
+def grade(grade):
+  users = User.query.filter_by(grade=grade).all()
+  checkins = Checkin.query.filter(Checkin.checkin_timestamp >= datetime.date.today()).all()
+  return render_template('grade.html', users=users,user=user,checkins=checkins,grade=grade)
