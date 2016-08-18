@@ -45,7 +45,7 @@
     <th>Name</th>
     </tr>
     
-    {% for checkin in users.checkins %}    
+    {% for checkin in checkins %}    
     <tr>
     <td> {{ checkin.checkin_timestamp.strftime('%Y-%m-%d %H:%M:%S') }} </td>
     <td> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>

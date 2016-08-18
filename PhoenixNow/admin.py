@@ -11,7 +11,7 @@ admin = Blueprint('admin', __name__, template_folder='templates', static_folder=
 def home():
   users = User.query.all()
   checkins = Checkin.query.all()
-  return render_template('admin.html', users=users)
+  return render_template('admin.html', users=users, checkins=checkins)
 
 @admin.route('/user/<int:user_id>')
 @login_required
