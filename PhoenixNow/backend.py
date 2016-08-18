@@ -72,6 +72,8 @@ def login():
     else:
         if user.check_password(res['password']):
             return jsonify(generate_token({"result": "success", "action": "login", "user": user.id}))
+        else:
+            raise InvalidUsage("The password provided was not correct", status_code=400)
 
 @backend.route('/checkin', methods=['POST'])
 def checkin():
