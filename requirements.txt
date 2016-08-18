@@ -21,3 +21,5 @@ Flask-Mail==0.9.1
 Flask-Login==0.3.2
 
 celery==3.1.23
+
+pyjwt==1.4.0

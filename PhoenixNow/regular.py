@@ -1,8 +1,8 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
+from PhoenixNow.user import create_user
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint
 from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
-from flask_mail import Message
 from PhoenixNow.model import db, User, Checkin
 from flask_login import login_required, login_user, logout_user, current_user
 import datetime
@@ -46,17 +46,10 @@ def signup():
   
   if request.method == 'POST':
     if form.validate_on_submit():
-      newuser = User(form.firstname.data, form.lastname.data, form.grade.data, form.email.data, form.password.data)
-      db.session.add(newuser)
-      db.session.commit()
-      token = generate_confirmation_token(newuser.email)
-      confirm_url = url_for('regular.verify_email', token=token, _external=True)
-      html = render_template('activate.html', confirm_url=confirm_url)
-      subject = "Please confirm your email"
-      send_email(newuser.email, subject, html)
-      flash('A verification email has been sent via email.', 'success')
+      user = create_user(form.firstname.data, form.lastname.data, form.grade.data, form.email.data, form.password.data)
+      login_user(user)
 
-      login_user(newuser)
+      flash('A verification email has been sent via email.', 'success')
       return redirect(url_for('regular.unverified'))
 
     else:   
