@@ -1,6 +1,6 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
 from PhoenixNow.user import create_user, checkin_user
-from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint
+from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint, request
 from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from PhoenixNow.model import db, User, Checkin
@@ -140,6 +140,9 @@ def resend_verification():
 @check_verified
 def checkin():
     user = current_user
-    checkin_user(user)
-    flash('Successfully checked in')
+    if request.remote_addr in ['192.168.1.1', '192.168.1.2']:
+        checkin_user(user)
+        flash('Successfully checked in')
+    else:
+        flash("You're not on the Guilford network")
     return redirect(url_for('regular.home'))
