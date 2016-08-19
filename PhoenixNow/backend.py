@@ -95,9 +95,10 @@ def checkin():
                         raise InvalidUsage("This user is not verified", status_code=400)
                     else:
                         checkin_user(user)
-                        return jsonify({"result": "success", "action": "checkin", token: res['token']})
+                        return jsonify({"result": "success", "action": "checkin", "token": res['token']})
 
-    raise InvalidUsage("The user is not at Guilford")
+    #raise InvalidUsage("The user is not at Guilford")
+    return jsonify({"lon": lon, "lat": lat})
 
 @backend.route('/schedule', methods=['GET', 'POST'])
 def schedule():
