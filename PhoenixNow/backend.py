@@ -103,7 +103,7 @@ def checkin():
 @backend.route('/schedule', methods=['GET', 'POST'])
 def schedule():
     if request.method == 'POST':
-        res = check_token(check_input(request.get_json(silent=True), 'monday', 'tuesday', 'thursday', 'friday', 'saturday', 'sunday'))
+        res = check_token(check_input(request.get_json(silent=True), 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'))
         user = res['user']
         user.monday = res['monday']
         user.tuesday = res['tuesday']
