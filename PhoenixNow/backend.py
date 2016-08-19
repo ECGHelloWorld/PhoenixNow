@@ -137,8 +137,8 @@ def schedule():
             'token': res['token']
         })
 
-@backend.route('/scheduleget', methods=['POST'])
-def schedule():
+@backend.route('/getschedule', methods=['POST'])
+def getschedule():
     res = check_token(check_input(request.get_json(silent=True)))
     user = res['user']
     return jsonify({
