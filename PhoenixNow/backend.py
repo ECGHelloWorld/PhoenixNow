@@ -97,8 +97,7 @@ def checkin():
                         checkin_user(user)
                         return jsonify({"result": "success", "action": "checkin", "token": res['token']})
 
-    #raise InvalidUsage("The user is not at Guilford")
-    return jsonify({"lon": lon, "lat": lat})
+    raise InvalidUsage("The user is not at Guilford")
 
 @backend.route('/schedule', methods=['GET', 'POST'])
 def schedule():
