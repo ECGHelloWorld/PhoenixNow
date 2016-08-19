@@ -11,6 +11,7 @@ admin = Blueprint('admin', __name__, template_folder='templates', static_folder=
 @admin_required
 def home():
     users = User.query.all()
+    users.sort(key=lambda user: (user.grade, user.lastname)) # sort by grade
     checkins = Checkin.query.filter(Checkin.checkin_timestamp >= datetime.date.today()).all()
     return render_template('admin.html', users=users, checkins=checkins)
 
@@ -36,6 +37,7 @@ def verify_schedule(user_id):
 @admin_required
 def grade(grade):
   users = User.query.filter_by(grade=grade).all()
+  users.sort(key=lambda user: user.lastname) # sort by last name
   checkins = Checkin.query.filter(Checkin.checkin_timestamp >=
           datetime.date.today(), Checkin.user.has(grade=grade)).all()
   return render_template('grade.html', users=users,user=user,checkins=checkins,grade=grade)
