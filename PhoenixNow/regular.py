@@ -102,12 +102,10 @@ def contact():
     return render_template('contact.html', form=form)
 
 @regular.route('/verify/<token>')
-@login_required
-@check_notverified
 def verify_email(token):
-  email = confirm_token(token)
-  user = current_user
-  if user.email == email:
+  tokenemail = confirm_token(token)
+  user = User.query.filter_by(email = tokenemail).first_or_404()
+  if user:
     user.verified = True
     db.session.commit()
     flash('You have confirmed your account. Thanks!', 'success')
