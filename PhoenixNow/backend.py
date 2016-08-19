@@ -136,3 +136,19 @@ def schedule():
             'verified': user.schedule_verified,
             'token': res['token']
         })
+
+@backend.route('/schedule', methods=['POST'])
+def schedule():
+    res = check_token(check_input(request.get_json(silent=True)))
+    user = res['user']
+    return jsonify({
+        "action": "get schedule",
+        "result": "success",
+        'monday': user.monday,
+        'tuesday': user.tuesday, 
+        'wednesday': user.wednesday, 
+        'thursday': user.thursday, 
+        'friday': user.friday,
+        'verified': user.schedule_verified,
+        'token': res['token']
+    })
