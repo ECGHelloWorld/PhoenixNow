@@ -136,5 +136,3 @@ def schedule():
             'verified': user.schedule_verified,
             'token': res['token']
         })
-
-        
