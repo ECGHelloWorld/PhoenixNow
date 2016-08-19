@@ -137,7 +137,7 @@ def schedule():
             'token': res['token']
         })
 
-@backend.route('/schedule', methods=['POST'])
+@backend.route('/scheduleget', methods=['POST'])
 def schedule():
     res = check_token(check_input(request.get_json(silent=True)))
     user = res['user']
