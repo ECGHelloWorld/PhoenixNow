@@ -18,6 +18,7 @@
 {% endif %}
 <div class="row">
 <h2>Enter your schedule for the semester</h2>
+<h3> Currently - {{ user.schedule }} </h3>
 </div>
 
 <div class="row">
@@ -28,35 +29,35 @@
         <div class="col-sm-2 col-sm-offset-1">
         <div class="form-group">
         {{ schedule_form.monday.label }}
-        {{ schedule_form.monday(class_="btn btn default", checked=user.monday) }}
+        {{ schedule_form.monday(class_="btn btn default") }}
         </div>
         </div>
 
         <div class="col-sm-2">
         <div class="form-group">
         {{ schedule_form.tuesday.label }}
-        {{ schedule_form.tuesday(class_="btn btn default", checked=user.tuesday) }}
+        {{ schedule_form.tuesday(class_="btn btn default") }}
         </div>
         </div>
 
         <div class="col-sm-2">
         <div class="form-group">
         {{ schedule_form.wednesday.label }}
-        {{ schedule_form.wednesday(class_="btn btn default", checked=user.wednesday) }}
+        {{ schedule_form.wednesday(class_="btn btn default") }}
         </div>
         </div>
 
         <div class="col-sm-2">
         <div class="form-group">
         {{ schedule_form.thursday.label }}
-        {{ schedule_form.thursday(class_="btn btn default", checked=user.thursday) }}
+        {{ schedule_form.thursday(class_="btn btn default") }}
         </div>
         </div>
 
         <div class="col-sm-2">
         <div class="form-group">
         {{ schedule_form.friday.label }}
-        {{ schedule_form.friday(class_="btn btn default", checked=user.friday) }}
+        {{ schedule_form.friday(class_="btn btn default") }}
         </div>
         </div>
 

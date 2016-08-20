@@ -39,20 +39,12 @@
 
     <table class="table table-striped table-responsive">
         <tr>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
+            <th>Schedule</th>
             <th>Verified</th>
             <th>Verify?</th>
         </tr>
         <tr>
-            <td>{{ user.monday }}</td>
-            <td>{{ user.tuesday }}</td>
-            <td>{{ user.wednesday }}</td>
-            <td>{{ user.thursday }}</td>
-            <td>{{ user.friday }}</td>
+            <td>{{ user.schedule }}</td>
             <td>{{ user.schedule_verified }}</td>
             <td><a href="/admin/user/{{ user.id }}/verify_schedule">Toggle Verification</a></td>
         </tr>
