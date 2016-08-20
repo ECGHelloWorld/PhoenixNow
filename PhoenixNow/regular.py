@@ -28,11 +28,17 @@ def schedule():
     user = current_user
 
     if form.validate_on_submit():
-        user.monday = form.monday.data
-        user.tuesday = form.tuesday.data
-        user.wednesday = form.wednesday.data
-        user.thursday = form.thursday.data
-        user.friday = form.friday.data
+        user.schedule = ""
+        if form.monday.data:
+            user.schedule = "M"
+        if form.tuesday.data:
+            user.schedule = "%s:T" % (user.schedule)
+        if form.wednesday.data:
+            user.schedule = "%s:W" % (user.schedule)
+        if form.thursday.data:
+            user.schedule = "%s:R" % (user.schedule)
+        if form.friday.data:
+            user.schedule = "%s:F" % (user.schedule)
         db.session.commit()
         flash("Your schedule has been updated.")
 
@@ -139,8 +145,10 @@ def resend_verification():
 def checkin():
     user = current_user
     if request.remote_addr in ['192.168.1.1', '192.168.1.2']:
-        checkin_user(user)
-        flash('Successfully checked in')
+        if checkin_user(user):
+            flash('Successfully checked in')
+        else:
+            flash('Unsuccessful, already checked in for today')
     else:
         flash("You're not on the Guilford network")
     return redirect(url_for('regular.home'))

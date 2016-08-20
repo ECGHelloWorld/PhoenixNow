@@ -13,16 +13,16 @@ class User(db.Model):
     pw_hash = db.Column(db.String)
     salt = db.Column(db.String)
     checkedin = db.Column(db.Boolean)
-    checkedin_days = db.String()
     creation_timestamp = db.Column(db.DateTime)
     checkins = db.relationship('Checkin', backref='user', lazy='dynamic')
     verified = db.Column(db.Boolean)
     schedule_verified = db.Column(db.Boolean)
-    monday = db.Column(db.Boolean)
-    tuesday = db.Column(db.Boolean)
-    wednesday = db.Column(db.Boolean)
-    thursday = db.Column(db.Boolean)
-    friday = db.Column(db.Boolean)
+    schedule = db.Column(db.String)
+    monday = db.Column(db.String)
+    tuesday = db.Column(db.String)
+    wednesday = db.Column(db.String)
+    thursday = db.Column(db.String)
+    friday = db.Column(db.String)
 
     def __init__(self, firstname, lastname, grade, email, password):
         self.firstname = firstname.title()
@@ -32,15 +32,10 @@ class User(db.Model):
         self.salt = bcrypt.gensalt()
         self.pw_hash = bcrypt.hashpw(password.encode('utf-8'), self.salt)
         self.creation_timestamp = datetime.datetime.utcnow()
-        self.checkedin_days = "none"
         self.checkedin = False
         self.verified = False
         self.schedule_verified = False
-        self.monday = False
-        self.tuesday = False
-        self.wednesday = False
-        self.thursday = False
-        self.friday = False
+        self.schedule = "M:T:W:R:F"
 
     def is_active(self):
         """True, as all users are active."""

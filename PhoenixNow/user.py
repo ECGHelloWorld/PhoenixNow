@@ -15,11 +15,16 @@ def create_user(first, last, grade, email, password):
     return newuser
 
 def checkin_user(user):
+    today = datetime.date.today()
+    for checkin in user.checkins:
+        if checkin.checkin_timestamp.date() == today:
+            return False
     checkinObject = Checkin()
     user.checkins.append(checkinObject)
     db.session.add(checkinObject)
     user.checkedin = True
     db.session.commit()
+    return True
 
 class get_weekly_checkins:
     
@@ -33,19 +38,23 @@ class get_weekly_checkins:
     def update_database(self): # change the day values to True if a checkin exists
         users = User.query.all()
         for user in users:
-            user.checkedin_days = "" #WITHOUT THIS IT GIVES 'VARCHARS' WHEN EMPTY OR SOMETHING??//
+            user.monday = "" #WITHOUT THIS IT GIVES 'VARCHARS' WHEN EMPTY OR SOMETHING??//
+            user.tuesday = ""
+            user.wednesday = ""
+            user.thursday = ""
+            user.friday = ""
         for checkin in self.monday_checkins:
-            checkin.user.checkedin_days = "M"
+            checkin.user.monday = "present"
             db.session.commit()
         for checkin in self.tuesday_checkins:
-            checkin.user.checkedin_days = "%s:T" % (checkin.user.checkedin_days)
+            checkin.user.tuesday = "present"
             db.session.commit()
         for checkin in self.wednesday_checkins:
-            checkin.user.checkedin_days = "%s:W" % (checkin.user.checkedin_days)
+            checkin.user.wednesday = "present"
             db.session.commit()
         for checkin in self.thursday_checkins:
-            checkin.user.checkedin_days = "%s:R" % (checkin.user.checkedin_days)
+            checkin.user.thursday = "present"
             db.session.commit()
         for checkin in self.friday_checkins:
-            checkin.user.checkedin_days = "%s:F" % (checkin.user.checkedin_days)
+            checkin.user.friday = "present"
             db.session.commit()

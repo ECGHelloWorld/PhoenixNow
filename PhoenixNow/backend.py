@@ -104,8 +104,10 @@ def checkin():
                     if user.verified == False:
                         raise InvalidUsage("This user is not verified", status_code=400)
                     else:
-                        checkin_user(user)
-                        return jsonify({"result": "success", "action": "checkin", "token": res['token']})
+                        if checkin_user(user):
+                            return jsonify({"result": "success", "action": "checkin", "token": res['token']})
+                        else:
+                            raise InvalidUsage("Already checked in for today")
 
     raise InvalidUsage("The user is not at Guilford")
 
@@ -113,20 +115,22 @@ def checkin():
 def schedule():
     res =  check_code(check_token(check_input(request.get_json(silent=True), 'monday', 'tuesday', 'wednesday', 'thursday', 'friday')))
     user = res['user']
-    user.monday = res['monday']
-    user.tuesday = res['tuesday']
-    user.wednesday = res['wednesday']
-    user.thursday = res['thursday']
-    user.friday = res['friday']
+    user.schedule = ""
+    if res['monday']:
+        user.schedule = "M"
+    if res['tuesday']:
+        user.schedule = "%s:T" % (user.schedule)
+    if res['wednesday']:
+        user.schedule = "%s:W" % (user.schedule)
+    if res['thursday']:
+       user.schedule = "%s:R" % (user.schedule)
+    if res['friday']:
+       user.schedule = "%s:F" % (user.schedule)
     db.session.commit()
     return jsonify({
         "action": "update schedule",
         "result": "success",
-        'monday': user.monday,
-        'tuesday': user.tuesday, 
-        'wednesday': user.wednesday, 
-        'thursday': user.thursday, 
-        'friday': user.friday ,
+        'schedule': user.schedule,
         'verified': user.schedule_verified,
         'token': res['token']
     })
@@ -138,11 +142,7 @@ def getschedule():
     return jsonify({
         "action": "get schedule",
         "result": "success",
-        'monday': user.monday,
-        'tuesday': user.tuesday, 
-        'wednesday': user.wednesday, 
-        'thursday': user.thursday, 
-        'friday': user.friday,
+        'schedule': user.schedule,
         'verified': user.schedule_verified,
         'token': res['token']
     })
