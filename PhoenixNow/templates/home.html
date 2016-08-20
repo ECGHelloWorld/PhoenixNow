@@ -2,25 +2,26 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-{% if not user.checkedin %}
+<h2>Welcome to PhoenixNow</h2>
+
+{% if not checkedin %}
 <div class="row">
-  <h2>Welcome to PhoenixNow</h2>
   <form action = "{{ url_for('regular.checkin') }}">
       <div class="form-group">
   {{ form.checkin(class_="btn btn-default") }}
-    </div>
+      </div>
   </form>
 </div>
 {% else %}
 <div class="row">
-<h4>Checked In!</h4>
+<h4>Checked In for {{ today }}!</h4>
 </div>
 {% endif %}
+
 <div class="row">
 <h2>Enter your schedule for the semester</h2>
-<h3> Currently - {{ user.schedule }} </h3>
+<h4> Currently - {{ user.schedule }} </h4>
 </div>
-
 <div class="row">
 
 <form method=post action="{{ url_for('regular.schedule') }}">
@@ -60,7 +61,6 @@
         {{ schedule_form.friday(class_="btn btn default") }}
         </div>
         </div>
-
 
     {{ schedule_form.submit(class_="btn btn-default") }}
 </form>

@@ -11,12 +11,47 @@ from PhoenixNow.config import ProductionConfig
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
 
+@regular.route('/test')
+def test():
+  user = create_user("johnny", "boy", "11", "1@guilford.edu", "1")
+  checkin_user(user)
+  user.verified = True
+  db.session.commit()
+  user = create_user("johnny", "lad", "12", "2@guilford.edu", "1")
+  checkin_user(user)
+  user.verified = True
+  db.session.commit()
+  user = create_user("johnny", "apple", "9", "3@guilford.edu", "1")
+  checkin_user(user)
+  user.verified = True
+  db.session.commit()
+  user = create_user("johnny", "zoo", "10", "4@guilford.edu", "1")
+  checkin_user(user)
+  user.verified = True
+  db.session.commit()
+  user = user = create_user("johnny", "quill", "11", "5@guilford.edu", "1")
+  checkin_user(user)
+  user.verified = True
+  db.session.commit()
+  user = create_user("admin", "account", "11", "chaudhryam@guilford.edu", "1")
+  checkin_user(user)
+  user.verified = True
+  db.session.commit()
+  return redirect(url_for('regular.home'))
+
 @regular.route('/')
 def home():
   form = CheckinForm()
   schedule_form = ScheduleForm()
 
   user = current_user
+
+  if user.is_active:
+    today = datetime.date.today()
+    for checkin in user.checkins:
+        if checkin.checkin_timestamp.date() == today:
+            checkedin = True
+        return render_template('home.html', user=user, form=form, schedule_form=schedule_form,checkedin=checkedin,today=today)
 
   return render_template('home.html', user=user, form=form, schedule_form=schedule_form)
 
@@ -29,6 +64,7 @@ def schedule():
 
     if form.validate_on_submit():
         user.schedule = ""
+        user.schedule_verified = False
         if form.monday.data:
             user.schedule = "M"
         if form.tuesday.data:
