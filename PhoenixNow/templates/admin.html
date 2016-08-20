@@ -11,13 +11,14 @@
     <th>#</th>
     <th>First Name</th>
     <th>Last Name</th>
-    <th>Email</th>
     <th>Grade</th>
+    <th>Monday</th>
+    <th>Tuesday</th>
+    <th>Wednesday</th>
+    <th>Thursday</th>
+    <th>Friday</th>
     <th>Verified</th>
     <th>Schedule Verified</th>
-    <th>Checked In</th>
-    <th>Creation</th>
-    <th>Checkins</th>
     </tr>
 
     {% for user in users %}    
@@ -25,13 +26,14 @@
         <td><a href="/admin/user/{{user.id}}">{{ user.id }}</a></td>
         <td><a href="/admin/user/{{user.id}}">{{ user.firstname }}</a></td>
         <td><a href="/admin/user/{{user.id}}">{{ user.lastname }}</a></td>
-        <td>{{ user.email }}</td>
         <td><a href="/admin/grade/{{user.grade}}">{{ user.grade }}</a></td>
+        <td>{{ user.monday }}</td>
+        <td>{{ user.tuesday }}</td>
+        <td>{{ user.wednesday }}</td>
+        <td>{{ user.thursday }}</td>
+        <td>{{ user.friday }}</td>
         <td>{{ user.verified }}</td>
         <td>{{ user.schedule_verified }}</td>
-        <td>{{ user.checkedin }}</td>
-        <td>{{ user.creation_timestamp.strftime('%x %X%p') }}</td>
-        <td>{{ user.checkins.count() }}</td>
     </tr>
     {% endfor %}
 
@@ -42,12 +44,16 @@
 
     <tr>
     <th>Timestamp</th>
+    <th>Week</th>
+    <th>Day</th>
     <th>Name</th>
     </tr>
     
     {% for checkin in checkins %}    
     <tr>
     <td> {{ checkin.checkin_timestamp.strftime('%x %X%p') }} </td>
+    <td> {{ checkin.checkin_week }} </td>
+    <td> {{ checkin.checkin_day }} </td>
     <td> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>
     </tr>
     {% endfor %}

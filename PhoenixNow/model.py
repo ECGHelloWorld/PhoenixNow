@@ -22,8 +22,6 @@ class User(db.Model):
     wednesday = db.Column(db.Boolean)
     thursday = db.Column(db.Boolean)
     friday = db.Column(db.Boolean)
-    saturday = db.Column(db.Boolean)
-    sunday = db.Column(db.Boolean)
 
     def __init__(self, firstname, lastname, grade, email, password):
         self.firstname = firstname.title()
@@ -70,15 +68,19 @@ class User(db.Model):
           return False
 
     def __repr__(self):
-        return "<User(name='%s')>" % (self.name)
+        return repr((self.lastname))
 
 class Checkin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     checkin_timestamp = db.Column(db.DateTime)
+    checkin_week = db.Column(db.String)
+    checkin_day = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self):
       self.checkin_timestamp = datetime.datetime.utcnow()
+      self.checkin_week = datetime.date.today().isocalendar()[1]
+      self.checkin_day = datetime.date.today().isocalendar()[2]
 
     def __repr__(self):
         return "<Checkin(id='%s')>" % (self.id)

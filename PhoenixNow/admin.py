@@ -1,6 +1,7 @@
 from flask import Flask, render_template, Blueprint, redirect, url_for, flash
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
 from PhoenixNow.model import db, User, Checkin
+from PhoenixNow.user import get_weekly_checkins
 from flask_login import login_required, login_user, logout_user
 import datetime
 
@@ -13,7 +14,10 @@ def home():
     users = User.query.all()
     users.sort(key=lambda user: (user.grade, user.lastname)) # sort by grade
     checkins = Checkin.query.filter(Checkin.checkin_timestamp >= datetime.date.today()).all()
-    return render_template('admin.html', users=users, checkins=checkins)
+    today = datetime.date.today()
+    weekly_checkins = get_weekly_checkins(today) # look at user.py
+    weekly_checkins.update_database() # look same place
+    return render_template('admin.html', users=users, checkins=checkins, weekly_checkins=weekly_checkins)
 
 @admin.route('/user/<int:user_id>')
 @login_required
