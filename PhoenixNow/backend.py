@@ -97,8 +97,8 @@ def checkin():
             if lat <= 36.0984408:
                 if lat >= 36.0903956:
                     user = res['user']
-                    if user.checkedin:
-                        raise InvalidUsage("You have already been checked in", status_code=400)
+                    #if user.checkedin:
+                        #raise InvalidUsage("You have already been checked in", status_code=400)
                     if user is None:
                         raise InvalidUsage("This user does not exist", status_code=400)
                     if user.verified == False:
