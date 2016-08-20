@@ -4,6 +4,7 @@ from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_ema
 from PhoenixNow.user import create_user, checkin_user
 from flask_login import login_required, login_user, logout_user
 from PhoenixNow.model import User, db
+from PhoenixNow.code import code
 
 backend = Blueprint('backend', __name__, template_folder='templates', static_folder='static')
 
@@ -32,6 +33,15 @@ def check_input(res, *args):
     else:
         raise InvalidUsage("You didn't input all the required information", status_code=400)
 
+def check_code(res):
+    if 'code' in res:
+        if res['code'] == code.code:
+            return res
+        else:
+            raise InvalidUsage("Your code was invalid", status_code=400)
+    else:
+        raise InvalidUsage("You didn't input all the required information", status_code=400)
+
 class InvalidUsage(Exception):
     status_code = 400
 
@@ -55,7 +65,7 @@ def handle_invalid_usage(error):
 
 @backend.route('/register', methods=['POST'])
 def register():
-    res = check_input(request.get_json(silent=True), 'firstname', 'lastname', 'grade', 'email', 'password')
+    res = check_code(check_input(request.get_json(silent=True), 'firstname', 'lastname', 'grade', 'email', 'password'))
     user = User.query.filter_by(email=res['email']).first()
     if user is None:
         newuser = create_user(res['firstname'], res['lastname'], res['grade'], res['email'], res['password'])
@@ -65,7 +75,7 @@ def register():
 
 @backend.route('/login', methods=['POST'])
 def login():
-    res = check_input(request.get_json(silent=True), 'email', 'password')
+    res = check_code(check_input(request.get_json(silent=True), 'email', 'password'))
     user = User.query.filter_by(email=res['email'].lower()).first()
     if user is None:
         raise InvalidUsage("This user has not been created", status_code=400)
@@ -77,7 +87,7 @@ def login():
 
 @backend.route('/checkin', methods=['POST'])
 def checkin():
-    res = check_token(check_input(request.get_json(silent=True), 'lat', 'lon'))
+    res = check_code(check_token(check_input(request.get_json(silent=True), 'lat', 'lon')))
 
     lon = float(res['lon'])
     lat = float(res['lat'])
@@ -101,44 +111,29 @@ def checkin():
 
 @backend.route('/schedule', methods=['GET', 'POST'])
 def schedule():
-    if request.method == 'POST':
-        res = check_token(check_input(request.get_json(silent=True), 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'))
-        user = res['user']
-        user.monday = res['monday']
-        user.tuesday = res['tuesday']
-        user.wednesday = res['wednesday']
-        user.thursday = res['thursday']
-        user.friday = res['friday']
-        db.session.commit()
-        return jsonify({
-            "action": "update schedule",
-            "result": "success",
-            'monday': user.monday,
-            'tuesday': user.tuesday, 
-            'wednesday': user.wednesday, 
-            'thursday': user.thursday, 
-            'friday': user.friday ,
-            'verified': user.schedule_verified,
-            'token': res['token']
-        })
-    elif request.method == "GET":
-        res = check_token(check_input(request.get_json(silent=True)))
-        user = res['user']
-        return jsonify({
-            "action": "get schedule",
-            "result": "success",
-            'monday': user.monday,
-            'tuesday': user.tuesday, 
-            'wednesday': user.wednesday, 
-            'thursday': user.thursday, 
-            'friday': user.friday,
-            'verified': user.schedule_verified,
-            'token': res['token']
-        })
+    res =  check_code(check_token(check_input(request.get_json(silent=True), 'monday', 'tuesday', 'wednesday', 'thursday', 'friday')))
+    user = res['user']
+    user.monday = res['monday']
+    user.tuesday = res['tuesday']
+    user.wednesday = res['wednesday']
+    user.thursday = res['thursday']
+    user.friday = res['friday']
+    db.session.commit()
+    return jsonify({
+        "action": "update schedule",
+        "result": "success",
+        'monday': user.monday,
+        'tuesday': user.tuesday, 
+        'wednesday': user.wednesday, 
+        'thursday': user.thursday, 
+        'friday': user.friday ,
+        'verified': user.schedule_verified,
+        'token': res['token']
+    })
 
 @backend.route('/getschedule', methods=['POST'])
 def getschedule():
-    res = check_token(check_input(request.get_json(silent=True)))
+    res = check_code(check_token(check_input(request.get_json(silent=True))))
     user = res['user']
     return jsonify({
         "action": "get schedule",
