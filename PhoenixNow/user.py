@@ -30,20 +30,22 @@ class get_weekly_checkins:
         self.thursday_checkins = Checkin.query.filter(Checkin.checkin_week == date.isocalendar()[1], Checkin.checkin_day == 4 ).all()
         self.friday_checkins = Checkin.query.filter(Checkin.checkin_week == '33', Checkin.checkin_day == '5' ).all()
    
-    def update_database(self): # change the day values to True if a checkin exists TODO: all values need to reset to False every new week (monday)
-        number = 0
+    def update_database(self): # change the day values to True if a checkin exists
+        users = User.query.all()
+        for user in users:
+            user.checkedin_days = "" #WITHOUT THIS IT GIVES 'VARCHARS' WHEN EMPTY OR SOMETHING??//
         for checkin in self.monday_checkins:
-            checkin.user.monday = True
+            checkin.user.checkedin_days = "M"
             db.session.commit()
         for checkin in self.tuesday_checkins:
-            checkin.user.tuesday = True
+            checkin.user.checkedin_days = "%s:T" % (checkin.user.checkedin_days)
             db.session.commit()
         for checkin in self.wednesday_checkins:
-            checkin.user.tuesday = True
+            checkin.user.checkedin_days = "%s:W" % (checkin.user.checkedin_days)
             db.session.commit()
         for checkin in self.thursday_checkins:
-            checkin.user.thursday = True
+            checkin.user.checkedin_days = "%s:R" % (checkin.user.checkedin_days)
             db.session.commit()
         for checkin in self.friday_checkins:
-            checkin.user.friday = True
+            checkin.user.checkedin_days = "%s:F" % (checkin.user.checkedin_days)
             db.session.commit()

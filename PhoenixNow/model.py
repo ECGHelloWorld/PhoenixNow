@@ -13,6 +13,7 @@ class User(db.Model):
     pw_hash = db.Column(db.String)
     salt = db.Column(db.String)
     checkedin = db.Column(db.Boolean)
+    checkedin_days = db.String()
     creation_timestamp = db.Column(db.DateTime)
     checkins = db.relationship('Checkin', backref='user', lazy='dynamic')
     verified = db.Column(db.Boolean)
@@ -31,6 +32,7 @@ class User(db.Model):
         self.salt = bcrypt.gensalt()
         self.pw_hash = bcrypt.hashpw(password.encode('utf-8'), self.salt)
         self.creation_timestamp = datetime.datetime.utcnow()
+        self.checkedin_days = "none"
         self.checkedin = False
         self.verified = False
         self.schedule_verified = False

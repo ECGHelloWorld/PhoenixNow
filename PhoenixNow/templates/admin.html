@@ -12,11 +12,7 @@
     <th>First Name</th>
     <th>Last Name</th>
     <th>Grade</th>
-    <th>Monday</th>
-    <th>Tuesday</th>
-    <th>Wednesday</th>
-    <th>Thursday</th>
-    <th>Friday</th>
+    <th>Checkins</th>
     <th>Verified</th>
     <th>Schedule Verified</th>
     </tr>
@@ -27,11 +23,7 @@
         <td><a href="/admin/user/{{user.id}}">{{ user.firstname }}</a></td>
         <td><a href="/admin/user/{{user.id}}">{{ user.lastname }}</a></td>
         <td><a href="/admin/grade/{{user.grade}}">{{ user.grade }}</a></td>
-        <td>{{ user.monday }}</td>
-        <td>{{ user.tuesday }}</td>
-        <td>{{ user.wednesday }}</td>
-        <td>{{ user.thursday }}</td>
-        <td>{{ user.friday }}</td>
+        <td>{{ user.checkedin_days }}</td>
         <td>{{ user.verified }}</td>
         <td>{{ user.schedule_verified }}</td>
     </tr>
