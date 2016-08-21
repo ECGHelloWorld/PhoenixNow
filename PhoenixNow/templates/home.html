@@ -106,15 +106,16 @@
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 
-<body>
+<body style="padding-top: 30px">
 
 
 <div class="container">
    <div class="center-home" style=display:none;>
-   <img src="http://i.imgur.com/D11pAaj.png" alt="cool phoenix" style="width:100px;height:141px;">
-   <h2>Welcome to PhoenixNow<h2>
-   <a href="/signin" class="btn btn-default">Sign In</a>
-   <a href="/signup" class="btn btn-default">Register</a>
+   <img src="http://i.imgur.com/D11pAaj.png" alt="cool phoenix" style="width:200px; height: 282px;">
+   <p class="title" style="display:none; font-size: 48px;">PhoenixNow<p>
+   <h4 class="tagline" style=display:none;>Your gateway to all things ECG.</h4>
+   <a href="/signin" id="SignIn" class="btn btn-default" style="display:none; margin-right: 5px;">Sign In</a>
+   <a href="/signup" id="Register" class="btn btn-default" style="display:none; margin-right: 5px">Register</a>
    </div>
 </div>
 
@@ -124,7 +125,11 @@
 
 <script>
 $(document).ready(function(){
-    $(".center-home").fadeIn(3000)
+    $(".center-home").fadeIn(1000)
+    $(".title").fadeIn(2000)
+    $(".tagline").fadeIn(2500)
+    $("#SignIn").fadeIn(3000)
+    $("#Register").fadeIn(3500)
 
     $(".btn").click(function(event){
         event.preventDefault();
