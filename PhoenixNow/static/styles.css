@@ -1,4 +1,8 @@
- body {
+body {
+    padding-top: 80px;
+}
+
+body.background {
     padding-top: 80px;
     font-family: "Roboto Thin", "Calibri", "Times New Roman", serif;
 /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#a90329+10,ffffff+100 */
