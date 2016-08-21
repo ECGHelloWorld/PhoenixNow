@@ -39,7 +39,7 @@ class User(db.Model):
         self.creation_timestamp = datetime.datetime.utcnow()
         self.checkedin = False
         self.verified = False
-        self.schedule_verified = True
+        self.schedule_verified = False
         self.schedule = "null"
         self.schedule_monday = False
         self.schedule_tuesday = False

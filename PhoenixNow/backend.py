@@ -131,6 +131,10 @@ def schedule():
     if res['friday']:
         user.schedule = "%s:F" % (user.schedule)
         user.schedule_friday = True
+    if user.schedule == "M:T:W:R:F":
+        user.schedule_verified = True
+    else:
+        user.schedule_verified = False
     db.session.commit()
     return jsonify({
         "action": "update schedule",
