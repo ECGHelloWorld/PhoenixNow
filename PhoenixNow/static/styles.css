@@ -35,9 +35,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', end
 }
 .table {
     text-align: left;
+    color: black;
 }
 .row {
     margin-bottom: 20px;
+    color: black;
 
 }
 
