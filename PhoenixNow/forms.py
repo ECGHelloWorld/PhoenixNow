@@ -58,7 +58,7 @@ class ContactForm(Form):
   submit = SubmitField("Send")
 
 class CheckinForm(Form):
-  checkin = SubmitField("Check in for the day.")
+  checkin = SubmitField("Check-in Today")
 
 class ScheduleForm(Form):
   monday = BooleanField("Monday")
