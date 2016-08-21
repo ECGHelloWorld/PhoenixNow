@@ -23,11 +23,11 @@
 <h4>Currently - {{ user.schedule }}</h4>
 </div>
 
-<div class="row">
+
 
 <form method=post action="{{ url_for('regular.schedule') }}">
         {{ form.hidden_tag() }}
-        
+        <div class="row">
         <div class="col-sm-2 col-sm-offset-1">
         <div class="form-group">
         {{ schedule_form.monday.label }}
@@ -62,10 +62,10 @@
         {{ schedule_form.friday(class_="btn btn default", checked=user.schedule_friday) }}
         </div>
         </div>
-
+        </div>
     {{ schedule_form.submit(class_="btn btn-default") }}
 </form>
-</div>
+
 
 <div class="row">
 <h2>Check-in's for this Week</h2>

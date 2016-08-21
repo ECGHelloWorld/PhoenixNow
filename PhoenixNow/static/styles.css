@@ -66,4 +66,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', end
   font-size: 16px;
 }
 
+.navbar-brand#navpic {
+  margin-top: 0px;
+  padding: 0px;
+}
+
 
