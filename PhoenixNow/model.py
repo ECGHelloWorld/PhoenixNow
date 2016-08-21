@@ -36,6 +36,11 @@ class User(db.Model):
         self.verified = False
         self.schedule_verified = True
         self.schedule = "M:T:W:R:F"
+        self.monday = ""
+        self.tuesday = ""
+        self.wednesday = ""
+        self.thursday = ""
+        self.friday = ""
 
     def is_active(self):
         """True, as all users are active."""
