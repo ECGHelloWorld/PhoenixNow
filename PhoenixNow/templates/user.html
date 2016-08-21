@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
-  <div>
+  <div style="background: #ffffff; color: black;">
 
       <h2>{{ user.firstname }} {{ user.lastname }}</h2>
 
-    <div>
-    <table class="table table-striped table-responsive">
+    <div class="table-responsive">
+    <table class="table table-striped">
 
     <tr>
     <th>#</th>
@@ -38,10 +38,12 @@
     </tr>
 
     </table>
+    </div>
 
     <h2>Schedule</h2>
 
-    <table class="table table-striped table-responsive table-hover">
+    <div class="table-responsive">
+    <table class="table table-striped table-hover">
         <tr>
             <th>Schedule</th>
             <th>Verified</th>
