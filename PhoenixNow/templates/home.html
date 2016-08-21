@@ -2,7 +2,7 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<h2>Welcome {{ user.firstname }} {{user.lastname}}</h2>
+<h2>Welcome {{ user.firstname }} {{user.lastname}}!</h2>
 
 {% if not checkedin %}
 <div class="row">
@@ -14,7 +14,7 @@
 </div>
 {% else %}
 <div class="row">
-<h4>Checked In for {{ today }}!</h4>
+<h4>Checked in for {{ today }}!</h4>
 </div>
 {% endif %}
 
@@ -68,7 +68,7 @@
 </div>
 
 <div class="row">
-<h2>This week's checkins</h2>
+<h2>Check-in's for the Week of {{ today - datetime.timedelta(days=today.weekday()) }}</h2>
 </div>
 
 <table class="table table-striped table-responsive">
