@@ -21,12 +21,12 @@ class SignupForm(Form):
     
     domain = self.email.data.lower().split('@')[1]
     if domain != "guilford.edu":
-      self.email.errors.append("Must register with guilford.edu email.")
+      self.email.errors.append("Must Register With Guilford.edu Email")
       return False
      
     user = User.query.filter_by(email = self.email.data.lower()).first()
     if user:
-      self.email.errors.append("This email is already taken.")
+      self.email.errors.append("This Email Is Already Taken")
       return False
     else:
       return True
@@ -47,7 +47,7 @@ class SigninForm(Form):
     if user and user.check_password(self.password.data):
       return True
     else:
-      self.email.errors.append("Invalid e-mail or password")
+      self.email.errors.append("Invalid E-mail or Password")
       return False
 
 class ContactForm(Form):
