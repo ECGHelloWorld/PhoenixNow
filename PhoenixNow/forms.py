@@ -66,4 +66,4 @@ class ScheduleForm(Form):
   wednesday = BooleanField("Wednesday")
   thursday = BooleanField("Thursday")
   friday = BooleanField("Friday")
-  submit = SubmitField("Submit")
+  submit = SubmitField("Submit  ")
