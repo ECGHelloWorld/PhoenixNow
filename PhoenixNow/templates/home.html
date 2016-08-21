@@ -2,7 +2,7 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<h2>Welcome to PhoenixNow</h2>
+<h2>Welcome {{ user.firstname }} {{user.lastname}}</h2>
 
 {% if not checkedin %}
 <div class="row">
@@ -20,8 +20,9 @@
 
 <div class="row">
 <h2>Enter your schedule for the semester</h2>
-<h4> Currently - {{ user.schedule }} </h4>
+<h4>Currently - {{ user.schedule }}</h4>
 </div>
+
 <div class="row">
 
 <form method=post action="{{ url_for('regular.schedule') }}">
@@ -64,8 +65,31 @@
 
     {{ schedule_form.submit(class_="btn btn-default") }}
 </form>
-
 </div>
+
+<div class="row">
+<h2>This week's checkins</h2>
+</div>
+
+<table class="table table-striped table-responsive">
+<tr>
+<th>Monday</th>
+<th>Tuesday</th> 
+<th>Wednesday</th>
+<th>Thursday</th>
+<th>Friday</th>
+</tr>
+ 
+<tr>
+<td>{{ user.monday }}</td>
+<td>{{ user.tuesday }}</td>
+<td>{{ user.wednesday }}</td>
+<td>{{ user.thursday }}</td>
+<td>{{ user.friday }}</td>
+</tr>
+</table>
+
+
 {% endblock %}  
 
 {% else %}

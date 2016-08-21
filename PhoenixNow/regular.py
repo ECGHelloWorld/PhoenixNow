@@ -1,5 +1,5 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
-from PhoenixNow.user import create_user, checkin_user
+from PhoenixNow.user import create_user, checkin_user, get_weekly_checkins
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint, request
 from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
@@ -47,11 +47,14 @@ def home():
   user = current_user
 
   if user.is_active:
+    checkedin = False
     today = datetime.date.today()
     for checkin in user.checkins:
         if checkin.checkin_timestamp.date() == today:
             checkedin = True
-        return render_template('home.html', user=user, form=form, schedule_form=schedule_form,checkedin=checkedin,today=today)
+    weekly_checkins = get_weekly_checkins(today) # look at user.py
+    weekly_checkins.update_database() # look at user.py
+    return render_template('home.html', user=user, form=form, schedule_form=schedule_form,checkedin=checkedin,today=today)
 
   return render_template('home.html', user=user, form=form, schedule_form=schedule_form)
 
@@ -64,7 +67,6 @@ def schedule():
 
     if form.validate_on_submit():
         user.schedule = ""
-        user.schedule_verified = False
         if form.monday.data:
             user.schedule = "M"
         if form.tuesday.data:
@@ -75,6 +77,10 @@ def schedule():
             user.schedule = "%s:R" % (user.schedule)
         if form.friday.data:
             user.schedule = "%s:F" % (user.schedule)
+        if user.schedule == "M:T:W:R:F":
+            user.schedule_verified = True
+        else:
+            user.schedule_verified = False
         db.session.commit()
         flash("Your schedule has been updated.")
 

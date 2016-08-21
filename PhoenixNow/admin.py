@@ -18,7 +18,7 @@ def home():
     today = datetime.date.today()
     weekly_checkins = get_weekly_checkins(today) # look at user.py
     weekly_checkins.update_database() # look at user.py
-    return render_template('admin.html', users=users, checkins=checkins, weekly_checkins=weekly_checkins)
+    return render_template('admin.html', users=users, checkins=checkins)
 
 @admin.route('/user/<int:user_id>')
 @login_required
@@ -49,4 +49,4 @@ def grade(grade):
   today = datetime.date.today()
   weekly_checkins = get_weekly_checkins(today) # look at user.py
   weekly_checkins.update_database() # look at user.py
-  return render_template('grade.html', users=users,user=user,checkins=checkins,grade=grade,weekly_checkins=weekly_checkins)
+  return render_template('grade.html', users=users,user=user,checkins=checkins,grade=grade)
