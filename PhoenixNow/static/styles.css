@@ -40,6 +40,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', end
 .table {
     text-align: left;
     color: black;
+    font-weight: bold;
 }
 .row {
     margin-bottom: 20px;
@@ -70,5 +71,3 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', end
   margin-top: 0px;
   padding: 0px;
 }
-
-
