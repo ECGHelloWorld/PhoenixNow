@@ -43,7 +43,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', end
   padding-left: 47%;
 }
 
-.btn {
+#SignIn, #Register {
   background: #800000;
   color: white;
   border: none;
