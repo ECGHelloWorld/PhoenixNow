@@ -2,7 +2,7 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<h2 style="color: black">Welcome {{ user.firstname }} {{user.lastname}}!</h2>
+<h2 style="color: black; margin-bottom: 20px;">Welcome {{ user.firstname }} {{user.lastname}}!</h2>
 
 {% if not checkedin %}
 <div class="row">
@@ -19,7 +19,7 @@
 {% endif %}
 
 <div class="row">
-<h2>Enter your schedule for the semester</h2>
+<h2>Schedule</h2>
 <h4>Currently - {{ user.schedule }}</h4>
 </div>
 
