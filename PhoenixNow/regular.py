@@ -204,3 +204,11 @@ def checkin():
     else:
         flash("Unsuccesful Check-in. Please check that you are on the Guilford College network.")
     return redirect(url_for('regular.home'))
+
+#Code here for potential future schedule page if necessary
+# @regular.route('/schedule')
+# @login_required
+# @check_verified
+# def schedule():
+#     user = current_user
+
