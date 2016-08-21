@@ -8,6 +8,7 @@
 * ~~Signin when verify~~
 * ~~Add code to server to verify only official android app is used~~
 * Two schedules, one that stays constant after being verified no matter what the user tries to do. Ie stays permanent once approved.
+* Make unverified accounts delete if someone else tries to register with the same email.
 
 # PhoenixNow
 This app facilitates signins and roll calls for schools that aren't especially centralized.
