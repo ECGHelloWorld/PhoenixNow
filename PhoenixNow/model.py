@@ -18,6 +18,11 @@ class User(db.Model):
     verified = db.Column(db.Boolean)
     schedule_verified = db.Column(db.Boolean)
     schedule = db.Column(db.String)
+    schedule_monday = db.Column(db.Boolean)
+    schedule_tuesday = db.Column(db.Boolean)
+    schedule_wednesday = db.Column(db.Boolean)
+    schedule_thursday = db.Column(db.Boolean)
+    schedule_friday = db.Column(db.Boolean)
     monday = db.Column(db.String)
     tuesday = db.Column(db.String)
     wednesday = db.Column(db.String)
@@ -35,7 +40,12 @@ class User(db.Model):
         self.checkedin = False
         self.verified = False
         self.schedule_verified = True
-        self.schedule = "M:T:W:R:F"
+        self.schedule = "null"
+        self.schedule_monday = False
+        self.schedule_tuesday = False
+        self.schedule_wednesday = False
+        self.schedule_thursday = False
+        self.schedule_friday = False
         self.monday = ""
         self.tuesday = ""
         self.wednesday = ""

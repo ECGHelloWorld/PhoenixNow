@@ -67,16 +67,26 @@ def schedule():
 
     if form.validate_on_submit():
         user.schedule = ""
+        user.schedule_monday = False
+        user.schedule_tuesday = False
+        user.schedule_wednesday = False
+        user.schedule_thursday = False
+        user.schedule_friday = False
         if form.monday.data:
             user.schedule = "M"
+            user.schedule_monday = True
         if form.tuesday.data:
             user.schedule = "%s:T" % (user.schedule)
+            user.schedule_tuesday = True
         if form.wednesday.data:
             user.schedule = "%s:W" % (user.schedule)
+            user.schedule_wednesday = True
         if form.thursday.data:
             user.schedule = "%s:R" % (user.schedule)
+            user.schedule_thursday = True
         if form.friday.data:
             user.schedule = "%s:F" % (user.schedule)
+            user.schedule_friday = True
         if user.schedule == "M:T:W:R:F":
             user.schedule_verified = True
         else:
