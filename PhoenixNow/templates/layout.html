@@ -19,11 +19,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <img src="http://i.imgur.com/D11pAaj.png" style="height: 50px; width: 36px">
-          <a class="navbar-brand" href="/">PhoenixNow</a>
+          <img src="http://i.imgur.com/D11pAaj.png" style="height: 48px; width: 33px">
+        
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
+          <li><a class="navbar-brand" href="/" style="color:white">PhoenixNow</a></li>
         <li><a href="{{ url_for('regular.home') }}">Home</a></li>
          {% if current_user.is_active %}
         <li><a href="{{ url_for('regular.contact') }}">Contact Us</a></li>
