@@ -149,7 +149,7 @@ def contact():
       html = render_template("contact_email.html", name=form.name.data,
               email=form.email.data, message=form.message.data)
       subject = "PhoenixNow Contact: " + form.subject.data
-      send_email("nick@nickendo.com", subject, html)
+      send_email("helloworldappclub@gmail.com", subject, html)
       flash('Your contact us email has been sent.', 'success')
       return render_template('contact.html', success=True)
     else:
@@ -198,9 +198,9 @@ def checkin():
     user = current_user
     if request.remote_addr in ['192.168.1.1', '192.168.1.2']:
         if checkin_user(user):
-            flash('Successfully checked in')
+            flash('Successful Check-in!')
         else:
-            flash('Unsuccessful, already checked in for today')
+            flash('You are already signed in for today.')
     else:
-        flash("You're not on the Guilford network")
+        flash("Unsuccesful Check-in. Please check that you are on the Guilford College network.")
     return redirect(url_for('regular.home'))

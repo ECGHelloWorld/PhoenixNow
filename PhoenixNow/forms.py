@@ -8,7 +8,7 @@ class SignupForm(Form):
   firstname = StringField("First Name",  [InputRequired("Please enter your first name.")])
   lastname = StringField("Last Name",  [InputRequired("Please enter your last name.")])
   grade = StringField("Grade Level", [InputRequired("Please enter your grade level.")])
-  email = StringField("Email",  [InputRequired("Please enter your email address."), Email("This field requires a valid email address")])
+  email = StringField("Email",  [InputRequired("Please enter your email address."), Email("This field requires a valid email address.")])
   password = PasswordField('Password', [InputRequired("Please enter a password.")])
   submit = SubmitField("Create account")
 
@@ -26,7 +26,7 @@ class SignupForm(Form):
      
     user = User.query.filter_by(email = self.email.data.lower()).first()
     if user:
-      self.email.errors.append("That email is already taken")
+      self.email.errors.append("This email is already taken.")
       return False
     else:
       return True
