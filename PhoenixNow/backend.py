@@ -118,14 +118,19 @@ def schedule():
     user.schedule = ""
     if res['monday']:
         user.schedule = "M"
+        user.schedule_monday = True
     if res['tuesday']:
         user.schedule = "%s:T" % (user.schedule)
+        user.schedule_tuesday = True
     if res['wednesday']:
         user.schedule = "%s:W" % (user.schedule)
+        user.schedule_wednesday = True
     if res['thursday']:
-       user.schedule = "%s:R" % (user.schedule)
+        user.schedule = "%s:R" % (user.schedule)
+        user.schedule_thursday = True
     if res['friday']:
-       user.schedule = "%s:F" % (user.schedule)
+        user.schedule = "%s:F" % (user.schedule)
+        user.schedule_friday = True
     db.session.commit()
     return jsonify({
         "action": "update schedule",
