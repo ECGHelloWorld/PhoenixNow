@@ -64,7 +64,7 @@ class ResetForm(Form):
     if self.password.data == self.confirmpassword.data:
       return True
     else:
-      self.email.errors.append("Passwords Don't Match")
+      self.password.errors.append("Passwords Don't Match")
       return False
 
 class RequestResetForm(Form):
