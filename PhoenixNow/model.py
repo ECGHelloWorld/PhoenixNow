@@ -41,11 +41,11 @@ class User(db.Model):
         self.verified = False
         self.schedule_verified = False
         self.schedule = "null"
-        self.schedule_monday = False
-        self.schedule_tuesday = False
-        self.schedule_wednesday = False
-        self.schedule_thursday = False
-        self.schedule_friday = False
+        self.schedule_monday = True
+        self.schedule_tuesday = True
+        self.schedule_wednesday = True
+        self.schedule_thursday = True
+        self.schedule_friday = True
         self.monday = ""
         self.tuesday = ""
         self.wednesday = ""
@@ -74,7 +74,7 @@ class User(db.Model):
         return self.pw_hash == bcrypt.hashpw(password.encode('utf-8'), self.salt)
 
     def is_admin(self):
-        if self.email in ['chaudhryam@guilford.edu', 'daynb@guilford.edu']:
+        if self.email in ['chaudhryam@guilford.edu', 'daynb@guilford.edu', 'admin@phoenixnow.me', 'kiddlm@guilford.edu', 'websternb@guilford.edu', 'lkiser@guilford.edu']:
           return True
         else:
           return False
