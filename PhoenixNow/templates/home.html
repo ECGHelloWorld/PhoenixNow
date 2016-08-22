@@ -2,7 +2,7 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<h2 style="color: black; margin-bottom: 20px;">Welcome {{ user.firstname }} {{user.lastname}}!</h2>
+<h2 style="color: #800000; font-family: 'Cinzel Decorative', cursive; margin-bottom: 20px;">Welcome {{ user.firstname }} {{user.lastname}}!</h2>
 
 {% if not checkedin %}
 <div class="row">
@@ -14,13 +14,13 @@
 </div>
 {% else %}
 <div class="row">
-<h4>Checked in for {{ today }}!</h4>
+<h4 style="color: #800000; font-family: 'Cinzel Decorative', cursive;">Checked in for {{ today }}!</h4>
 </div>
 {% endif %}
 
 <div class="row">
-<h2>Schedule</h2>
-<h4>Currently - {{ user.schedule }}</h4>
+<h2 style="color: #800000; font-family: 'Cinzel Decorative', cursive;">Schedule</h2>
+<h4 style="color: #800000; font-family: 'Cinzel Decorative', cursive;">Currently - {{ user.schedule }}</h4>
 </div>
 
 
