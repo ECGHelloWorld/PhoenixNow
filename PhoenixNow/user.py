@@ -11,7 +11,7 @@ def create_user(first, last, grade, email, password):
     confirm_url = url_for('regular.verify_email', token=token, _external=True)
     html = render_template('activate.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
-    send_email(newuser.email, subject, html)
+    #send_email(newuser.email, subject, html)
     return newuser
 
 def checkin_user(user):
@@ -24,6 +24,14 @@ def checkin_user(user):
     db.session.add(checkinObject)
     user.checkedin = True
     db.session.commit()
+    return True
+
+def reset_password_email(email):
+    token = generate_confirmation_token(email)
+    reset_url = url_for('regular.reset_password', token=token, _external=True)
+    html = render_template('resetemail.html', reset_url=reset_url)
+    subject = "Password reset request."
+    send_email(email, subject, html)
     return True
 
 class get_weekly_checkins:

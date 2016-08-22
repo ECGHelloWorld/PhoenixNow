@@ -1,43 +1,16 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
-from PhoenixNow.user import create_user, checkin_user, get_weekly_checkins
+from PhoenixNow.user import create_user, checkin_user, get_weekly_checkins, reset_password_email
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint, request
-from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm
+from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from PhoenixNow.model import db, User, Checkin
 from flask_login import login_required, login_user, logout_user, current_user
 import datetime
+import bcrypt
 
 from PhoenixNow.config import ProductionConfig
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
-
-@regular.route('/test')
-def test():
-  user = create_user("johnny", "boy", "11", "1@guilford.edu", "1")
-  checkin_user(user)
-  user.verified = True
-  db.session.commit()
-  user = create_user("johnny", "lad", "12", "2@guilford.edu", "1")
-  checkin_user(user)
-  user.verified = True
-  db.session.commit()
-  user = create_user("johnny", "apple", "9", "3@guilford.edu", "1")
-  checkin_user(user)
-  user.verified = True
-  db.session.commit()
-  user = create_user("johnny", "zoo", "10", "4@guilford.edu", "1")
-  checkin_user(user)
-  user.verified = True
-  db.session.commit()
-  user = user = create_user("johnny", "quill", "11", "5@guilford.edu", "1")
-  checkin_user(user)
-  user.verified = True
-  db.session.commit()
-  user = create_user("admin", "account", "11", "chaudhryam@guilford.edu", "1")
-  checkin_user(user)
-  user.verified = True
-  db.session.commit()
-  return redirect(url_for('regular.home'))
 
 @regular.route('/')
 def home():
@@ -162,7 +135,7 @@ def contact():
 @regular.route('/verify/<token>')
 def verify_email(token):
   tokenemail = confirm_token(token)
-  user = User.query.filter_by(email = tokenemail).first_or_404()
+  user = User.query.filter_by(email = tokenemail).first()
   if user:
     user.verified = True
     db.session.commit()
@@ -170,6 +143,38 @@ def verify_email(token):
   else:
     flash('The confirmation link is invalid or has expired.', 'danger')
   return redirect(url_for('regular.home'))
+
+@regular.route('/reset/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+  form = ResetForm()
+  tokenemail = confirm_token(token)
+  user = User.query.filter_by(email = tokenemail).first()
+  if user:
+    if request.method == 'POST':
+      if form.validate_on_submit():
+        user.pw_hash = bcrypt.hashpw(form.password.data.encode('utf-8'), user.salt)
+        db.session.commit()
+        flash('Your password has been reset.')
+        return redirect(url_for('regular.home'))
+      else:
+        return render_template('reset.html', form=form, token=token)
+    elif request.method == 'GET':
+      return render_template('reset.html', form=form, token=token)
+  else:
+    flash('The confirmation link is invalid or has expired.', 'danger')
+
+@regular.route('/requestreset', methods=['GET', 'POST'])
+def requestreset():
+  form = RequestResetForm()
+  if request.method == 'POST':
+    if form.validate_on_submit():
+      reset_password_email(form.email.data)
+      flash('An email has been sent to reset your password.')
+      return redirect(url_for('regular.home'))
+    else:
+      return render_template('requestreset.html', form=form)
+  elif request.method == 'GET':
+    return render_template('requestreset.html', form=form)
 
 @regular.route('/unverified')
 @login_required
