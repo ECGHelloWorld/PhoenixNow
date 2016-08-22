@@ -5,14 +5,8 @@ body {
 body.background {
     padding-top: 80px;
     font-family: "Roboto Thin", "Calibri", "Times New Roman", serif;
-/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#a90329+10,ffffff+100 */
-background: rgb(169,3,41); /* Old browsers */
-background: -moz-linear-gradient(top,  rgba(169,3,41,1) 10%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(top,  rgba(169,3,41,1) 10%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(to bottom,  rgba(169,3,41,1) 10%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
-
-
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#a90329+10,ffffff+100 */
+    background: #F0EAD6;
     margin: 0;
     background-repeat: no-repeat;
     background-attachment: fixed;
