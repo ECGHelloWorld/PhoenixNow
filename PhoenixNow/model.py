@@ -41,11 +41,11 @@ class User(db.Model):
         self.verified = False
         self.schedule_verified = False
         self.schedule = "null"
-        self.schedule_monday = False
-        self.schedule_tuesday = False
-        self.schedule_wednesday = False
-        self.schedule_thursday = False
-        self.schedule_friday = False
+        self.schedule_monday = True
+        self.schedule_tuesday = True
+        self.schedule_wednesday = True
+        self.schedule_thursday = True
+        self.schedule_friday = True
         self.monday = ""
         self.tuesday = ""
         self.wednesday = ""
