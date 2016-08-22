@@ -4,7 +4,7 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = 'sqlite://:memory:'
     SECRET_KEY = 'idontknowwhatthisis'
     SECURITY_PASSWORD_SALT = "fortoken"
-    MAIL_DEFAULT_SENDER = "support@chadali.me"
+    MAIL_DEFAULT_SENDER = "support@phoenixnow.me"
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///data.db'
