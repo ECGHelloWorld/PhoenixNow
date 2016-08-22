@@ -196,7 +196,7 @@ def resend_verification():
 @check_verified
 def checkin():
     user = current_user
-    if request.remote_addr in ['192.168.1.1', '192.168.1.2']:
+    if request.remote_addr in ['192.154.63.*']:
         if checkin_user(user):
             flash('Successful Check-in!')
         else:
