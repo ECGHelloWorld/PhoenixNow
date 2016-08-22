@@ -40,7 +40,7 @@ class User(db.Model):
         self.checkedin = False
         self.verified = False
         self.schedule_verified = False
-        self.schedule = "M:T:W:R:F (default)"
+        self.schedule = "M:T:W:R:F"
         self.schedule_monday = True
         self.schedule_tuesday = True
         self.schedule_wednesday = True
