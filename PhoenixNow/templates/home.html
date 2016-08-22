@@ -112,6 +112,24 @@
 <body class="background" style="padding-top: 30px; color: #800000; background: #F0EAD6; font-family: 'Cinzel Decorative', cursive;">
 
 <div class="container">
+<div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'message' %}
+              <div class="alert alert-warning alert-dismissable" role="alert">
+            {% else %}
+              <div class="alert alert-{{ category }} alert-dismissable" role="alert">
+            {% endif %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              {{ message }}
+            </div>
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+</div>
+
+<div class="container">
    <div class="center-home" style=display:none;>
    <img src="/static/images/phoenixnowlogo.png" alt="cool phoenix" style="width:200px; height: 282px;">
    <p class="title" style="display:none; font-size: 48px;">PhoenixNow</p>
