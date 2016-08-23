@@ -123,7 +123,6 @@ def contact():
               email=form.email.data, message=form.message.data)
       subject = "PhoenixNow Contact: " + form.subject.data
       send_email("chaudhryam@guilford.edu, helloworldappclub@gmail.com, kerrj@guilford.edu, nairv@guilford.edu, daynb@guilford.edu", subject, html)
-      send_email("kerrj@guilford.edu", subject, html)
       flash('Your contact us email has been sent.', 'success')
       return render_template('contact.html', success=True)
     else:
