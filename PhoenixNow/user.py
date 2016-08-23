@@ -11,7 +11,7 @@ def create_user(first, last, grade, email, password):
     confirm_url = url_for('regular.verify_email', token=token, _external=True)
     html = render_template('activate.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
-    #send_email(newuser.email, subject, html)
+    send_email(newuser.email, subject, html)
     return newuser
 
 def checkin_user(user):

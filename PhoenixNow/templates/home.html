@@ -2,6 +2,7 @@
 {% extends 'layout.html' %}
 {% block content %}
 
+
 <h2 style="color: #800000; font-family: 'Cinzel Decorative', cursive; margin-bottom: 20px;">Welcome {{ user.firstname }} {{user.lastname}}!</h2>
 
 {% if not checkedin %}
@@ -19,13 +20,18 @@
 {% endif %}
 
 <div class="row">
-<h2 style="color: #800000; font-family: 'Cinzel Decorative', cursive;">Schedule</h2>
+<button type="button" class="btn btn-secondary" id="showschedule">Schedule</button>
+<img src="/static/images/questionmark.png" alt="schedule help" style="width:20px; height: 20px;" class="scheduletoggle" data-toggle="tooltip" data-placement="right" title="By default a 5 day schedule is selected. If your schedule differs, please indicate it below and an admin will verify the schedule change.">
+</div>
+
+<div class="row scheduleform" style="display:none;">
+<h2 style="color: #800000; font-family: 'Cinzel Decorative', cursive;">Schedule </h2> 
 <h4 style="color: #800000; font-family: 'Cinzel Decorative', cursive;">Currently - {{ user.schedule }}</h4>
 </div>
 
 
 
-<form method=post action="{{ url_for('regular.schedule') }}">
+<form class="row scheduleform" style="display:none;" method=post action="{{ url_for('regular.schedule') }}">
         {{ form.hidden_tag() }}
         <div class="row">
         <div class="col-sm-2 col-sm-offset-1">
@@ -91,6 +97,21 @@
 </table>
 </div>
 
+<script>
+$(document).ready(function(){
+
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip(); 
+
+        $("#showschedule").click(function(event){
+            $(".scheduleform").fadeToggle(1000);
+        });
+
+    });
+
+});
+</script>
+
 {% endblock %}  
 
 {% else %}
@@ -130,7 +151,7 @@
 </div>
 
 <div class="container">
-   <div class="center-home" style=display:none;>
+   <div class="center-home" style="display:none;">
    <img src="/static/images/phoenixnowlogo.png" alt="cool phoenix" style="width:300px; height: 300px;">
    <p class="title" style="display:none; font-size: 48px;">PhoenixNow</p>
    <p style="margin-bottom: 20px; font-size: 18px; font-weight: bold;">Your gateway to all things ECG.</p>

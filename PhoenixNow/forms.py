@@ -10,6 +10,7 @@ class SignupForm(Form):
   grade = StringField("Grade Level", [InputRequired("Please Enter Your Grade Level")])
   email = StringField("Email",  [InputRequired("Please Enter Your Email Address"), Email("This Field Requires a Valid Email Address")])
   password = PasswordField('Password', [InputRequired("Please Enter a Password")])
+  confirmpassword = PasswordField('Confirm Password', [InputRequired("Please Repeat your Password")])
   submit = SubmitField("Create account")
 
   def __init__(self, *args, **kwargs):
@@ -28,8 +29,12 @@ class SignupForm(Form):
     if user:
       self.email.errors.append("This Email Is Already Taken")
       return False
-    else:
+
+    if self.password.data == self.confirmpassword.data:
       return True
+    else:
+      self.password.errors.append("Passwords Don't Match")
+      return False
 
 class SigninForm(Form):
   email = StringField("Email",  [InputRequired("Please Enter Your Email Address"), Email("Please Enter Your Email Address")])
@@ -69,7 +74,7 @@ class ResetForm(Form):
 
 class RequestResetForm(Form):
   email = StringField("Email",  [InputRequired("Please Enter Your Email Address"), Email("Please Enter Your Email Address")])
-  submit = SubmitField("Sign In")
+  submit = SubmitField("Submit")
    
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
