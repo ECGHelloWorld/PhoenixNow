@@ -1,19 +1,18 @@
 body {
     padding-top: 80px;
+    background: #F0EAD6;
 }
 
 body.background {
-    padding-top: 80px;
     font-family: "Roboto Thin", "Calibri", "Times New Roman", serif;
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#a90329+10,ffffff+100 */
-
-    background: #F0EAD6;
 
     margin: 0;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    color: white;
-
+    background-image: url("/static/images/homepagebackground.png");
+  padding-top: 30px; 
+  color: #800000; 
    /* text-shadow:
    -1px -1px 0 #000,  
     1px -1px 0 #000,
@@ -66,4 +65,9 @@ body.background {
 .navbar-brand#navpic {
   margin-top: 0px;
   padding: 0px;
+}
+
+.newtheme {
+
+
 }
