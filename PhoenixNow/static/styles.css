@@ -8,9 +8,12 @@ body.background {
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#a90329+10,ffffff+100 */
 
     margin: 0;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-image: url("/static/images/homepagebackground.png");
+    background: url(/static/images/homepagebackground.png) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
   padding-top: 30px; 
   color: #800000; 
    /* text-shadow:
