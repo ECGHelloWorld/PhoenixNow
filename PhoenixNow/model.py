@@ -90,7 +90,7 @@ class Checkin(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self):
-      self.checkin_timestamp = datetime.datetime.utcnow()
+      self.checkin_timestamp = datetime.datetime.today()
       self.checkin_week = datetime.date.today().isocalendar()[1]
       self.checkin_day = datetime.date.today().isocalendar()[2]
 
