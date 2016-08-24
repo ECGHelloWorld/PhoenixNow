@@ -20,6 +20,7 @@ def history():
 
   form = CalendarForm()
   user = current_user
+  today = datetime.date.today()
   chart = False
 
   if request.method == 'POST':
@@ -41,10 +42,10 @@ def history():
       weekly_checkins = get_weekly_checkins(searchdate)
       week = weekly_checkins.create_week_object(user)
 
-      return render_template('history.html', user=user, searchdate=searchdate, week=week, form=form, chart=chart)
+      return render_template('history.html', user=user, searchdate=searchdate, week=week, form=form, chart=chart, today=today)
                  
   elif request.method == 'GET':
-    return render_template('history.html', form=form)
+    return render_template('history.html', form=form, today=today)
 
 @regular.route('/')
 def home():
