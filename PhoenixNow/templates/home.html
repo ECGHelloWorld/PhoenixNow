@@ -20,8 +20,13 @@
 {% endif %}
 
 <div class="row">
+
 <button type="button" class="btn btn-secondary" id="showschedule">Schedule</button>
 <img src="/static/images/questionmark.png" alt="schedule help" style="width:20px; height: 20px;" class="scheduletoggle" data-toggle="tooltip" data-placement="right" title="By default a 5 day schedule is selected. If your schedule differs, please indicate it below and an admin will verify the schedule change.">
+
+<a href="/history" class="btn btn-secondary" style="margin-left: 10px;">History</a>
+<img src="/static/images/questionmark.png" alt="schedule help" style="width:20px; height: 20px;" class="scheduletoggle" data-toggle="tooltip" data-placement="right" title="View your checkin history one week at a time. Input dates in the format ( Year-Day-Month ).">
+
 </div>
 
 <div class="row scheduleform" style="display:none;">
@@ -96,6 +101,7 @@
 </tr>
 </table>
 </div>
+
 
 <script>
 $(document).ready(function(){
