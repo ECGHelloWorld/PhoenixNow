@@ -3,9 +3,41 @@
 
 {% if chart %}
 
+
+
 <div class="row">
-<h2>Check-in's for {{ searchdate }}</h2>
+<h2>Week of {{ searchdate.strftime('%A, %B %d %Y') }}</h2>
 </div>
+
+
+  <div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+
+  <form action="{{ url_for('regular.history') }}" method=post>
+    {{ form.hidden_tag() }}
+
+    <div class="form-group">
+    {{ form.date.label }}
+    {{ form.date(class_="form-control") }}
+    </div>
+
+    {{ form.submit(class_="btn btn-default") }}
+    
+    <br></br>
+
+    <div class="row">
+    <input class="btn btn-default" id="submit" name="submit" type="submit" value="Previous Week">
+    <input class="btn btn-default" id="submit" name="submit" type="submit" value="Next Week">
+    </div>
+
+
+  </form>
+    <br></br>
+
+  </div>
+  <div class="col-sm-4"></div>
+  </div>
 
 <div class="table-responsive">
 <table class="table table-striped">
@@ -26,7 +58,6 @@
 </tr>
 </table>
 </div>
-
 
 {% else %}
 
@@ -51,6 +82,14 @@
     </div>
 
     {{ form.submit(class_="btn btn-default") }}
+
+    <br></br>
+
+    <div class="row">
+    <input class="btn btn-default" id="submit" name="submit" type="submit" value="Previous Week">
+    <input class="btn btn-default" id="submit" name="submit" type="submit" value="Next Week">
+    </div>
+
     </form>
     <br></br>
 

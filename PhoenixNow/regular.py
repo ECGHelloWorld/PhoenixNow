@@ -7,6 +7,7 @@ from PhoenixNow.model import db, User, Checkin
 from PhoenixNow.week import Week
 from flask_login import login_required, login_user, logout_user, current_user
 import datetime
+from datetime import timedelta
 import bcrypt
 
 from PhoenixNow.config import ProductionConfig
@@ -20,20 +21,27 @@ def history():
   form = CalendarForm()
   user = current_user
   chart = False
-  
+
   if request.method == 'POST':
-    if form.validate_on_submit():
-      stringdate = form.date.data
-      searchdate = datetime.datetime.strptime(stringdate, '%Y-%m-%d')
-      
+      chart = True
+      try:
+        stringdate = form.date.data
+        searchdate = datetime.datetime.strptime(stringdate, '%Y-%m-%d').date()
+      except:
+        return "Improper Date Format"
+
+      if request.form['submit'] == "Next Week":
+        searchdate = searchdate + timedelta(days=7)
+        form.date.data = searchdate
+
+      if request.form['submit'] == "Previous Week":
+        searchdate = searchdate + timedelta(days=-7)
+        form.date.data = searchdate
+
       weekly_checkins = get_weekly_checkins(searchdate)
       week = weekly_checkins.create_week_object(user)
-      
-      chart = True      
 
-      return render_template('history.html', user=user, chart=chart, searchdate=searchdate, week=week)
-    else:
-      return render_template('history.html', form=form)
+      return render_template('history.html', user=user, searchdate=searchdate, week=week, form=form, chart=chart)
                  
   elif request.method == 'GET':
     return render_template('history.html', form=form)

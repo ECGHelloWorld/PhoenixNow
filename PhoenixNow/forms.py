@@ -109,5 +109,5 @@ class ScheduleForm(Form):
   submit = SubmitField("Submit")
 
 class CalendarForm(Form):
-  date = StringField("Date (2016-3-30)",  [InputRequired("Please Enter Your Name")])
-  submit = SubmitField("Send")
+  date = StringField("Date (ex. 2016-3-30 )")
+  submit = SubmitField("Submit Date")
