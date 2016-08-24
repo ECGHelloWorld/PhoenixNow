@@ -1,9 +1,10 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
 from PhoenixNow.user import create_user, checkin_user, get_weekly_checkins, reset_password_email
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint, request
-from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm
+from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm, CalendarForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from PhoenixNow.model import db, User, Checkin
+from PhoenixNow.week import Week
 from flask_login import login_required, login_user, logout_user, current_user
 import datetime
 import bcrypt
@@ -11,6 +12,31 @@ import bcrypt
 from PhoenixNow.config import ProductionConfig
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
+
+@regular.route('/history', methods=['GET', 'POST'])
+@login_required
+def history():
+
+  form = CalendarForm()
+  user = current_user
+  chart = False
+  
+  if request.method == 'POST':
+    if form.validate_on_submit():
+      stringdate = form.date.data
+      searchdate = datetime.datetime.strptime(stringdate, '%Y-%m-%d')
+      
+      weekly_checkins = get_weekly_checkins(searchdate)
+      week = weekly_checkins.create_week_object(user)
+      
+      chart = True      
+
+      return render_template('history.html', user=user, chart=chart, searchdate=searchdate, week=week)
+    else:
+      return render_template('history.html', form=form)
+                 
+  elif request.method == 'GET':
+    return render_template('history.html', form=form)
 
 @regular.route('/')
 def home():

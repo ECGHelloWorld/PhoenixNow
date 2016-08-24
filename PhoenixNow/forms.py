@@ -107,3 +107,7 @@ class ScheduleForm(Form):
   thursday = BooleanField("Thursday")
   friday = BooleanField("Friday")
   submit = SubmitField("Submit")
+
+class CalendarForm(Form):
+  date = StringField("Date (2016-3-30)",  [InputRequired("Please Enter Your Name")])
+  submit = SubmitField("Send")
