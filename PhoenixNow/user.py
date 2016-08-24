@@ -1,6 +1,7 @@
 from PhoenixNow.mail import generate_confirmation_token, send_email
 from flask import url_for, render_template
 from PhoenixNow.model import db, User, Checkin
+from PhoenixNow.week import Week
 import datetime
 
 def create_user(first, last, grade, email, password):
@@ -66,3 +67,21 @@ class get_weekly_checkins:
         for checkin in self.friday_checkins:
             checkin.user.friday = "present"
             db.session.commit()
+    def create_week_object(self, user):
+        week = Week()
+        for checkin in self.monday_checkins:
+            if checkin.user_id == user.id:
+              week.monday = "present"
+        for checkin in self.tuesday_checkins:
+            if checkin.user_id == user.id:
+              week.tuesday = "present"
+        for checkin in self.wednesday_checkins:
+            if checkin.user_id == user.id:
+              week.wednesday = "present"
+        for checkin in self.thursday_checkins:
+            if checkin.user_id == user.id:
+              week.thursday = "present"
+        for checkin in self.friday_checkins:
+            if checkin.user_id == user.id:
+              week.friday = "present"
+        return week
