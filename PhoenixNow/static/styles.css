@@ -5,14 +5,10 @@ body {
 
 body.background {
     padding-top: 80px;
-
     font-family: "Calibri", "Times New Roman", serif;
-
     background: #F0EAD6;
     margin: 0;
-
     color: #800000; 
-
 }
 
 body.homebackground {
@@ -71,3 +67,14 @@ body.homebackground {
   padding: 0px;
 }
 
+.title{
+color: #800000; 
+font-family: 'Cinzel Decorative', cursive;
+}
+
+
+.content{
+
+
+
+}
