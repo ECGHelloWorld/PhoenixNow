@@ -42,7 +42,7 @@ class get_weekly_checkins:
         self.tuesday_checkins = Checkin.query.filter(Checkin.checkin_week == date.isocalendar()[1], Checkin.checkin_day == 2 ).all()
         self.wednesday_checkins = Checkin.query.filter(Checkin.checkin_week == date.isocalendar()[1], Checkin.checkin_day == 3 ).all()
         self.thursday_checkins = Checkin.query.filter(Checkin.checkin_week == date.isocalendar()[1], Checkin.checkin_day == 4 ).all()
-        self.friday_checkins = Checkin.query.filter(Checkin.checkin_week == '33', Checkin.checkin_day == 5 ).all()
+        self.friday_checkins = Checkin.query.filter(Checkin.checkin_week == date.isocalendar()[1], Checkin.checkin_day == 5 ).all()
    
     def update_database(self): # change the day values to True if a checkin exists
         users = User.query.all()
