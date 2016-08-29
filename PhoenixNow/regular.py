@@ -246,8 +246,7 @@ def checkin():
     return redirect(url_for('regular.home'))
 
 @regular.route('/about')
-@login_required
-@check_verified
+@login_notrequired
 def about():
 
     return render_template('about.html')
