@@ -5,6 +5,12 @@
 
 <h2 class="title" style="margin-bottom: 20px;">Welcome {{ user.firstname }} {{user.lastname}}!</h2>
 
+<div class="row">
+<h2 class="harambe" style="display:none;">He died For us</h2>
+<img class="harambe" src="/static/images/Harambe.jpg" style="height:170px; width:170px; margin:20px; display:none;">
+<h2 class="harambe" style="display:none;">RIP 1999-2016</h2>
+</div>
+
 {% if not checkedin %}
 <div class="row">
   <form action = "{{ url_for('regular.checkin') }}">
@@ -105,6 +111,7 @@
 
 <script>
 $(document).ready(function(){
+    var count = 0;
 
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip(); 
@@ -113,7 +120,19 @@ $(document).ready(function(){
             $(".scheduleform").fadeToggle(1000);
         });
 
-    });
+        $(".title").click(function(event){
+            count += 1;
+            if (count > 9) {
+              $(".harambe").fadeToggle(1000);    
+              count = 0;   
+            }
+        });
+
+
+        });
+
+
+
 
 });
 </script>
