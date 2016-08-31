@@ -33,11 +33,12 @@
         <li><a href="{{ url_for('regular.about') }}">About Us</a></li>
          <li><a href="{{ url_for('regular.signout') }}">Sign Out</a></li>
          {% if current_user.is_admin() %}
-	 <li><a href="{{ url_for('admin.home') }}">Admin Page</a></li>
+	 <li><a href="{{ url_for('admin.home') }}">Admin Portal</a></li>
 	 {% endif %}
          {% else %}
          <li><a href="{{ url_for('regular.signup') }}">Register</a></li>
          <li><a href="{{ url_for('regular.signin') }}">Sign In</a></li>
+         <li><a href="{{ url_for('regular.about') }}">About Us</a></li>
          {% endif %}
           </ul>
         </div><!--/.nav-collapse -->
