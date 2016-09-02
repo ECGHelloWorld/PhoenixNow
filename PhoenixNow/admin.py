@@ -14,10 +14,11 @@ def home():
     users = User.query.all()
     users.sort(key=lambda user: (user.grade, user.lastname)) # sort by grade and name
     checkins = Checkin.query.filter(Checkin.checkin_timestamp >= datetime.date.today()).all()
+    checkins.sort(key=lambda checkin: (checkin.user.lastname)) # sort by grade and name
     today = datetime.date.today()
     weekly_checkins = get_weekly_checkins(today) # look at user.py
-    weekly_checkins.update_database() # look same place
-    return render_template('admin.html', users=users, checkins=checkins, weekly_checkins=weekly_checkins)
+    weekly_checkins.update_database() # look at user.py
+    return render_template('admin.html', users=users, checkins=checkins)
 
 @admin.route('/user/<int:user_id>')
 @login_required
@@ -44,4 +45,8 @@ def grade(grade):
   users.sort(key=lambda user: user.lastname) # sort by last name
   checkins = Checkin.query.filter(Checkin.checkin_timestamp >=
           datetime.date.today(), Checkin.user.has(grade=grade)).all()
+  checkins.sort(key=lambda checkin: (checkin.user.lastname)) # sort by grade and name
+  today = datetime.date.today()
+  weekly_checkins = get_weekly_checkins(today) # look at user.py
+  weekly_checkins.update_database() # look at user.py
   return render_template('grade.html', users=users,user=user,checkins=checkins,grade=grade)

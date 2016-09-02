@@ -1,56 +1,70 @@
 {% extends "layout.html" %}
 {% block content %}
-  <div>
+  <div style="background: #ffffff; color: black;">
 
     <h2>Users</h2>
 
-    <div>
-    <table class="table table-striped table-responsive">
+    <div class="table-responsive">
+    <table class="table table-striped table-hover">
 
     <tr>
-    <th>#</th>
-    <th>First Name</th>
     <th>Last Name</th>
+    <th>First Name</th>
+    <th>Email</th>
     <th>Grade</th>
-    <th>Checkins</th>
-    <th>Verified</th>
+    <th>Monday</th>
+    <th>Tuesday</th>
+    <th>Wednesday</th>
+    <th>Thursday</th>
+    <th>Friday</th>
+    <th>Schedule</th>
     <th>Schedule Verified</th>
     </tr>
 
-    {% for user in users %}    
+    {% for user in users %}
+    {% if user.verified %}
     <tr>
-        <td><a href="/admin/user/{{user.id}}">{{ user.id }}</a></td>
-        <td><a href="/admin/user/{{user.id}}">{{ user.firstname }}</a></td>
         <td><a href="/admin/user/{{user.id}}">{{ user.lastname }}</a></td>
+        <td><a href="/admin/user/{{user.id}}">{{ user.firstname }}</a></td>
+        <td>{{ user.email }}</td>
         <td><a href="/admin/grade/{{user.grade}}">{{ user.grade }}</a></td>
-        <td>{{ user.checkedin_days }}</td>
-        <td>{{ user.verified }}</td>
+        <td>{{ user.monday }}</td>
+        <td>{{ user.tuesday }}</td>
+        <td>{{ user.wednesday }}</td>
+        <td>{{ user.thursday }}</td>
+        <td>{{ user.friday }}</td>
+        <td>{{ user.schedule }}</td>
         <td>{{ user.schedule_verified }}</td>
     </tr>
+    {% endif %}
     {% endfor %}
 
     </table>
+    </div>
 
     <h2>Check-ins</h2>
-    <table class="table table-striped table-responsive">
+
+    <div class="table-responsive">
+    <table class="table table-striped table-responsive table-hover">
 
     <tr>
+    <th>Name</th>
     <th>Timestamp</th>
     <th>Week</th>
     <th>Day</th>
-    <th>Name</th>
     </tr>
     
     {% for checkin in checkins %}    
     <tr>
+    <td> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>
     <td> {{ checkin.checkin_timestamp.strftime('%x %X%p') }} </td>
     <td> {{ checkin.checkin_week }} </td>
-    <td> {{ checkin.checkin_day }} </td>
-    <td> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>
+    <td> {{ checkin.checkin_timestamp.strftime('%A') }} </td>
     </tr>
     {% endfor %}
 
     </table>
     </div>
+
   </div>
 {% endblock %}

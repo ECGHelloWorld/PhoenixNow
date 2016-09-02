@@ -3,7 +3,7 @@ class Config(object):
     TESTING = False
     SECRET_KEY = 'idontknowwhatthisis'
     SECURITY_PASSWORD_SALT = "fortoken"
-    MAIL_DEFAULT_SENDER = "support@chadali.me"
+    MAIL_DEFAULT_SENDER = "support@phoenixnow.org"
 
 class ProductionConfig(Config):
 #    SQLALCHEMY_DATABASE_URI = 'mysql+oursql://user:pass@localhost/dbname'

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
  
 {% block content %}
-  <h2>Sign up</h2>
+  <h2 class="title">Register</h2>
  
   {% for message in form.firstname.errors %}
     <div class="alert alert-warning alert-dismissible" role="alert">
@@ -56,7 +56,7 @@
     </div>
 
     <div class="form-group">
-    <label for="grade">Select grade</label>
+    <label for="grade">Select Grade Level</label>
       <select class="form-control" name="grade" id="grade">
         <option> 9</option>
         <option>10</option>
@@ -73,6 +73,11 @@
     <div class="form-group">
     {{ form.password.label }}
     {{ form.password(class_="form-control") }}
+    </div>
+
+    <div class="form-group">
+    {{ form.confirmpassword.label }}
+    {{ form.confirmpassword(class_="form-control") }}
     </div>
 
     {{ form.submit(class_="btn btn-default") }}

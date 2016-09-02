@@ -1,15 +1,51 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
-from PhoenixNow.user import create_user, checkin_user
+from PhoenixNow.user import create_user, checkin_user, get_weekly_checkins, reset_password_email
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint, request
-from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm
+from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm, CalendarForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from PhoenixNow.model import db, User, Checkin
+from PhoenixNow.week import Week
 from flask_login import login_required, login_user, logout_user, current_user
 import datetime
+from datetime import timedelta
+import bcrypt
 
 from PhoenixNow.config import ProductionConfig
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
+
+@regular.route('/history', methods=['GET', 'POST'])
+@login_required
+def history():
+
+  form = CalendarForm()
+  user = current_user
+  today = datetime.date.today()
+  chart = False
+
+  if request.method == 'POST':
+      chart = True
+      try:
+        stringdate = form.date.data
+        searchdate = datetime.datetime.strptime(stringdate, '%Y-%m-%d').date()
+      except:
+        return "Improper Date Format"
+
+      if request.form['submit'] == "Next Week":
+        searchdate = searchdate + timedelta(days=7)
+        form.date.data = searchdate
+
+      if request.form['submit'] == "Previous Week":
+        searchdate = searchdate + timedelta(days=-7)
+        form.date.data = searchdate
+
+      weekly_checkins = get_weekly_checkins(searchdate)
+      week = weekly_checkins.create_week_object(user)
+
+      return render_template('history.html', user=user, searchdate=searchdate, week=week, form=form, chart=chart, today=today)
+                 
+  elif request.method == 'GET':
+    return render_template('history.html', form=form, today=today)
 
 @regular.route('/')
 def home():
@@ -17,6 +53,16 @@ def home():
   schedule_form = ScheduleForm()
 
   user = current_user
+
+  if user.is_active:
+    checkedin = False
+    today = datetime.date.today()
+    for checkin in user.checkins:
+        if checkin.checkin_timestamp.date() == today:
+            checkedin = True
+    weekly_checkins = get_weekly_checkins(today) # look at user.py
+    weekly_checkins.update_database() # look at user.py
+    return render_template('home.html', user=user, form=form, schedule_form=schedule_form,checkedin=checkedin,today=today)
 
   return render_template('home.html', user=user, form=form, schedule_form=schedule_form)
 
@@ -28,11 +74,31 @@ def schedule():
     user = current_user
 
     if form.validate_on_submit():
-        user.monday = form.monday.data
-        user.tuesday = form.tuesday.data
-        user.wednesday = form.wednesday.data
-        user.thursday = form.thursday.data
-        user.friday = form.friday.data
+        user.schedule = ""
+        user.schedule_monday = False
+        user.schedule_tuesday = False
+        user.schedule_wednesday = False
+        user.schedule_thursday = False
+        user.schedule_friday = False
+        if form.monday.data:
+            user.schedule = "M"
+            user.schedule_monday = True
+        if form.tuesday.data:
+            user.schedule = "%s:T" % (user.schedule)
+            user.schedule_tuesday = True
+        if form.wednesday.data:
+            user.schedule = "%s:W" % (user.schedule)
+            user.schedule_wednesday = True
+        if form.thursday.data:
+            user.schedule = "%s:R" % (user.schedule)
+            user.schedule_thursday = True
+        if form.friday.data:
+            user.schedule = "%s:F" % (user.schedule)
+            user.schedule_friday = True
+        if user.schedule == "M:T:W:R:F":
+            user.schedule_verified = True
+        else:
+            user.schedule_verified = False
         db.session.commit()
         flash("Your schedule has been updated.")
 
@@ -91,7 +157,7 @@ def contact():
       html = render_template("contact_email.html", name=form.name.data,
               email=form.email.data, message=form.message.data)
       subject = "PhoenixNow Contact: " + form.subject.data
-      send_email("nick@nickendo.com", subject, html)
+      send_email("chaudhryam@guilford.edu, helloworldappclub@gmail.com, kerrj@guilford.edu, nairv@guilford.edu, daynb@guilford.edu", subject, html)
       flash('Your contact us email has been sent.', 'success')
       return render_template('contact.html', success=True)
     else:
@@ -104,7 +170,7 @@ def contact():
 @regular.route('/verify/<token>')
 def verify_email(token):
   tokenemail = confirm_token(token)
-  user = User.query.filter_by(email = tokenemail).first_or_404()
+  user = User.query.filter_by(email = tokenemail).first()
   if user:
     user.verified = True
     db.session.commit()
@@ -112,6 +178,38 @@ def verify_email(token):
   else:
     flash('The confirmation link is invalid or has expired.', 'danger')
   return redirect(url_for('regular.home'))
+
+@regular.route('/reset/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+  form = ResetForm()
+  tokenemail = confirm_token(token)
+  user = User.query.filter_by(email = tokenemail).first()
+  if user:
+    if request.method == 'POST':
+      if form.validate_on_submit():
+        user.pw_hash = bcrypt.hashpw(form.password.data.encode('utf-8'), user.salt)
+        db.session.commit()
+        flash('Your password has been reset.')
+        return redirect(url_for('regular.home'))
+      else:
+        return render_template('reset.html', form=form, token=token)
+    elif request.method == 'GET':
+      return render_template('reset.html', form=form, token=token)
+  else:
+    flash('The confirmation link is invalid or has expired.', 'danger')
+
+@regular.route('/requestreset', methods=['GET', 'POST'])
+def requestreset():
+  form = RequestResetForm()
+  if request.method == 'POST':
+    if form.validate_on_submit():
+      reset_password_email(form.email.data)
+      flash('An email has been sent to reset your password.')
+      return redirect(url_for('regular.home'))
+    else:
+      return render_template('requestreset.html', form=form)
+  elif request.method == 'GET':
+    return render_template('requestreset.html', form=form)
 
 @regular.route('/unverified')
 @login_required
@@ -138,9 +236,23 @@ def resend_verification():
 @check_verified
 def checkin():
     user = current_user
-    if request.remote_addr in ['192.168.1.1', '192.168.1.2']:
-        checkin_user(user)
-        flash('Successfully checked in')
+    if request.remote_addr.rsplit('.',1)[0] in ['192.154.63']:
+        if checkin_user(user):
+            flash('Successful Check-in!')
+        else:
+            flash('You are already signed in for today.')
     else:
-        flash("You're not on the Guilford network")
+        flash("Unsuccesful Check-in. Please check that you are on the Guilford College network.")
     return redirect(url_for('regular.home'))
+
+@regular.route('/about')
+def about():
+    return render_template('about.html')
+
+#Code here for potential future schedule page if necessary
+# @regular.route('/schedule')
+# @login_required
+# @check_verified
+# def schedule():
+#     user = current_user
+

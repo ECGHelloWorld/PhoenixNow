@@ -1,6 +1,7 @@
 from PhoenixNow.mail import generate_confirmation_token, send_email
 from flask import url_for, render_template
 from PhoenixNow.model import db, User, Checkin
+from PhoenixNow.week import Week
 import datetime
 
 def create_user(first, last, grade, email, password):
@@ -15,11 +16,24 @@ def create_user(first, last, grade, email, password):
     return newuser
 
 def checkin_user(user):
+    today = datetime.date.today()
+    for checkin in user.checkins:
+        if checkin.checkin_timestamp.date() == today:
+            return False
     checkinObject = Checkin()
     user.checkins.append(checkinObject)
     db.session.add(checkinObject)
     user.checkedin = True
     db.session.commit()
+    return True
+
+def reset_password_email(email):
+    token = generate_confirmation_token(email)
+    reset_url = url_for('regular.reset_password', token=token, _external=True)
+    html = render_template('resetemail.html', reset_url=reset_url)
+    subject = "Password reset request."
+    send_email(email, subject, html)
+    return True
 
 class get_weekly_checkins:
     
@@ -28,24 +42,46 @@ class get_weekly_checkins:
         self.tuesday_checkins = Checkin.query.filter(Checkin.checkin_week == date.isocalendar()[1], Checkin.checkin_day == 2 ).all()
         self.wednesday_checkins = Checkin.query.filter(Checkin.checkin_week == date.isocalendar()[1], Checkin.checkin_day == 3 ).all()
         self.thursday_checkins = Checkin.query.filter(Checkin.checkin_week == date.isocalendar()[1], Checkin.checkin_day == 4 ).all()
-        self.friday_checkins = Checkin.query.filter(Checkin.checkin_week == '33', Checkin.checkin_day == '5' ).all()
+        self.friday_checkins = Checkin.query.filter(Checkin.checkin_week == date.isocalendar()[1], Checkin.checkin_day == 5 ).all()
    
     def update_database(self): # change the day values to True if a checkin exists
         users = User.query.all()
         for user in users:
-            user.checkedin_days = "" #WITHOUT THIS IT GIVES 'VARCHARS' WHEN EMPTY OR SOMETHING??//
+            user.monday = "" #WITHOUT THIS IT GIVES 'VARCHARS' WHEN EMPTY OR SOMETHING??//
+            user.tuesday = ""
+            user.wednesday = ""
+            user.thursday = ""
+            user.friday = ""
         for checkin in self.monday_checkins:
-            checkin.user.checkedin_days = "M"
+            checkin.user.monday = "present"
             db.session.commit()
         for checkin in self.tuesday_checkins:
-            checkin.user.checkedin_days = "%s:T" % (checkin.user.checkedin_days)
+            checkin.user.tuesday = "present"
             db.session.commit()
         for checkin in self.wednesday_checkins:
-            checkin.user.checkedin_days = "%s:W" % (checkin.user.checkedin_days)
+            checkin.user.wednesday = "present"
             db.session.commit()
         for checkin in self.thursday_checkins:
-            checkin.user.checkedin_days = "%s:R" % (checkin.user.checkedin_days)
+            checkin.user.thursday = "present"
             db.session.commit()
         for checkin in self.friday_checkins:
-            checkin.user.checkedin_days = "%s:F" % (checkin.user.checkedin_days)
+            checkin.user.friday = "present"
             db.session.commit()
+    def create_week_object(self, user):
+        week = Week()
+        for checkin in self.monday_checkins:
+            if checkin.user_id == user.id:
+              week.monday = "present"
+        for checkin in self.tuesday_checkins:
+            if checkin.user_id == user.id:
+              week.tuesday = "present"
+        for checkin in self.wednesday_checkins:
+            if checkin.user_id == user.id:
+              week.wednesday = "present"
+        for checkin in self.thursday_checkins:
+            if checkin.user_id == user.id:
+              week.thursday = "present"
+        for checkin in self.friday_checkins:
+            if checkin.user_id == user.id:
+              week.friday = "present"
+        return week

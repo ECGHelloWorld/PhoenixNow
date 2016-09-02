@@ -2,69 +2,141 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-{% if not user.checkedin %}
+
+<h2 class="title" style="margin-bottom: 20px;">Welcome {{ user.firstname }} {{user.lastname}}!</h2>
+
 <div class="row">
-  <h2>Welcome to PhoenixNow</h2>
+<h2 class="harambe" style="display:none;">He died For us</h2>
+<img class="harambe" src="/static/images/Harambe.jpg" style="height:170px; width:170px; margin:20px; display:none;">
+<h2 class="harambe" style="display:none;">RIP 1999-2016</h2>
+</div>
+
+{% if not checkedin %}
+<div class="row">
   <form action = "{{ url_for('regular.checkin') }}">
       <div class="form-group">
   {{ form.checkin(class_="btn btn-default") }}
-    </div>
+      </div>
   </form>
 </div>
 {% else %}
 <div class="row">
-<h4>Checked In!</h4>
+<h4 class="title">Checked in for {{ today }}!</h4>
 </div>
 {% endif %}
+
 <div class="row">
-<h2>Enter your schedule for the semester</h2>
+
+<button type="button" class="btn btn-secondary" id="showschedule">Schedule</button>
+<img src="/static/images/questionmark.png" alt="schedule help" style="width:20px; height: 20px;" class="scheduletoggle" data-toggle="tooltip" data-placement="right" title="By default a 5 day schedule is selected. If your schedule differs, please indicate it below and an admin will verify the schedule change.">
+
+<a href="/history" class="btn btn-secondary" style="margin-left: 10px;">History</a>
+<img src="/static/images/questionmark.png" alt="schedule help" style="width:20px; height: 20px;" class="scheduletoggle" data-toggle="tooltip" data-placement="right" title="View your checkin history one week at a time. Input dates in the format ( Year-Day-Month ).">
+
 </div>
 
-<div class="row">
+<div class="row scheduleform" style="display:none;">
+<h2 class="title">Schedule </h2> 
+<h4 class="content">Currently - {{ user.schedule }}</h4>
+</div>
 
-<form method=post action="{{ url_for('regular.schedule') }}">
+
+
+<form class="row scheduleform" style="display:none;" method=post action="{{ url_for('regular.schedule') }}">
         {{ form.hidden_tag() }}
-        
+        <div class="row">
         <div class="col-sm-2 col-sm-offset-1">
         <div class="form-group">
         {{ schedule_form.monday.label }}
-        {{ schedule_form.monday(class_="btn btn default", checked=user.monday) }}
+        {{ schedule_form.monday(class_="btn btn default", checked=user.schedule_monday) }}
         </div>
         </div>
 
         <div class="col-sm-2">
         <div class="form-group">
         {{ schedule_form.tuesday.label }}
-        {{ schedule_form.tuesday(class_="btn btn default", checked=user.tuesday) }}
+        {{ schedule_form.tuesday(class_="btn btn default", checked=user.schedule_tuesday) }}
         </div>
         </div>
 
         <div class="col-sm-2">
         <div class="form-group">
         {{ schedule_form.wednesday.label }}
-        {{ schedule_form.wednesday(class_="btn btn default", checked=user.wednesday) }}
+        {{ schedule_form.wednesday(class_="btn btn default", checked=user.schedule_wednesday) }}
         </div>
         </div>
 
         <div class="col-sm-2">
         <div class="form-group">
         {{ schedule_form.thursday.label }}
-        {{ schedule_form.thursday(class_="btn btn default", checked=user.thursday) }}
+        {{ schedule_form.thursday(class_="btn btn default", checked=user.schedule_thursday) }}
         </div>
         </div>
 
         <div class="col-sm-2">
         <div class="form-group">
         {{ schedule_form.friday.label }}
-        {{ schedule_form.friday(class_="btn btn default", checked=user.friday) }}
+        {{ schedule_form.friday(class_="btn btn default", checked=user.schedule_friday) }}
         </div>
         </div>
-
-
+        </div>
     {{ schedule_form.submit(class_="btn btn-default") }}
 </form>
 
+
+<div class="row">
+<h2 class="title">Week of {{ today }}</h2>
 </div>
+
+<div class="table-responsive">
+<table class="table table-striped">
+<tr>
+<th>Monday</th>
+<th>Tuesday</th> 
+<th>Wednesday</th>
+<th>Thursday</th>
+<th>Friday</th>
+</tr>
+ 
+<tr>
+<td>{{ user.monday }}</td>
+<td>{{ user.tuesday }}</td>
+<td>{{ user.wednesday }}</td>
+<td>{{ user.thursday }}</td>
+<td>{{ user.friday }}</td>
+</tr>
+</table>
+</div>
+
+
+<script>
+$(document).ready(function(){
+    var count = 0;
+
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip(); 
+
+        $("#showschedule").click(function(event){
+            $(".scheduleform").fadeToggle(1000);
+        });
+
+        $(".title").click(function(event){
+            count += 1;
+            if (count > 9) {
+              $(".harambe").fadeToggle(1000);    
+              count = 0;   
+            }
+        });
+
+
+        });
+
+
+
+
+});
+</script>
+
 {% endblock %}  
 
 {% else %}
@@ -77,21 +149,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 	<title>PhoenixNow</title>
+    <link rel='shortcut icon' href='/static/images/phoenixnowfavicon.ico' type='image/x-icon'/ >
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 
-<body>
-
+<body class="homebackground" style="padding-top: 50px;">
 
 <div class="container">
-   <div class="center-home" style=display:none;>
-   <img src="http://i.imgur.com/D11pAaj.png" alt="cool phoenix" style="width:100px;height:141px;">
-   <h2>Welcome to PhoenixNow<h2>
-   <a href="/signin" class="btn btn-default">Sign In</a>
-   <a href="/signup" class="btn btn-default">Register</a>
+<div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'message' %}
+              <div class="alert alert-warning alert-dismissable" role="alert">
+            {% else %}
+              <div class="alert alert-{{ category }} alert-dismissable" role="alert">
+            {% endif %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              {{ message }}
+            </div>
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+</div>
+
+<div class="container">
+   <div class="center-home" style="display:none; font-family: 'Cinzel Decorative', cursive;">
+   <img src="/static/images/phoenixnowlogo.png" alt="cool phoenix" style="width: 290px; height: 290px;">
+   <p class="title" style="display:none; font-size: 48px; font-size: 5vmax; margin: 0px;">PhoenixNow</p>
+   <p class="tagline" style="margin-bottom: 20px; font-size: 18px; font-weight: bold; display: none;">Your gateway to all things ECG</p>
+   <a href="/signin" id="SignIn" class="btn btn-default hvr-underline-from-center" style="display:none; margin-right: 5px;">Sign In </a>
+   <a href="/signup" id="Register" class="btn btn-default hvr-underline-from-center" style="display:none; margin-right: 5px">Register</a>
+   <br><br><br>
+   <a href="https://play.google.com/store/apps/details?id=com.weebly.helloworldclub.phoenixnow" style="margin: 50px;"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" style="width: 161px; height: 62px;"></a>
    </div>
 </div>
+
+</body>
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -99,7 +195,11 @@
 
 <script>
 $(document).ready(function(){
-    $(".center-home").fadeIn(3000)
+    $(".center-home").fadeIn(1000)
+    $(".title").fadeIn(2000)
+    $(".tagline").fadeIn(2500)
+    $("#SignIn").fadeIn(3000)
+    $("#Register").fadeIn(3500)
 
     $(".btn").click(function(event){
         event.preventDefault();
@@ -114,7 +214,6 @@ $(document).ready(function(){
 });
 </script>
 
-</body>
 </html>
 
 {% endif %}

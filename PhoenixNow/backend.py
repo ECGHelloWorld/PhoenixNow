@@ -97,15 +97,17 @@ def checkin():
             if lat <= 36.0984408:
                 if lat >= 36.0903956:
                     user = res['user']
-                    if user.checkedin:
-                        raise InvalidUsage("You have already been checked in", status_code=400)
+                    #if user.checkedin:
+                        #raise InvalidUsage("You have already been checked in", status_code=400)
                     if user is None:
                         raise InvalidUsage("This user does not exist", status_code=400)
                     if user.verified == False:
                         raise InvalidUsage("This user is not verified", status_code=400)
                     else:
-                        checkin_user(user)
-                        return jsonify({"result": "success", "action": "checkin", "token": res['token']})
+                        if checkin_user(user):
+                            return jsonify({"result": "success", "action": "checkin", "token": res['token']})
+                        else:
+                            raise InvalidUsage("Already checked in for today")
 
     raise InvalidUsage("The user is not at Guilford")
 
@@ -113,20 +115,31 @@ def checkin():
 def schedule():
     res =  check_code(check_token(check_input(request.get_json(silent=True), 'monday', 'tuesday', 'wednesday', 'thursday', 'friday')))
     user = res['user']
-    user.monday = res['monday']
-    user.tuesday = res['tuesday']
-    user.wednesday = res['wednesday']
-    user.thursday = res['thursday']
-    user.friday = res['friday']
+    user.schedule = ""
+    if res['monday']:
+        user.schedule = "M"
+        user.schedule_monday = True
+    if res['tuesday']:
+        user.schedule = "%s:T" % (user.schedule)
+        user.schedule_tuesday = True
+    if res['wednesday']:
+        user.schedule = "%s:W" % (user.schedule)
+        user.schedule_wednesday = True
+    if res['thursday']:
+        user.schedule = "%s:R" % (user.schedule)
+        user.schedule_thursday = True
+    if res['friday']:
+        user.schedule = "%s:F" % (user.schedule)
+        user.schedule_friday = True
+    if user.schedule == "M:T:W:R:F":
+        user.schedule_verified = True
+    else:
+        user.schedule_verified = False
     db.session.commit()
     return jsonify({
         "action": "update schedule",
         "result": "success",
-        'monday': user.monday,
-        'tuesday': user.tuesday, 
-        'wednesday': user.wednesday, 
-        'thursday': user.thursday, 
-        'friday': user.friday ,
+        'schedule': user.schedule,
         'verified': user.schedule_verified,
         'token': res['token']
     })
@@ -138,11 +151,7 @@ def getschedule():
     return jsonify({
         "action": "get schedule",
         "result": "success",
-        'monday': user.monday,
-        'tuesday': user.tuesday, 
-        'wednesday': user.wednesday, 
-        'thursday': user.thursday, 
-        'friday': user.friday,
+        'schedule': user.schedule,
         'verified': user.schedule_verified,
         'token': res['token']
     })
