@@ -10,10 +10,10 @@ class User(db.Model):
     lastname = db.Column(db.String(100))
     email = db.Column(db.String(120), unique=True)
     grade = db.Column(db.Integer)
-    pw_hash = db.Column(db.String)
-    salt = db.Column(db.String)
+    pw_hash = db.Column(db.String(500))
+    salt = db.Column(db.String(100))
     checkedin = db.Column(db.Boolean)
-    checkedin_days = db.String()
+    checkedin_days = db.Column(db.String(500))
     creation_timestamp = db.Column(db.DateTime)
     checkins = db.relationship('Checkin', backref='user', lazy='dynamic')
     verified = db.Column(db.Boolean)
@@ -75,8 +75,8 @@ class User(db.Model):
 class Checkin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     checkin_timestamp = db.Column(db.DateTime)
-    checkin_week = db.Column(db.String)
-    checkin_day = db.Column(db.String)
+    checkin_week = db.Column(db.String(500))
+    checkin_day = db.Column(db.String(500))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self):
