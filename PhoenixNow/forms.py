@@ -111,3 +111,16 @@ class ScheduleForm(Form):
 class CalendarForm(Form):
   date = StringField("Date")
   submit = SubmitField("Submit Date")
+
+class UserForm(Form):
+  firstname = StringField("First Name")
+  lastname = StringField("Last Name")
+  grade = StringField("Grade Level")
+  submit = SubmitField("Edit Account")
+
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)
+ 
+  def validate(self):
+    if not Form.validate(self):
+      return False

@@ -14,6 +14,12 @@ from PhoenixNow.config import ProductionConfig
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
 
+@regular.route('/test')
+def test():
+    user = create_user('ali', 'chaudhry', '12', 'chaudhryam@guilford.edu', '1')
+    user.verified = True
+    return redirect(url_for('regular.home'))
+
 @regular.route('/history', methods=['GET', 'POST'])
 @login_required
 def history():
