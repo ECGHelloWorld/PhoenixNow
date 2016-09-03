@@ -34,8 +34,7 @@ class User(db.Model):
         self.lastname = lastname.title()
         self.email = email
         self.grade = grade
-        self.salt = bcrypt.gensalt()
-        self.pw_hash = bcrypt.hashpw(password.encode('utf-8'), self.salt)
+        self.pw_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         self.creation_timestamp = datetime.datetime.utcnow()
         self.checkedin = False
         self.verified = False
@@ -71,8 +70,7 @@ class User(db.Model):
         return False
 
     def check_password(self, password):
-        if bcrypt.hashpw(password.encode('utf-8'), self.pw_hash) == self.pw_hash:
-            return True
+        return bcrypt.checkpw(password.encode('utf-8'), self.pw_hash)
 
     def is_admin(self):
         if self.email in ['chaudhryam@guilford.edu', 'daynb@guilford.edu', 'admin@phoenixnow.me', 'kiddlm@guilford.edu', 'websternb@guilford.edu', 'lkiser@guilford.edu']:
