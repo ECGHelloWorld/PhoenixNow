@@ -9,7 +9,7 @@ Flask==0.11.1
 SQLAlchemy==1.0.14
 Flask-SQLAlchemy==2.1
 
-bcrypt==2.0.0
+bcrypt==3.1.0
 
 sphinx-autobuild==0.6.0
 Sphinx==1.4.4
