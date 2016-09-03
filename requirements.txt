@@ -25,3 +25,5 @@ celery==3.1.23
 pyjwt==1.4.0
 
 https://launchpad.net/oursql/py3k/py3k-0.9.4/+download/oursql-0.9.4.zip
+
+uwsgi==2.0.13.1
