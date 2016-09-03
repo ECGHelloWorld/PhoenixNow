@@ -71,7 +71,8 @@ class User(db.Model):
         return False
 
     def check_password(self, password):
-        return self.pw_hash == bcrypt.hashpw(password.encode('utf-8'), self.salt)
+        if bcrypt.hashpw(password.encode('utf-8'), self.pw_hash) == self.pw_hash:
+            return True
 
     def is_admin(self):
         if self.email in ['chaudhryam@guilford.edu', 'daynb@guilford.edu', 'admin@phoenixnow.me', 'kiddlm@guilford.edu', 'websternb@guilford.edu', 'lkiser@guilford.edu']:
