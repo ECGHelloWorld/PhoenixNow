@@ -22,3 +22,10 @@ def deploy():
         build()
         down()
         up()
+
+def restore_old_db():
+    sudo('docker cp ~/mysql-dump-new.sql phoenixnow_db_1:/')
+    sudo("docker exec -it phoenixnow_db_1 sh -c 'exec mysql -h172.18.0.2 -uroot -ppass < mysql-dump-new.sql'")
+
+def db_access():
+    sudo("docker exec -it phoenixnow_db_1 sh -c 'exec mysql -h172.18.0.2 -uroot -ppass'")
