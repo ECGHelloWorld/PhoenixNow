@@ -6,7 +6,8 @@ class Config(object):
     MAIL_DEFAULT_SENDER = "support@phoenixnow.org"
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'mysql+oursql://root:pass@db/phoenixrises'
+    #SQLALCHEMY_DATABASE_URI = 'mysql+oursql://root:pass@db/phoenixrises'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://postgres:password@db/phoenixrises
 
 class DevelopmentConfig(Config):
     DEBUG = True

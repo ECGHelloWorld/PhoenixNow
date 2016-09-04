@@ -24,14 +24,25 @@ def deploy():
         down()
         up()
 
-def restore_old_db():
+def mysql_restore_old_db():
     sudo('docker cp ~/mysql-dump-new.sql phoenixnow_db_1:/')
     sudo("docker exec -it phoenixnow_db_1 sh -c 'exec mysql -h172.18.0.2 -uroot -ppass < mysql-dump-new.sql'")
 
-def db_access():
+def mysql_db_access():
     sudo("docker exec -it phoenixnow_db_1 sh -c 'exec mysql -h172.18.0.2 -uroot -ppass'")
 
-def backup_db():
+def mysql_backup_db():
     today = datetime.datetime.utcnow()
     today_str = today.strftime("%-m-%-d-%Y-%-H-%-M-%-S")
     sudo("docker exec phoenixnow_db_1 sh -c 'exec mysqldump --all-databases -uroot -ppass' > /home/ecg/backup-" + today_str +".sql")
+
+def backup_db():
+    sudo("docker exec -t phoenixnow_db_1 pg_dumpall -c > /home/ecg/dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql")
+
+def list_backups():
+    run("ls /home/ecg/ | grep dump")
+
+def restore_backup(name):
+    # fab restore_backup:name=sqlbackupname
+    run("cat your_dump.sql | sudo docker exec -i phoenixnow_db_1 psql -Upostgres")
+    

@@ -9,6 +9,6 @@ services:
     env_file: 
      - .env
   db:
-    image: mariadb:latest
+    image: postgres:latest
     env_file:
      - .env
