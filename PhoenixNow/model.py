@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+import os
 import bcrypt
 import datetime
 
@@ -17,17 +18,17 @@ class User(db.Model):
     checkins = db.relationship('Checkin', backref='user', lazy='dynamic')
     verified = db.Column(db.Boolean)
     schedule_verified = db.Column(db.Boolean)
-    schedule = db.Column(db.String)
+    schedule = db.Column(db.String(500))
     schedule_monday = db.Column(db.Boolean)
     schedule_tuesday = db.Column(db.Boolean)
     schedule_wednesday = db.Column(db.Boolean)
     schedule_thursday = db.Column(db.Boolean)
     schedule_friday = db.Column(db.Boolean)
-    monday = db.Column(db.String)
-    tuesday = db.Column(db.String)
-    wednesday = db.Column(db.String)
-    thursday = db.Column(db.String)
-    friday = db.Column(db.String)
+    monday = db.Column(db.String(500))
+    tuesday = db.Column(db.String(500))
+    wednesday = db.Column(db.String(500))
+    thursday = db.Column(db.String(500))
+    friday = db.Column(db.String(500))
 
     def __init__(self, firstname, lastname, grade, email, password):
         self.firstname = firstname.title()
@@ -70,7 +71,12 @@ class User(db.Model):
         return False
 
     def check_password(self, password):
-        return bcrypt.checkpw(password.encode('utf-8'), self.pw_hash)
+        # If using sqlite, all you have to do is remove the .encode method from
+        # self.pw_hash
+        if os.environ.get('FLASK_DEBUG'):
+            return bcrypt.checkpw(password.encode('utf-8'), self.pw_hash)
+        else:
+            return bcrypt.checkpw(password.encode('utf-8'), self.pw_hash.encode('utf-8'))
 
     def is_admin(self):
         if self.email in ['chaudhryam@guilford.edu', 'daynb@guilford.edu', 'admin@phoenixnow.me', 'kiddlm@guilford.edu', 'websternb@guilford.edu', 'lkiser@guilford.edu']:

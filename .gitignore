@@ -97,3 +97,5 @@ ENV/
 *.db
 
 code.py
+
+*.env

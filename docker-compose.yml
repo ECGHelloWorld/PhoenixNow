@@ -1,0 +1,14 @@
+version: '2'
+services:
+  web:
+    build: .
+    ports:
+     - "3031:3031"
+    depends_on:
+     - db
+    env_file: 
+     - .env
+  db:
+    image: mariadb:latest
+    env_file:
+     - .env

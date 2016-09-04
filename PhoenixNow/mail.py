@@ -4,7 +4,6 @@ from PhoenixNow.config import ProductionConfig
 mail = Mail()
 
 from itsdangerous import URLSafeTimedSerializer
-from PhoenixNow.config import ProductionConfig
 
 def generate_confirmation_token(email):
     serializer = URLSafeTimedSerializer(ProductionConfig.SECRET_KEY)
