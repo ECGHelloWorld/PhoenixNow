@@ -1,4 +1,5 @@
 from fabric.api import *
+import datetime
 
 env.hosts = ['phoenixnow.org']
 env.user = 'ecg'
@@ -29,3 +30,8 @@ def restore_old_db():
 
 def db_access():
     sudo("docker exec -it phoenixnow_db_1 sh -c 'exec mysql -h172.18.0.2 -uroot -ppass'")
+
+def backup_db():
+    today = datetime.datetime.utcnow()
+    today_str = today.strftime("%-m-%-d-%Y-%-H-%-M-%-S")
+    sudo("docker exec phoenixnow_db_1 sh -c 'exec mysqldump --all-databases -uroot -ppass' > /home/ecg/backup-" + today_str +".sql")
