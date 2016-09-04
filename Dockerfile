@@ -1,8 +1,7 @@
 FROM python:3.5-alpine
 MAINTAINER Nicholas Day <nick@nickendo.com>
 
-RUN apk update && apk add build-base mariadb-dev libffi-dev python3-dev
-build-base linux-headers pcre-dev wget
+RUN apk update && apk add build-base mariadb-dev libffi-dev python3-dev build-base linux-headers pcre-dev wget
 
 ENV DOCKERIZE_VERSION v0.2.0
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
