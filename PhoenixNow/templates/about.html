@@ -7,9 +7,23 @@
  <br>
  <p class="content"> This app was made by the ECG Hello World App Club. </p>
  <br>
- <p class="content"> Programming and Design by Nicholas Day, Varun Nair, Justin Kerr, and Ali Chaudhry.</p>
+ <p class="content"> Programming and Design by Nicholas Day, Varun Nair, Justin Kerr, and <span class="name"></span>.</p>
 <br>
  <p class="content"> Artwork designed by Calder Brown.</p>
 <br>
  <p class="content"> Have an interest in Python, HTML/CSS, or Java? Feel free to check out the <a href="https://github.com/ECGHelloWorld/PhoenixNow/graphs/contributors">GitHub Page</a> or join the Hello World App Club!</p>
+
+
+
+<script>
+    $(document).ready(function(){
+    $(function(){
+        $(".name").typed({
+            strings: ["Alli Ch", "Ali Chaudhry^2000", "<strong>Ali Chaudhry</strong>"],
+            typeSpeed: 100,
+            backDelay: 300
+        });
+    });
+    });
+</script>
 {% endblock %}
