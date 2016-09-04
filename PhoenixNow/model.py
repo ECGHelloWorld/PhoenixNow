@@ -35,7 +35,7 @@ class User(db.Model):
         self.lastname = lastname.title()
         self.email = email
         self.grade = grade
-        self.pw_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        self.pw_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         self.creation_timestamp = datetime.datetime.utcnow()
         self.checkedin = False
         self.verified = False
@@ -71,12 +71,7 @@ class User(db.Model):
         return False
 
     def check_password(self, password):
-        # If using sqlite, all you have to do is remove the .encode method from
-        # self.pw_hash
-        if os.environ.get('FLASK_DEBUG'):
-            return bcrypt.checkpw(password.encode('utf-8'), self.pw_hash)
-        else:
-            return bcrypt.checkpw(password.encode('utf-8'), self.pw_hash.encode('utf-8'))
+        return bcrypt.checkpw(password.encode('utf-8'), self.pw_hash.encode('utf-8'))
 
     def is_admin(self):
         if self.email in ['chaudhryam@guilford.edu', 'daynb@guilford.edu', 'admin@phoenixnow.me', 'kiddlm@guilford.edu', 'websternb@guilford.edu', 'lkiser@guilford.edu']:
