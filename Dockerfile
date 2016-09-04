@@ -19,4 +19,4 @@ COPY . .
 
 EXPOSE 3031
 
-CMD dockerize -wait tcp://db:3306 -timeout 30s && uwsgi --socket :3031 -w run:app
+CMD dockerize -wait tcp://db:3306 -timeout 60s && uwsgi --socket :3031 -w run:app
