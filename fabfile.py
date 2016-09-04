@@ -37,7 +37,7 @@ def mysql_backup_db():
     sudo("docker exec phoenixnow_db_1 sh -c 'exec mysqldump --all-databases -uroot -ppass' > /home/ecg/backup-" + today_str +".sql")
 
 def backup_db():
-    sudo("docker exec -t phoenixnow_db_1 pg_dumpall -c > /home/ecg/dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql")
+    sudo("docker exec -t phoenixnow_db_1 pg_dumpall -c > /home/ecg/dump_`date +%d-%m-%Y_%H_%M_%S`.sql")
 
 def list_backups():
     run("ls /home/ecg/ | grep dump")
