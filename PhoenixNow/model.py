@@ -33,7 +33,7 @@ class User(db.Model):
     def __init__(self, firstname, lastname, grade, email, password):
         self.firstname = firstname.title()
         self.lastname = lastname.title()
-        self.email = email
+        self.email = email.lower()
         self.grade = grade
         self.pw_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         self.creation_timestamp = datetime.datetime.utcnow()
