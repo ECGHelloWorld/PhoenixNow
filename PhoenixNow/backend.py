@@ -155,3 +155,23 @@ def getschedule():
         'verified': user.schedule_verified,
         'token': res['token']
     })
+
+@backend.route('/getcheckins', methods=['POST'])
+def getcheckins():
+    res = check_code(check_token(check_input(request.get_json(silent=True))))
+    if 'date' in res:
+      user = res['user']
+      weekly_checkins = get_weekly_checkins(res['date'])
+      week = weekly_checkins.create_week_object(user)
+      return jsonify({
+          "action": "get checkins",
+          "result": "success",
+          'monday': week.monday,
+          'tuesday': week.tuesday,
+          'wednesday': week.wednesday,
+          'thursday': week.thursday,
+          'friday': week.friday,
+          'token': res['token']
+      })
+    else:
+      raise InvalidUsage("No date provided.")
