@@ -3,6 +3,16 @@ body {
     
 }
 
+.updatelog {
+    position:absolute;
+    bottom:0;
+    right:0;
+    background: rgba(54, 25, 25, .3);
+    border: solid 1px black;
+    border-radius: 25px;
+    width: 200px;
+}
+
 body.background {
     padding-top: 80px;
     font-family: "Calibri", "Times New Roman", serif;
