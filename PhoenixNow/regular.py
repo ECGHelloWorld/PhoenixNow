@@ -169,7 +169,12 @@ def contact():
 
 @regular.route('/verify/<token>')
 def verify_email(token):
+
   tokenemail = confirm_token(token)
+  if tokenemail is False:
+    flash('The confirmation link is invalid or has expired.', 'danger')
+    return redirect(url_for('regular.home'))
+
   user = User.query.filter_by(email = tokenemail).first()
   if user:
     user.verified = True
@@ -182,7 +187,12 @@ def verify_email(token):
 @regular.route('/reset/<token>', methods=['GET', 'POST'])
 def reset_password(token):
   form = ResetForm()
+
   tokenemail = confirm_token(token)
+  if tokenemail is False:
+    flash('The confirmation link is invalid or has expired.', 'danger')
+    return redirect(url_for('regular.home'))
+
   user = User.query.filter_by(email = tokenemail).first()
   if user:
     if request.method == 'POST':
