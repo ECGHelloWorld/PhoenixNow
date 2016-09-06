@@ -1,10 +1,11 @@
 import jwt
 from flask import Blueprint, jsonify, request
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
-from PhoenixNow.user import create_user, checkin_user
+from PhoenixNow.user import create_user, checkin_user, get_weekly_checkins
 from flask_login import login_required, login_user, logout_user
 from PhoenixNow.model import User, db
 from PhoenixNow.code import code
+from PhoenixNow.week import Week
 
 backend = Blueprint('backend', __name__, template_folder='templates', static_folder='static')
 
