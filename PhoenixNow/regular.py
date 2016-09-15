@@ -30,14 +30,14 @@ def save_endpoint():
 def root():
     return regular.send_static_file('sw.js')
 
-@login_required
 @regular.route('/beta')
+@login_required
 def beta():
     user = current_user
     return render_template('beta.html',user=user)
 
-@login_required
 @regular.route('/betatest')
+@login_required
 def betatest():
     user = current_user
     payload = {'registration_ids':[user.gcm_endpoint]}
