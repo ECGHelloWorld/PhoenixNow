@@ -29,6 +29,7 @@ class User(db.Model):
     wednesday = db.Column(db.String(500))
     thursday = db.Column(db.String(500))
     friday = db.Column(db.String(500))
+    gcm_endpoint = db.Column(db.String(500))
 
     def __init__(self, firstname, lastname, grade, email, password):
         self.firstname = firstname.title()

@@ -1,18 +1,50 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
 from PhoenixNow.user import create_user, checkin_user, get_weekly_checkins, reset_password_email
-from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint, request
+from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint, request, jsonify
 from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm, CalendarForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from PhoenixNow.model import db, User, Checkin
 from PhoenixNow.week import Week
 from flask_login import login_required, login_user, logout_user, current_user
 import datetime
+import requests
 from datetime import timedelta
 import bcrypt
+import json
+import os
 
 from PhoenixNow.config import ProductionConfig
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
+
+@regular.route('/saveendpoint', methods=['POST'])
+def save_endpoint():
+  data = request.json['endpoint']
+  data = data.split('/')[-1]
+  user = current_user
+  user.gcm_endpoint = data
+  db.session.commit()
+  return jsonify({"title": data})
+
+@regular.route('/sw.js')
+def root():
+    return resume.send_static_file('sw.js')
+
+@login_required
+@regular.route('/beta')
+def beta():
+    user = current_user
+    return render_template('beta.html',user=user)
+
+@login_required
+@regular.route('/betatest')
+def betatest():
+    user = current_user
+    payload = {'registration_ids':[user.gcm_endpoint]}
+    url = 'https://android.googleapis.com/gcm/send'
+    headers = {"Authorization":os.environ.get('tempapikey'), "Content-Type":"application/json"}
+    res = requests.post(url,headers=headers,data=json.dumps(payload))
+    return res.content
 
 @regular.route('/history', methods=['GET', 'POST'])
 @login_required
