@@ -29,7 +29,7 @@ def push():
     users.sort(key=lambda user: (user.grade, user.lastname)) # sort by grade and name
     return render_template('push.html', users=users)
 
-@admin.route('/sendpush/<str:gcm_endpoint>', methods=['GET', 'POST'])
+@admin.route('/sendpush/<gcm_endpoint>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def sendpush(gcm_endpoint):
