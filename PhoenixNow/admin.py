@@ -21,6 +21,32 @@ def home():
     weekly_checkins.update_database() # look at user.py
     return render_template('admin.html', users=users, checkins=checkins)
 
+@admin.route('/push')
+@login_required
+@admin_required
+def push():
+    users = User.query.all()
+    users.sort(key=lambda user: (user.grade, user.lastname)) # sort by grade and name
+    return render_template('push.html', users=users)
+
+@admin.route('/sendpush/<str:gcm_endpoint>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def sendpush(gcm_endpoint):
+  if request.method == 'POST':
+    payload = {'registration_ids':[gcm_endpoint]}
+    url = 'https://android.googleapis.com/gcm/send'
+    headers = {"Authorization": "key=" + os.environ.get('TEMPAPIKEY'), "Content-Type":"application/json"}
+    res = requests.post(url,headers=headers,data=json.dumps(payload))
+    return res.content
+
+  elif request.method == 'GET':
+    payload = {'registration_ids':[gcm_endpoint]}
+    url = 'https://android.googleapis.com/gcm/send'
+    headers = {"Authorization": "key=" + os.environ.get('TEMPAPIKEY'), "Content-Type":"application/json"}
+    res = requests.post(url,headers=headers,data=json.dumps(payload))
+    return res.content
+
 @admin.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
