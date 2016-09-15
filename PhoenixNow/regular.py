@@ -42,7 +42,7 @@ def betatest():
     user = current_user
     payload = {'registration_ids':[user.gcm_endpoint]}
     url = 'https://android.googleapis.com/gcm/send'
-    headers = {"Authorization":os.environ.get('tempapikey'), "Content-Type":"application/json"}
+    headers = {"Authorization":os.environ.get('TEMPAPIKEY'), "Content-Type":"application/json"}
     res = requests.post(url,headers=headers,data=json.dumps(payload))
     return res.content
 
