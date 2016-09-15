@@ -28,7 +28,7 @@ def save_endpoint():
 
 @regular.route('/sw.js')
 def root():
-    return resume.send_static_file('sw.js')
+    return regular.send_static_file('sw.js')
 
 @login_required
 @regular.route('/beta')
