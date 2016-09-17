@@ -98,13 +98,15 @@ def home():
     form = CheckinForm()
     schedule_form = ScheduleForm()
     
+    if not current_user.is_authenticated:
+        return render_template('home.html', user=current_user)
+
     user = current_user
 
     today = datetime.date.today()
     week = week_magic(today)
     
-    checkin_today = Checkin.query.filter(Checkin.user==user,
-            Checkin.checkin_timestamp==today).first()
+    checkin_today = Checkin.query.filter(Checkin.user==user, Checkin.checkin_timestamp==today).first()
     if checkin_today is None:
         checkedin = False
     else:
