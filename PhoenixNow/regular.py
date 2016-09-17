@@ -29,14 +29,14 @@ def save_endpoint():
 def root():
     return regular.send_static_file('sw.js')
 
-@login_required
 @regular.route('/beta')
+@login_required
 def beta():
     user = current_user
     return render_template('beta.html',user=user)
 
-@login_required
 @regular.route('/betatest')
+@login_required
 def betatest():
     user = current_user
     payload = {'registration_ids':[user.gcm_endpoint]}
@@ -171,7 +171,7 @@ def signup():
   if request.method == 'POST':
     if form.validate_on_submit():
       user = create_user(form.firstname.data, form.lastname.data, form.grade.data, form.email.data, form.password.data)
-      login_user(user)
+      login_user(user,remember=True)
 
       flash('A verification email has been sent via email.', 'success')
       return redirect(url_for('regular.unverified'))
@@ -191,7 +191,7 @@ def signin():
   if request.method == 'POST':
     if form.validate_on_submit():
       user = User.query.filter_by(email = form.email.data.lower()).first()
-      login_user(user)
+      login_user(user,remember=True)
       return redirect(url_for('regular.home'))
     else:
       return render_template('signin.html', form=form)
