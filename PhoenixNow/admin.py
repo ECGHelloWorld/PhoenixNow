@@ -13,11 +13,11 @@ admin = Blueprint('admin', __name__, template_folder='templates', static_folder=
 @login_required
 @admin_required
 def home():
+    today = datetime.date.today()
     users = User.query.all()
     users.sort(key=lambda user: (user.grade, user.lastname)) # sort by grade and name
-    checkins = Checkin.query.filter(Checkin.checkin_timestamp >= datetime.date.today()).all()
+    checkins = Checkin.query.filter(Checkin.checkin_timestamp>=today).all()
     checkins.sort(key=lambda checkin: (checkin.user.lastname)) # sort by grade and name
-    today = datetime.date.today()
     weekly_checkins = get_weekly_checkins(today) # look at user.py
     weekly_checkins.update_database() # look at user.py
     return render_template('admin.html', users=users, checkins=checkins)

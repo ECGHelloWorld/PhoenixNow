@@ -1,5 +1,5 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
-from PhoenixNow.user import create_user, checkin_user, get_weekly_checkins, reset_password_email
+from PhoenixNow.user import create_user, checkin_user, reset_password_email, weekly_checkins
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint, request, jsonify
 from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm, CalendarForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
@@ -70,28 +70,12 @@ def history():
         searchdate = searchdate + timedelta(days=-7)
         form.date.data = searchdate
 
-      weekly_checkins = get_weekly_checkins(searchdate)
-      week = weekly_checkins.create_week_object(user)
+      user_week = weekly_checkins(searchdate, user)
 
-      return render_template('history.html', user=user, searchdate=searchdate, week=week, form=form, chart=chart, today=today)
+      return render_template('history.html', user=user, user_week=user_week, searchdate=searchdate, form=form, chart=chart, today=today)
                  
   elif request.method == 'GET':
     return render_template('history.html', form=form, today=today)
-
-def week_magic(day):
-    day_of_week = day.weekday()
-
-    to_beginning_of_week = datetime.timedelta(days=day_of_week)
-    monday = day - to_beginning_of_week
-
-    to_end_of_week = datetime.timedelta(days=4 - day_of_week)
-    friday = day + to_end_of_week
-
-    tuesday = day + datetime.timedelta(days=3 - day_of_week)
-    wednesday = day + datetime.timedelta(days=2 - day_of_week)
-    thursday = day + datetime.timedelta(days=1 - day_of_week)
-
-    return [monday, tuesday, wednesday, thursday, friday]
 
 @regular.route('/')
 def home():
@@ -104,7 +88,6 @@ def home():
     user = current_user
 
     today = datetime.date.today()
-    week = week_magic(today)
     
     checkin_today = Checkin.query.filter(Checkin.user==user, Checkin.checkin_timestamp==today).first()
     if checkin_today is None:
@@ -112,19 +95,11 @@ def home():
     else:
         checkedin = True
     
-    start = today - datetime.timedelta(days=today.weekday())
-    checkins = Checkin.query.filter(Checkin.user==user, Checkin.checkin_timestamp>=start).order_by('Checkin.checkin_timestamp')
-
-    user_week = [False, False, False, False, False]
-
-    for date in week:
-        for checkin in checkins:
-            if date == checkin.checkin_timestamp.date():
-                user_week[date.weekday()] = True
+    user_week = weekly_checkins(today, user)
 
     return render_template('home.html', user=user, form=form,
             checkedin=checkedin, schedule_form=schedule_form,
-            checkins=checkins, user_week=user_week, today=today)
+            user_week=user_week, today=today)
 
 @regular.route('/schedule', methods=['POST'])
 @login_required

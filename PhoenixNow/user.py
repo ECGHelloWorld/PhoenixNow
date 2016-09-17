@@ -4,6 +4,36 @@ from PhoenixNow.model import db, User, Checkin
 from PhoenixNow.week import Week
 import datetime
 
+def week_magic(day):
+    day_of_week = day.weekday()
+
+    to_beginning_of_week = datetime.timedelta(days=day_of_week)
+    monday = day - to_beginning_of_week
+
+    to_end_of_week = datetime.timedelta(days=4 - day_of_week)
+    friday = day + to_end_of_week
+
+    tuesday = day + datetime.timedelta(days=3 - day_of_week)
+    wednesday = day + datetime.timedelta(days=2 - day_of_week)
+    thursday = day + datetime.timedelta(days=1 - day_of_week)
+
+    return [monday, tuesday, wednesday, thursday, friday]
+
+def weekly_checkins(date, user):
+
+    week = week_magic(date)
+    
+    checkins = Checkin.query.filter(Checkin.user==user, Checkin.checkin_timestamp>=week[0]).order_by('Checkin.checkin_timestamp')
+
+    user_week = [False, False, False, False, False]
+
+    for date in week:
+        for checkin in checkins:
+            if date == checkin.checkin_timestamp.date():
+                user_week[date.weekday()] = True
+
+    return user_week
+
 def create_user(first, last, grade, email, password):
     newuser = User(first, last, grade, email, password)
     db.session.add(newuser)
