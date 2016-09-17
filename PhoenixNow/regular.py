@@ -117,7 +117,7 @@ def home():
 
     for date in week:
         for checkin in checkins:
-            if date == checkin.date():
+            if date == checkin.checkin_timestamp.date():
                 user_week[date.weekday()] = True
 
     return render_template('home.html', user=user, form=form,
