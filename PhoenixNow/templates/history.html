@@ -51,7 +51,7 @@
  
 <tr>
     {% for day in user_week %}
-        <td>{{ 'Present' if day else 'Absent' }}</td>
+        <td>{{ 'Present' if day else '' }}</td>
     {% endfor %}
 </tr>
 </table>
