@@ -100,7 +100,7 @@
  
 <tr>
     {% for day in user_week %}
-        <td>{{ day }}</td>
+        <td>{{ 'Present' if day else 'Absent' }}</td>
     {% endfor %}
 </tr>
 </table>
