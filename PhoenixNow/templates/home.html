@@ -99,11 +99,9 @@
 </tr>
  
 <tr>
-<td>{{ user.monday }}</td>
-<td>{{ user.tuesday }}</td>
-<td>{{ user.wednesday }}</td>
-<td>{{ user.thursday }}</td>
-<td>{{ user.friday }}</td>
+    {% for day in user_week %}
+        <td>{{ day }}</td>
+    {% endfor %}
 </tr>
 </table>
 </div>

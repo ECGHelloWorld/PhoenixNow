@@ -54,19 +54,15 @@ class get_weekly_checkins:
             user.friday = ""
         for checkin in self.monday_checkins:
             checkin.user.monday = "present"
-            db.session.commit()
         for checkin in self.tuesday_checkins:
             checkin.user.tuesday = "present"
-            db.session.commit()
         for checkin in self.wednesday_checkins:
             checkin.user.wednesday = "present"
-            db.session.commit()
         for checkin in self.thursday_checkins:
             checkin.user.thursday = "present"
-            db.session.commit()
         for checkin in self.friday_checkins:
             checkin.user.friday = "present"
-            db.session.commit()
+        db.session.commit()
     def create_week_object(self, user):
         week = Week()
         for checkin in self.monday_checkins:
