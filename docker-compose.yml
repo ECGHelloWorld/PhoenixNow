@@ -15,7 +15,7 @@ services:
     build: .
     env_file: 
      - .env
-    command: "dockerize -wait tcp://rabbitmq:5672 celery -A PhoenixNow.tasks worker --loglevel=info"
+    command: "dockerize -wait tcp://rabbitmq:5672 -timeout 30s celery -A PhoenixNow.tasks worker --loglevel=info"
   db:
     image: postgres:9.5.4
     env_file:
