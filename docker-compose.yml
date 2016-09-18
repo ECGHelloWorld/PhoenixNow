@@ -1,6 +1,7 @@
 version: '2'
 volumes:
   pdb:
+  redis:
 services:
   web:
     build: .
@@ -10,9 +11,16 @@ services:
      - db
     env_file: 
      - .env
+  celery:
+    build: .
+    command: celery -A tasks worker --loglevel=info
   db:
     image: postgres:latest
     env_file:
      - .env
     volumes:
      - pdb:/var/lib/postgresql/data
+  redis:
+    image: 'redis:3.0-alpine'
+    volumes:
+      - redis:/data
