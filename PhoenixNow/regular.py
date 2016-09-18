@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, flash, session, redirect, url
 from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm, CalendarForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from PhoenixNow.model import db, User, Checkin
+from PhoenixNow.tasks import remind
 from flask_login import login_required, login_user, logout_user, current_user
 import datetime
 import requests
@@ -15,6 +16,11 @@ import os
 from PhoenixNow.config import ProductionConfig
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
+
+@regular.route('/test')
+def test1():
+    remind.apply_async([current_user.id], countdown=3)
+    return "hi"
 
 @regular.route('/saveendpoint', methods=['POST'])
 def save_endpoint():

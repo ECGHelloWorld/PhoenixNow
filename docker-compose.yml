@@ -1,7 +1,7 @@
 version: '2'
 volumes:
   pdb:
-  redis:
+  pn_rabbitmq:
 services:
   web:
     build: .
@@ -13,14 +13,16 @@ services:
      - .env
   celery:
     build: .
-    command: celery -A tasks worker --loglevel=info
+    env_file: 
+     - .env
+    command: "dockerize -wait tcp://rabbitmq:5672 celery -A PhoenixNow.tasks worker --loglevel=info"
   db:
-    image: postgres:latest
+    image: postgres:9.5.4
     env_file:
      - .env
     volumes:
      - pdb:/var/lib/postgresql/data
-  redis:
-    image: 'redis:3.0-alpine'
+  rabbitmq:
+    image: rabbitmq:3.6.5
     volumes:
-      - redis:/data
+      - pn_rabbitmq:/var/lib/rabbitmq

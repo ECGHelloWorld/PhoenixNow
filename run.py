@@ -1,8 +1,8 @@
 from PhoenixNow.config import ProductionConfig, DevelopmentConfig
+from PhoenixNow.factory import create_app, extensions
 import os
-from PhoenixNow import create_app
 
 if os.environ.get('FLASK_DEBUG'):
-    app = create_app(DevelopmentConfig)
+    app = extensions(create_app(DevelopmentConfig))
 else:
-    app = create_app(ProductionConfig)
+    app = extensions(create_app(ProductionConfig))
