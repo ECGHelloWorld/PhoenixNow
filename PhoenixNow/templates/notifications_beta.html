@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Push Notification codelab</title>
+  <link rel="manifest" href="static/manifest.json">
+</head>
+<body>
+  <h1>Push Notifications</h1>
+  <p>This only works on chrome browsers.</p>
+  <p>Your current endpoint (you only need to subscribe once): <br> {{user.gcm_endpoint}}</p>
+  <button disabled>Subscribe</button>
+  <br><br>
+  <a href="{{url_for('regular.betatest')}}"><p>click here to test notifications after you subscribed</p></a>
+  <script src="static/main.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</body>
+</html>

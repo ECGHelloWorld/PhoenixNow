@@ -1,10 +1,10 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
 from PhoenixNow.user import create_user, checkin_user, reset_password_email, weekly_checkins
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint, request, jsonify
-from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm, CalendarForm
+from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm, CalendarForm, EmailReminderForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from PhoenixNow.model import db, User, Checkin
-from PhoenixNow.tasks import remind
+from PhoenixNow.tasks import start_reminders, celery, count
 from flask_login import login_required, login_user, logout_user, current_user
 import datetime
 import requests
@@ -17,12 +17,50 @@ from PhoenixNow.config import ProductionConfig
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
 
+@regular.route('/beta')
+@login_required
+def beta():
+    form = EmailReminderForm()
+    user = current_user
+    form.date.data = user.email_reminder
+    form.enabled.data = True if len(user.email_reminder) > 0 else False
+    return render_template('beta.html', form=form)
+
 @regular.route('/test')
 def test1():
-    remind.apply_async([current_user.id], countdown=3)
-    return "hi"
+    count.apply_async(countdown=30)
+
+@regular.route('/beta/reminder', methods=['POST'])
+@login_required
+def reminder():
+    form = EmailReminderForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        user = current_user
+
+        if form.enabled.data:
+            # It doesn't matter if multiple reminders are created because 
+            if len(user.email_reminder) == 0:
+                flash("Email reminder time was set.")
+            else:
+                if len(user.email_reminder_id) > 0:
+                    celery.control.revoke(user.email_reminder_id, terminate=True)
+                    flash("Email reminder time was changed.")
+
+            user.email_reminder = form.date.data
+            start_reminders.delay(user.id)
+        else:
+            if len(user.email_reminder_id) > 0:
+                celery.control.revoke(user.email_reminder_id, terminate=True)
+            user.email_reminder = ""
+            flash("Email reminder time was disabled.")
+
+
+        db.session.commit()
+
+        return redirect(url_for('regular.beta'))
 
 @regular.route('/saveendpoint', methods=['POST'])
+@login_required
 def save_endpoint():
   data = request.json['endpoint']
   data = data.split('/')[-1]
@@ -35,15 +73,15 @@ def save_endpoint():
 def root():
     return regular.send_static_file('sw.js')
 
-@regular.route('/beta')
+@regular.route('/notifications/beta')
 @login_required
-def beta():
+def notifications():
     user = current_user
-    return render_template('beta.html',user=user)
+    return render_template('notifications_beta.html',user=user)
 
-@regular.route('/betatest')
+@regular.route('/notifications/betatest')
 @login_required
-def betatest():
+def notifications_test():
     user = current_user
     payload = {'registration_ids':[user.gcm_endpoint]}
     url = 'https://android.googleapis.com/gcm/send'
