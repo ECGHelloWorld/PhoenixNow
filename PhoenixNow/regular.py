@@ -1,6 +1,7 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
 from PhoenixNow.user import create_user, checkin_user, reset_password_email, weekly_checkins
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint, request, jsonify
+from sqlalchemy.sql import func
 from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm, CalendarForm, EmailReminderForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from PhoenixNow.model import db, User, Checkin
@@ -133,7 +134,9 @@ def home():
 
     today = datetime.date.today()
     
-    checkin_today = Checkin.query.filter(Checkin.user==user, Checkin.checkin_timestamp==today).first()
+    checkin_today = Checkin.query.filter(Checkin.user==user,
+            func.date(Checkin.checkin_timestamp)==today).first()
+
     if checkin_today is None:
         checkedin = False
     else:
