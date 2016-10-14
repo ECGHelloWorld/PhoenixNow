@@ -126,9 +126,12 @@ def history():
 def home():
     form = CheckinForm()
     schedule_form = ScheduleForm()
+
+    CheckinCount = Checkin.query.count()
     
     if not current_user.is_authenticated:
-        return render_template('home.html', user=current_user)
+        return render_template('home.html', user=current_user,
+                CheckinCount=CheckinCount)
 
     user = current_user
 
@@ -144,11 +147,8 @@ def home():
     
     user_week = weekly_checkins(today, user)
 
-    CheckinCount = Checkin.query.count()
-
     return render_template('home.html', user=user, form=form,
             checkedin=checkedin, schedule_form=schedule_form,
-            CheckinCount=CheckinCount,
             user_week=user_week, today=today)
 
 @regular.route('/schedule', methods=['POST'])
