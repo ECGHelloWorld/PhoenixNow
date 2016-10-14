@@ -126,9 +126,12 @@ def history():
 def home():
     form = CheckinForm()
     schedule_form = ScheduleForm()
+
+    CheckinCount = Checkin.query.count()
     
     if not current_user.is_authenticated:
-        return render_template('home.html', user=current_user)
+        return render_template('home.html', user=current_user,
+                CheckinCount=CheckinCount)
 
     user = current_user
 
