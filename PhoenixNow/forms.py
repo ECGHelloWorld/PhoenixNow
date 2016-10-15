@@ -112,6 +112,11 @@ class CalendarForm(Form):
   date = StringField("Date")
   submit = SubmitField("Submit Date")
 
+class EmailReminderForm(Form):
+  enabled = BooleanField("Enabled")
+  date = StringField("Reminder Time")
+  submit = SubmitField("Submit Time")
+
 class UserForm(Form):
   firstname = StringField("First Name")
   lastname = StringField("Last Name")

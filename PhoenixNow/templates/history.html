@@ -50,11 +50,9 @@
 </tr>
  
 <tr>
-<td>{{ week.monday }}</td>
-<td>{{ week.tuesday }}</td>
-<td>{{ week.wednesday }}</td>
-<td>{{ week.thursday }}</td>
-<td>{{ week.friday }}</td>
+    {% for day in user_week %}
+        <td>{{ 'Present' if day else '' }}</td>
+    {% endfor %}
 </tr>
 </table>
 </div>

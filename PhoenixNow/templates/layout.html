@@ -11,6 +11,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles.css">
+    {% block head %}
+    {% endblock %}
 </head>
 <body>
 
@@ -32,6 +34,7 @@
          <li><a href="{{ url_for('regular.about') }}">About Us</a></li>
          {% if current_user.is_active %}
          <li><a href="{{ url_for('regular.contact') }}">Contact Us</a></li>
+         <li><a href="{{ url_for('regular.beta') }}">Beta</a></li>
          {% if current_user.is_admin() %}
 	 <li><a href="{{ url_for('admin.home') }}">Admin Portal</a></li>
 	 {% endif %}
@@ -72,10 +75,10 @@
  {% endblock %}
 </body>
 
-<div class="updatelog">
+<!--<div class="updatelog">
 <p> Update Log: </p>
 <p>Fixed duplicate accounts in the database and an error where email's weren't case insensitive</p>
-</div>
+</div>-->
 
 </div>
 

@@ -1,10 +1,12 @@
 import jwt
 from flask import Blueprint, jsonify, request
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
-from PhoenixNow.user import create_user, checkin_user
+from PhoenixNow.user import create_user, checkin_user, get_weekly_checkins
 from flask_login import login_required, login_user, logout_user
 from PhoenixNow.model import User, db
 from PhoenixNow.code import code
+from PhoenixNow.week import Week
+import datetime
 
 backend = Blueprint('backend', __name__, template_folder='templates', static_folder='static')
 
@@ -155,3 +157,24 @@ def getschedule():
         'verified': user.schedule_verified,
         'token': res['token']
     })
+
+@backend.route('/getcheckins', methods=['POST'])
+def getcheckins():
+    res = check_code(check_token(check_input(request.get_json(silent=True))))
+    if 'date' in res:
+      user = res['user']
+      searchdate = datetime.datetime.strptime(res['date'], '%Y-%m-%d').date()
+      weekly_checkins = get_weekly_checkins(searchdate)
+      week = weekly_checkins.create_week_object(user)
+      return jsonify({
+          "action": "get checkins",
+          "result": "success",
+          'monday': week.monday,
+          'tuesday': week.tuesday,
+          'wednesday': week.wednesday,
+          'thursday': week.thursday,
+          'friday': week.friday,
+          'token': res['token']
+      })
+    else:
+      raise InvalidUsage("No date provided.")

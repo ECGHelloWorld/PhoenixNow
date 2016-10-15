@@ -21,4 +21,4 @@ COPY . .
 
 EXPOSE 3031
 
-CMD dockerize -wait tcp://db:5432 -timeout 30s && uwsgi --socket :3031 -w run:app
+CMD dockerize -wait tcp://db:5432 -wait tcp://rabbitmq:5672 -timeout 30s && uwsgi --socket :3031 -w run:app

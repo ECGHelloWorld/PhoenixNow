@@ -99,3 +99,4 @@ ENV/
 code.py
 
 *.env
+*.flask

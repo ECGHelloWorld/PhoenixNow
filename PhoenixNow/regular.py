@@ -1,18 +1,94 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
-from PhoenixNow.user import create_user, checkin_user, get_weekly_checkins, reset_password_email
-from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint, request
-from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm, CalendarForm
+from PhoenixNow.user import create_user, checkin_user, reset_password_email, weekly_checkins
+from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint, request, jsonify
+from sqlalchemy.sql import func
+from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm, CalendarForm, EmailReminderForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from PhoenixNow.model import db, User, Checkin
-from PhoenixNow.week import Week
+from PhoenixNow.tasks import start_reminders, celery, count
 from flask_login import login_required, login_user, logout_user, current_user
 import datetime
+import requests
 from datetime import timedelta
 import bcrypt
+import json
+import os
 
 from PhoenixNow.config import ProductionConfig
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
+
+@regular.route('/beta')
+@login_required
+def beta():
+    form = EmailReminderForm()
+    user = current_user
+    form.date.data = user.email_reminder
+    form.enabled.data = True if len(user.email_reminder) > 0 else False
+    return render_template('beta.html', form=form)
+
+@regular.route('/test')
+def test1():
+    count.apply_async(countdown=30)
+
+@regular.route('/beta/reminder', methods=['POST'])
+@login_required
+def reminder():
+    form = EmailReminderForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        user = current_user
+
+        if form.enabled.data:
+            # It doesn't matter if multiple reminders are created because 
+            if len(user.email_reminder) == 0:
+                flash("Email reminder time was set.")
+            else:
+                if len(user.email_reminder_id) > 0:
+                    celery.control.revoke(user.email_reminder_id, terminate=True)
+                    flash("Email reminder time was changed.")
+
+            user.email_reminder = form.date.data
+            start_reminders.delay(user.id)
+        else:
+            if len(user.email_reminder_id) > 0:
+                celery.control.revoke(user.email_reminder_id, terminate=True)
+            user.email_reminder = ""
+            flash("Email reminder time was disabled.")
+
+
+        db.session.commit()
+
+        return redirect(url_for('regular.beta'))
+
+@regular.route('/saveendpoint', methods=['POST'])
+@login_required
+def save_endpoint():
+  data = request.json['endpoint']
+  data = data.split('/')[-1]
+  user = current_user
+  user.gcm_endpoint = data
+  db.session.commit()
+  return jsonify({"title": data})
+
+@regular.route('/sw.js')
+def root():
+    return regular.send_static_file('sw.js')
+
+@regular.route('/notifications/beta')
+@login_required
+def notifications():
+    user = current_user
+    return render_template('notifications_beta.html',user=user)
+
+@regular.route('/notifications/betatest')
+@login_required
+def notifications_test():
+    user = current_user
+    payload = {'registration_ids':[user.gcm_endpoint]}
+    url = 'https://android.googleapis.com/gcm/send'
+    headers = {"Authorization": "key=" + os.environ.get('TEMPAPIKEY'), "Content-Type":"application/json"}
+    res = requests.post(url,headers=headers,data=json.dumps(payload))
+    return res.content
 
 @regular.route('/history', methods=['GET', 'POST'])
 @login_required
@@ -39,32 +115,41 @@ def history():
         searchdate = searchdate + timedelta(days=-7)
         form.date.data = searchdate
 
-      weekly_checkins = get_weekly_checkins(searchdate)
-      week = weekly_checkins.create_week_object(user)
+      user_week = weekly_checkins(searchdate, user)
 
-      return render_template('history.html', user=user, searchdate=searchdate, week=week, form=form, chart=chart, today=today)
+      return render_template('history.html', user=user, user_week=user_week, searchdate=searchdate, form=form, chart=chart, today=today)
                  
   elif request.method == 'GET':
     return render_template('history.html', form=form, today=today)
 
 @regular.route('/')
 def home():
-  form = CheckinForm()
-  schedule_form = ScheduleForm()
+    form = CheckinForm()
+    schedule_form = ScheduleForm()
 
-  user = current_user
+    CheckinCount = Checkin.query.count()
+    
+    if not current_user.is_authenticated:
+        return render_template('home.html', user=current_user,
+                CheckinCount=CheckinCount)
 
-  if user.is_active:
-    checkedin = False
+    user = current_user
+
     today = datetime.date.today()
-    for checkin in user.checkins:
-        if checkin.checkin_timestamp.date() == today:
-            checkedin = True
-    weekly_checkins = get_weekly_checkins(today) # look at user.py
-    weekly_checkins.update_database() # look at user.py
-    return render_template('home.html', user=user, form=form, schedule_form=schedule_form,checkedin=checkedin,today=today)
+    
+    checkin_today = Checkin.query.filter(Checkin.user==user,
+            func.date(Checkin.checkin_timestamp)==today).first()
 
-  return render_template('home.html', user=user, form=form, schedule_form=schedule_form)
+    if checkin_today is None:
+        checkedin = False
+    else:
+        checkedin = True
+    
+    user_week = weekly_checkins(today, user)
+
+    return render_template('home.html', user=user, form=form,
+            checkedin=checkedin, schedule_form=schedule_form,
+            user_week=user_week, today=today)
 
 @regular.route('/schedule', methods=['POST'])
 @login_required
@@ -113,7 +198,7 @@ def signup():
   if request.method == 'POST':
     if form.validate_on_submit():
       user = create_user(form.firstname.data, form.lastname.data, form.grade.data, form.email.data, form.password.data)
-      login_user(user)
+      login_user(user,remember=True)
 
       flash('A verification email has been sent via email.', 'success')
       return redirect(url_for('regular.unverified'))
@@ -133,7 +218,7 @@ def signin():
   if request.method == 'POST':
     if form.validate_on_submit():
       user = User.query.filter_by(email = form.email.data.lower()).first()
-      login_user(user)
+      login_user(user,remember=True)
       return redirect(url_for('regular.home'))
     else:
       return render_template('signin.html', form=form)

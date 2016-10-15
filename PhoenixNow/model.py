@@ -17,6 +17,8 @@ class User(db.Model):
     creation_timestamp = db.Column(db.DateTime)
     checkins = db.relationship('Checkin', backref='user', lazy='dynamic')
     verified = db.Column(db.Boolean)
+    email_reminder = db.Column(db.String(50))
+    email_reminder_id = db.Column(db.String(500))
     schedule_verified = db.Column(db.Boolean)
     schedule = db.Column(db.String(500))
     schedule_monday = db.Column(db.Boolean)
@@ -29,6 +31,7 @@ class User(db.Model):
     wednesday = db.Column(db.String(500))
     thursday = db.Column(db.String(500))
     friday = db.Column(db.String(500))
+    gcm_endpoint = db.Column(db.String(500))
 
     def __init__(self, firstname, lastname, grade, email, password):
         self.firstname = firstname.title()
@@ -47,6 +50,7 @@ class User(db.Model):
         self.schedule_thursday = True
         self.schedule_friday = True
         self.monday = ""
+        self.email_reminder = ""
         self.tuesday = ""
         self.wednesday = ""
         self.thursday = ""
