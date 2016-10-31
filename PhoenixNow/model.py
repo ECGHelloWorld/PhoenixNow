@@ -5,6 +5,11 @@ import datetime
 
 db = SQLAlchemy()
 
+followers = db.Table('followers',
+    db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
+)
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(100))
@@ -32,6 +37,12 @@ class User(db.Model):
     thursday = db.Column(db.String(500))
     friday = db.Column(db.String(500))
     gcm_endpoint = db.Column(db.String(500))
+    followed = db.relationship('User', 
+                               secondary=followers, 
+                               primaryjoin=(followers.c.follower_id == id), 
+                               secondaryjoin=(followers.c.followed_id == id), 
+                               backref=db.backref('followers', lazy='dynamic'), 
+                               lazy='dynamic')
 
     def __init__(self, firstname, lastname, grade, email, password):
         self.firstname = firstname.title()
@@ -73,6 +84,19 @@ class User(db.Model):
     def is_anonymous(self):
         """False, as anonymous users aren't supported."""
         return False
+
+    def follow(self, user):
+        if not self.is_following(user):
+            self.followed.append(user)
+            return self
+
+    def unfollow(self, user):
+        if self.is_following(user):
+            self.followed.remove(user)
+            return self
+
+    def is_following(self, user):
+        return self.followed.filter(followers.c.followed_id == user.id).count() > 0
 
     def check_password(self, password):
         return bcrypt.checkpw(password.encode('utf-8'), self.pw_hash.encode('utf-8'))
