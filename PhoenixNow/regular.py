@@ -55,7 +55,7 @@ def unfollowall():
   user = current_user
   profiles = User.query.all()
   for profile in profiles:
-	user.unfollow(profile)
+    user.unfollow(profile)
   db.session.add(user)
   db.session.commit()
   flash('You have removed access from everyone')
@@ -67,7 +67,7 @@ def followall():
   user = current_user
   profiles = User.query.all()
   for profile in profiles:
-	user.follow(profile)
+    user.follow(profile)
   db.session.add(user)
   db.session.commit()
   flash('You have given access to everyone')
