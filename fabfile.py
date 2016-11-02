@@ -27,6 +27,9 @@ def deploy():
     down()
     up()
 
+def attach():
+    sudo("docker attach phoenixnow_web_1 --sig-proxy=false")
+    
 def mysql_restore_old_db():
     sudo('docker cp /home/ecg/mysql-dump-new.sql phoenixnow_db_1:/')
     sudo("docker exec -it phoenixnow_db_1 sh -c 'exec mysql -h172.18.0.2 -uroot -ppass < mysql-dump-new.sql'")
