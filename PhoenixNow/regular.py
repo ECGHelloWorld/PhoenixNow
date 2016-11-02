@@ -84,11 +84,11 @@ def profile(user_id):
     user = current_user
     friend = User.query.filter_by(id=user_id).first_or_404()
     if friend.is_following(user) or friend.id == user.id:
-	permission = True
-    	return render_template('profile.html', friend=friend, user=user, permission=permission)
+      permission = True
+      return render_template('profile.html', friend=friend, user=user, permission=permission)
     else:
-	permission = False
-    	return render_template('profile.html', friend=friend, user=user, permission=permission)
+      permission = False
+      return render_template('profile.html', friend=friend, user=user, permission=permission)
 
 @regular.route('/beta/reminder', methods=['POST'])
 @login_required
