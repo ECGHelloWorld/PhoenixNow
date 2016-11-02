@@ -28,8 +28,95 @@ def beta():
     return render_template('beta.html', form=form)
 
 @regular.route('/test')
-def test1():
-    count.apply_async(countdown=30)
+def test():
+        # make four users
+        u1 = User(firstname='john', lastname='john', email='john@example.com', password='1', grade='9')
+        u2 = User(firstname='susan', lastname='susan', email='susan@example.com',password='1', grade='9')
+        u3 = User(firstname='mary', lastname='mary', email='mary@example.com', password='1', grade='9')
+        u4 = User(firstname='david', lastname='david', email='david@example.com', password='1', grade='9')
+        db.session.add(u1)
+        db.session.add(u2)
+        db.session.add(u3)
+        db.session.add(u4)
+        db.session.commit()
+        # setup the followers
+        u1.follow(u1)  # john follows himself
+        u1.follow(u2)  # john follows susan
+        u1.follow(u4)  # john follows david
+        u2.follow(u2)  # susan follows herself
+        u2.follow(u3)  # susan follows mary
+        u3.follow(u3)  # mary follows herself
+        u3.follow(u4)  # mary follows david
+        u4.follow(u4)  # david follows himself
+        db.session.add(u1)
+        db.session.add(u2)
+        db.session.add(u3)
+        db.session.add(u4)
+        db.session.commit()
+	return redirect(url_for('regular.home'))
+
+@regular.route('/unfollow/<int:user_id>')
+@login_required
+def unfollow(user_id):
+  user = current_user
+  friend = User.query.filter_by(id=user_id).first_or_404()
+  user.unfollow(friend)
+  db.session.add(user)
+  db.session.commit()
+  flash('You have removed access from ' + friend.email)
+  return redirect(url_for('regular.profile',user_id=user.id))
+
+@regular.route('/follow/<int:user_id>')
+@login_required
+def follow(user_id):
+  user = current_user
+  friend = User.query.filter_by(id=user_id).first_or_404()
+  user.follow(friend)
+  db.session.add(user)
+  db.session.commit()
+  flash('You given access to ' + friend.email)
+  return redirect(url_for('regular.profile',user_id=user.id))
+
+@regular.route('/unfollowall')
+@login_required
+def unfollowall():
+  user = current_user
+  profiles = User.query.all()
+  for profile in profiles:
+	user.unfollow(profile)
+  db.session.add(user)
+  db.session.commit()
+  flash('You have removed access from everyone')
+  return redirect(url_for('regular.profile',user_id=user.id))
+
+@regular.route('/followall')
+@login_required
+def followall():
+  user = current_user
+  profiles = User.query.all()
+  for profile in profiles:
+	user.follow(profile)
+  db.session.add(user)
+  db.session.commit()
+  flash('You have given access to everyone')
+  return redirect(url_for('regular.profile',user_id=user.id))
+
+@regular.route('/profile/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def profile(user_id):
+  if request.method == 'POST':
+    user = current_user
+    return 'post sent'
+
+  elif request.method == 'GET':
+    user = current_user
+    friend = User.query.filter_by(id=user_id).first_or_404()
+    if friend.is_following(user) or friend.id == user.id:
+	permission = True
+    	return render_template('profile.html', friend=friend, user=user, permission=permission)
+    else:
+	permission = False
+    	return render_template('profile.html', friend=friend, user=user, permission=permission)
 
 @regular.route('/beta/reminder', methods=['POST'])
 @login_required

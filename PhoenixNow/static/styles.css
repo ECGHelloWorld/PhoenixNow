@@ -1,6 +1,9 @@
 body {
     padding-top: 80px;
-    
+}
+
+textarea {
+    text-align: center;
 }
 
 .updatelog {
@@ -50,7 +53,6 @@ body.homebackground {
 .row {
     margin-bottom: 20px;
     color: black;
-
 }
 
 .form-control {

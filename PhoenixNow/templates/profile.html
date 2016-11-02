@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% block content %}
+
+	{% if permission %}
+	<div class="container">
+		<div class="page-header">
+			<h1>{{ friend.firstname }} {{ friend.lastname }}'s Schedule</h1> 
+		</div>
+
+		<div class="row">
+		<div class="col-sm-2" style="border:solid 1px black;">
+			<div class="friends" style="overflow-y:auto;height:300px;font-size:20px;">
+				<h2 style="margin-bottom:5px;padding:0;">Viewable Profiles</h2>
+				<div style="font-size:14px"> click to visit </div><br>
+				{% for follower in user.followers %}
+				<a href="/profile/{{follower.id}}">{{follower.firstname}}</a><br>
+				{% endfor %}
+			</div>
+		</div>
+
+		<div class="col-sm-8">
+			<div class="col-xs-2 col-xs-offset-1" id="monday" style="padding:0;">
+				<b>Monday</b>
+				<textarea style="width:100%;height:250px;">Never</textarea>
+			</div>
+              		<div class="col-xs-2" id="tuesday" style="padding:0;">
+				<b>Tuesday</b>
+				<textarea style="width:100%;height:250px;">Let</textarea>
+			</div>
+              		<div class="col-xs-2" id="wednesday" style="padding:0;">
+				<b>Wednesday</b>
+				<textarea style="width:100%;height:250px;">You</textarea>
+			</div>
+              		<div class="col-xs-2" id="thursday" style="padding:0;">
+				<b>Thursday</b>
+				<textarea style="width:100%;height:250px;">Down</textarea>
+			</div>
+              		<div class="col-xs-2" id="friday" style="padding:0;">
+				<b>Friday</b>
+				<textarea style="width:100%;height:250px;">.</textarea>
+			</div>
+		</div>
+
+		<div class="col-sm-2" style="border:solid 1px black;">
+			<div class="friends" style="height:300px;overflow-y:auto;font-size:20px;">
+				<h2 style="margin-bottom:0px;padding:0;">Give Access</h2>
+				<div style="font-size:14px">
+				<a href="/followall">Give All</a><br>
+				<a href="/unfollowall">Remove All</a><br><br>
+				</div>
+				<h2 style="margin-bottom:0px;padding:0;">Access Given</h2>
+				<div style="font-size:14px"> click to remove access </div>
+				{% for follower in user.followed %}
+				<a href="/unfollow/{{follower.id}}">{{follower.firstname}}</a><br>
+				{% endfor %}
+			</div>
+		</div>
+
+		</div>
+
+	</div>
+	{% endif %}
+
+	{% if not permission %}
+	<div class="container">
+		<h3> {{friend.firstname}} {{friend.lastname}} has not given you permission to visit their page. </h3>
+		<h6> lolrekt </h6>
+	</div>
+	{% endif %}
+
+{% endblock %}
