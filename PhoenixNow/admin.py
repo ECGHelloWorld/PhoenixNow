@@ -6,6 +6,8 @@ from PhoenixNow.user import get_weekly_checkins
 from flask_login import login_required, login_user, logout_user
 from PhoenixNow.forms import UserForm, CalendarForm
 import datetime
+import requests
+import json
 import os
 
 admin = Blueprint('admin', __name__, template_folder='templates', static_folder='static')
