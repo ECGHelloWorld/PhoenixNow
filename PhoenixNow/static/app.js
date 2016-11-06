@@ -16,7 +16,8 @@ messaging.requestPermission()
 })
 .then(function(token) {
    console.log(token);
-   $("p").append(token);
+   window.token = token;
+   $("#tokenCheck").append(token);
 
    $.ajax({
     url: "/saveendpoint",
@@ -44,4 +45,46 @@ messaging.requestPermission()
 
 messaging.onMessage(function(payload) {
   console.log('onMessage: ', payload);
+  alert("You are able to successfully receive notifications.")
+});
+
+$('#test, #group-status, #opt-out').click(function () {
+    if (this.id == 'test') {
+        $.ajax({
+          headers: {
+           'Authorization':'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE',
+           'Content-Type':'application/json'
+          },
+          url: "https://fcm.googleapis.com/fcm/send",
+          data: JSON.stringify({
+            to: token,
+            notification: {"body":"Reminder to Sign In","title":"PhoenixNow","click_action":"https://phoenixnow.org"}
+          }),
+          contentType: 'application/json',
+          type: "POST",
+          dataType : "json",
+   })
+    }
+    else if (this.id == 'group-status') {
+        $.ajax({
+          url: "https://iid.googleapis.com/iid/info/" + token + "?details=true",
+          headers: {
+            'Authorization':'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE'
+          },
+          type: "GET",
+          dataType : "json",
+        }).done(function(msg) {
+          console.log(msg)
+        });
+    }
+    else if (this.id == 'opt-out') {
+        $.ajax({
+        headers: {
+            'Authorization':'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE',
+            'Content-Type':'application/json'
+        },
+        url: "https://iid.googleapis.com/iid/v1/" + token + "/rel/topics/PhoenixNow",
+        type: "POST",
+        })
+    }
 });
