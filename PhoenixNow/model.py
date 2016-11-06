@@ -36,12 +36,12 @@ class User(db.Model):
     wednesday = db.Column(db.String(500))
     thursday = db.Column(db.String(500))
     friday = db.Column(db.String(500))
-    profile_monday = db.Column(db.String(500))
-    profile_tuesday = db.Column(db.String(500))
-    profile_wednesday = db.Column(db.String(500))
-    profile_thursday = db.Column(db.String(500))
-    profile_friday = db.Column(db.String(500))
-    gcm_endpoint = db.Column(db.String(500))
+    profile_monday = db.Column(db.String(1000))
+    profile_tuesday = db.Column(db.String(1000))
+    profile_wednesday = db.Column(db.String(1000))
+    profile_thursday = db.Column(db.String(1000))
+    profile_friday = db.Column(db.String(1000))
+    gcm_endpoint = db.Column(db.String(1000))
     followed = db.relationship('User', 
                                secondary=followers, 
                                primaryjoin=(followers.c.follower_id == id), 
@@ -71,6 +71,12 @@ class User(db.Model):
         self.wednesday = ""
         self.thursday = ""
         self.friday = ""
+        self.profile_monday = ""
+        self.profile_tuesday = ""
+        self.profile_wednesday = ""
+        self.profile_thursday = ""
+        self.profile_friday = ""
+	
 
     def is_active(self):
         """True, as all users are active."""
