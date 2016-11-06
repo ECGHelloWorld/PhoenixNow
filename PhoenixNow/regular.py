@@ -27,27 +27,27 @@ def beta():
     form.enabled.data = True if len(user.email_reminder) > 0 else False
     return render_template('beta.html', form=form)
 
-@regular.route('/unfollow/<int:user_id>')
+@regular.route('/unfollow/<useremail>')
 @login_required
-def unfollow(user_id):
+def unfollow(useremail):
   user = current_user
-  friend = User.query.filter_by(id=user_id).first_or_404()
+  friend = User.query.filter_by(email=useremail).first_or_404()
   user.unfollow(friend)
   db.session.add(user)
   db.session.commit()
   flash('You have removed access from ' + friend.email)
-  return redirect(url_for('regular.profile',user_id=user.id))
+  return redirect(url_for('regular.profile',useremail=user.email))
 
-@regular.route('/follow/<int:user_id>')
+@regular.route('/follow/<useremail>')
 @login_required
-def follow(user_id):
+def follow(useremail):
   user = current_user
-  friend = User.query.filter_by(id=user_id).first_or_404()
+  friend = User.query.filter_by(email=useremail).first_or_404()
   user.follow(friend)
   db.session.add(user)
   db.session.commit()
   flash('You given access to ' + friend.email)
-  return redirect(url_for('regular.profile',user_id=user.id))
+  return redirect(url_for('regular.profile',useremail=user.email))
 
 @regular.route('/unfollowall')
 @login_required
@@ -59,31 +59,47 @@ def unfollowall():
   db.session.add(user)
   db.session.commit()
   flash('You have removed access from everyone')
-  return redirect(url_for('regular.profile',user_id=user.id))
+  return redirect(url_for('regular.profile',useremail=user.email))
 
 @regular.route('/followall')
 @login_required
 def followall():
   user = current_user
   profiles = User.query.all()
-  for profile in profiles:
-    user.follow(profile)
+  for profile in profiles:	
+    if profile.verified == True:
+      user.follow(profile)
   db.session.add(user)
   db.session.commit()
   flash('You have given access to everyone')
-  return redirect(url_for('regular.profile',user_id=user.id))
+  return redirect(url_for('regular.profile',useremail=user.email))
 
-@regular.route('/profile/<int:user_id>', methods=['GET', 'POST'])
+
+@regular.route('/profile')
 @login_required
-def profile(user_id):
+def redirecttoprofile():
+  user=current_user
+  return redirect(url_for('regular.profile',useremail=str(user.email)))
+
+@regular.route('/profile/<useremail>', methods=['GET', 'POST'])
+@login_required
+def profile(useremail):
   if request.method == 'POST':
     user = current_user
-    return 'post sent'
+    user.profile_monday = request.form["monday"].replace("\r\n", "<br />")
+    user.profile_tuesday = request.form["tuesday"].replace("\r\n", "<br />")
+    user.profile_wednesday = request.form["wednesday"].replace("\r\n", "<br />")
+    user.profile_thursday = request.form["thursday"].replace("\r\n", "<br />")
+    user.profile_friday = request.form["friday"].replace("\r\n", "<br />")
+    db.session.add(user)
+    db.session.commit()
+    flash("Text Saved!")
+    return redirect(url_for('regular.profile',useremail=user.email))
 
   elif request.method == 'GET':
     user = current_user
-    friend = User.query.filter_by(id=user_id).first_or_404()
-    if friend.is_following(user) or friend.id == user.id:
+    friend = User.query.filter_by(email=useremail).first_or_404()
+    if friend.is_following(user) or friend.email == user.email:
       permission = True
       return render_template('profile.html', friend=friend, user=user, permission=permission)
     else:

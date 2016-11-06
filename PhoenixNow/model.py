@@ -36,6 +36,11 @@ class User(db.Model):
     wednesday = db.Column(db.String(500))
     thursday = db.Column(db.String(500))
     friday = db.Column(db.String(500))
+    profile_monday = db.Column(db.String(500))
+    profile_tuesday = db.Column(db.String(500))
+    profile_wednesday = db.Column(db.String(500))
+    profile_thursday = db.Column(db.String(500))
+    profile_friday = db.Column(db.String(500))
     gcm_endpoint = db.Column(db.String(500))
     followed = db.relationship('User', 
                                secondary=followers, 

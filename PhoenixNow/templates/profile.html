@@ -13,32 +13,43 @@
 				<h2 style="margin-bottom:5px;padding:0;">Viewable Profiles</h2>
 				<div style="font-size:14px"> click to visit </div><br>
 				{% for follower in user.followers %}
-				<a href="/profile/{{follower.id}}">{{follower.firstname}}</a><br>
+				<a href="/profile/{{follower.email}}">{{follower.firstname}}</a><br>
 				{% endfor %}
 			</div>
 		</div>
 
 		<div class="col-sm-8">
+			<form action="/profile/{{user.email}}" method=post>
+
+			<div class="row">
 			<div class="col-xs-2 col-xs-offset-1" id="monday" style="padding:0;">
 				<b>Monday</b>
-				<textarea style="width:100%;height:250px;">Never</textarea>
+				<textarea name="monday" style="width:100%;height:250px;">{{friend.profile_monday}}</textarea>
 			</div>
               		<div class="col-xs-2" id="tuesday" style="padding:0;">
 				<b>Tuesday</b>
-				<textarea style="width:100%;height:250px;">Let</textarea>
+				<textarea name="tuesday" style="width:100%;height:250px;">{{friend.profile_tuesday}}</textarea>
 			</div>
               		<div class="col-xs-2" id="wednesday" style="padding:0;">
 				<b>Wednesday</b>
-				<textarea style="width:100%;height:250px;">You</textarea>
+				<textarea name="wednesday" style="width:100%;height:250px;">{{friend.profile_wednesday}}</textarea>
 			</div>
               		<div class="col-xs-2" id="thursday" style="padding:0;">
 				<b>Thursday</b>
-				<textarea style="width:100%;height:250px;">Down</textarea>
+				<textarea name="thursday" style="width:100%;height:250px;">{{friend.profile_thursday}}</textarea>
 			</div>
               		<div class="col-xs-2" id="friday" style="padding:0;">
 				<b>Friday</b>
-				<textarea style="width:100%;height:250px;">.</textarea>
+				<textarea name="friday" style="width:100%;height:250px;">{{friend.profile_friday}}</textarea>
 			</div>
+			</div>
+			
+			{% if user.email == friend.email %}
+			<input class="btn btn-default" id="submit" name="submit" type="submit" value="Save Text">
+			{% endif %}
+
+			</form>
+
 		</div>
 
 		<div class="col-sm-2" style="border:solid 1px black;">
@@ -51,7 +62,7 @@
 				<h2 style="margin-bottom:0px;padding:0;">Access Given</h2>
 				<div style="font-size:14px"> click to remove access </div>
 				{% for follower in user.followed %}
-				<a href="/unfollow/{{follower.id}}">{{follower.firstname}}</a><br>
+				<a href="/unfollow/{{follower.email}}">{{follower.firstname}}</a><br>
 				{% endfor %}
 			</div>
 		</div>
