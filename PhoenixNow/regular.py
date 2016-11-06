@@ -91,7 +91,6 @@ def profile(useremail):
     user.profile_wednesday = request.form["wednesday"].replace("\r\n", "<br />")
     user.profile_thursday = request.form["thursday"].replace("\r\n", "<br />")
     user.profile_friday = request.form["friday"].replace("\r\n", "<br />")
-    db.session.add(user)
     db.session.commit()
     flash("Text Saved!")
     return redirect(url_for('regular.profile',useremail=user.email))
@@ -139,30 +138,40 @@ def reminder():
 @login_required
 def save_endpoint():
   data = request.json['endpoint']
-  data = data.split('/')[-1]
   user = current_user
   user.gcm_endpoint = data
   db.session.commit()
+
   return jsonify({"title": data})
 
-@regular.route('/sw.js')
+@regular.route('/firebase-messaging-sw.js')
 def root():
-    return regular.send_static_file('sw.js')
+    return regular.send_static_file('firebase-messaging-sw.js')
 
-@regular.route('/notifications/beta')
+@regular.route('/manifest.json')
+def root1():
+    return regular.send_static_file('manifest.json')
+
+@regular.route('/notifications/subscribe')
 @login_required
 def notifications():
     user = current_user
     return render_template('notifications_beta.html',user=user)
 
-@regular.route('/notifications/betatest')
+@regular.route('/notifications/test')
 @login_required
 def notifications_test():
     user = current_user
-    payload = {'registration_ids':[user.gcm_endpoint]}
-    url = 'https://android.googleapis.com/gcm/send'
-    headers = {"Authorization": "key=" + os.environ.get('TEMPAPIKEY'), "Content-Type":"application/json"}
+    payload = {"to":user.gcm_endpoint,'notification':{"body":"Reminder to Sign In","title":"PhoenixNow","click_action":"https://phoenixnow.org"}}
+    url = 'https://fcm.googleapis.com/fcm/send'
+    headers = {"Authorization": 'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE', "Content-Type":"application/json"}
     res = requests.post(url,headers=headers,data=json.dumps(payload))
+
+# check if token is part of a group
+#    url = "https://iid.googleapis.com/iid/info/" + user.gcm_endpoint + "?details=true"
+#    headers = {"Authorization": "key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE"}
+#    res = requests.get(url,headers=headers)
+
     return res.content
 
 @regular.route('/history', methods=['GET', 'POST'])
