@@ -52,7 +52,6 @@ def sendpush():
 @login_required
 @admin_required
 def individual_push(endpoint):
-    user = current_user
     payload = {"to":endpoint,'notification':{"body":"Reminder to Sign In","title":"PhoenixNow","click_action":"https://phoenixnow.org"}}
     url = 'https://fcm.googleapis.com/fcm/send'
     headers = {"Authorization": 'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE', "Content-Type":"application/json"}
