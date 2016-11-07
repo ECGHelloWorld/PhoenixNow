@@ -27,5 +27,5 @@ messaging.setBackgroundMessageHandler(function(payload) {
 
 //curl 
 
-// curl -X POST --header "Authorization: key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"to\":\"eKu11Lj69AI:APA91bEOYBqhu50TDZW2_yBs9a0wHZ8BtWIczY_sHheSkMH0iRrVQ5pSMkR3-M-rhWyKXcM7AecsfKsCnXwsIqN5t1G-Ywc4QM-xOVfIBfNErnkVMkpBlejntWqG9lSWLHkDBrOV8S8E\",\"notification\":{\"body\":\"Sign In\"},\"title\":\"PhoenixNow\"}"
+// curl -X POST --header "Authorization: key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"to\":\"fawL7nvcY_g:APA91bFd2HdGqYCqG9-3OG0EGkNerxbbPDnF67vd4zzwhCtoL2rvnuVZ8wAaZ3pM3wI-oS82R5OrvgBolZj2wSVRF089gsWYQYRCA3U1uYB-31UTgKF90jQxy6vK7l-1yEFZSM9UcyXU\",\"notification\":{\"body\":\"Sign In\"},\"title\":\"PhoenixNow\"}"
 

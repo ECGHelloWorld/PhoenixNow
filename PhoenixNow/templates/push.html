@@ -20,7 +20,7 @@
         <td><a href="/admin/user/{{user.id}}">{{ user.lastname }}</a></td>
         <td><a href="/admin/user/{{user.id}}">{{ user.firstname }}</a></td>
         <td>{{ user.email }}</td>
-        <td><a href="/admin/sendpush/{{user.gcm_endpoint}}">{{ user.gcm_endpoint }}</a></td>
+        <td><a href="/admin/individualpush/{{user.gcm_endpoint}}">{{ user.gcm_endpoint }}</a></td>
     </tr>
     {% endif %}
     {% endfor %}
