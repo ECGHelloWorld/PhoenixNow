@@ -5,16 +5,15 @@
   <h1>Setting up push notifications</h1>
   <p>Access this page on your mobile device.</p>
   <p>Agree to notifications if the site requests.</p>
-  <p>Wait until a 'token' value appears on screen.</p>
-  <p>Use button to test if notifications work.</p>
+  <p>Use the button to test if notifications work.</p>
+  <p>Opt out by clicking the button. Generate a new token by revisiting this page.</p>
 </div>
 
 <p id="tokenCheck"> You should see a 'token' to the right -  </p>
 
 <div class="row">
 <button type="button" id="test" class="btn btn-default">Test Notifications</button>
-<button type="button" id="opt-out" class="btn btn-default">Opt Out</button>
-<button type="button" id="group-status" class="btn btn-default">Check Group Status</button>
+<a href="/optout" class="btn btn-secondary"">Opt Out</a>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/3.5.3/firebase.js"></script>

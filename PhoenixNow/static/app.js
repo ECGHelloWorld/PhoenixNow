@@ -48,7 +48,7 @@ messaging.onMessage(function(payload) {
   alert("You are able to successfully receive notifications.")
 });
 
-$('#test, #group-status, #opt-out').click(function () {
+$('#test').click(function () {
     if (this.id == 'test') {
         $.ajax({
           headers: {
@@ -62,29 +62,7 @@ $('#test, #group-status, #opt-out').click(function () {
           }),
           contentType: 'application/json',
           type: "POST",
-          dataType : "json",
-   })
-    }
-    else if (this.id == 'group-status') {
-        $.ajax({
-          url: "https://iid.googleapis.com/iid/info/" + token + "?details=true",
-          headers: {
-            'Authorization':'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE'
-          },
-          type: "GET",
-          dataType : "json",
-        }).done(function(msg) {
-          console.log(msg)
-        });
-    }
-    else if (this.id == 'opt-out') {
-        $.ajax({
-        headers: {
-            'Authorization':'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE',
-            'Content-Type':'application/json'
-        },
-        url: "https://iid.googleapis.com/iid/v1/" + token + "/rel/topics/PhoenixNow",
-        type: "POST",
+          dataType : "json"
         })
     }
 });

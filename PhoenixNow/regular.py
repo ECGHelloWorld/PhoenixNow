@@ -49,6 +49,19 @@ def follow(useremail):
   flash('You given access to ' + friend.email)
   return redirect(url_for('regular.profile',useremail=user.email))
 
+@regular.route('/reminderlist')
+@login_required
+def remiderList():
+  remindTokens = []
+  allTokens = []
+  profiles = User.query.all()
+  for profile in profiles:
+    if profile.gcm_endpoint is not None:
+      allTokens.append(profile.gcm_endpoint)
+      if not profile.checkedin:
+        remindTokens.append(profile.gcm_endpoint)
+  return jsonify({'remind':remindTokens,'all':allTokens})
+
 @regular.route('/unfollowall')
 @login_required
 def unfollowall():
@@ -79,7 +92,7 @@ def followall():
 @login_required
 def redirecttoprofile():
   user=current_user
-  return redirect(url_for('regular.profile',useremail=str(user.email)))
+  return redirect(url_for('regular.profile',useremail=user.email))
 
 @regular.route('/profile/<useremail>', methods=['GET', 'POST'])
 @login_required
@@ -143,6 +156,19 @@ def save_endpoint():
   db.session.commit()
 
   return jsonify({"title": data})
+
+@regular.route('/optout')
+@login_required
+def optout():
+  user = current_user
+  payload = {"to":"/topics/PhoenixNow",'registration_tokens':[user.gcm_endpoint]}
+  url = 'https://iid.googleapis.com/iid/v1:batchRemove'
+  headers = {"Authorization": 'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE', "Content-Type":"application/json"}
+  res = requests.post(url,headers=headers,data=json.dumps(payload))
+  user.gcm_endpoint = None
+  db.session.commit()
+  flash("Your token has been removed from the server, and you will no longer receive push notifications")
+  return redirect(url_for('regular.home'))
 
 @regular.route('/firebase-messaging-sw.js')
 def root():

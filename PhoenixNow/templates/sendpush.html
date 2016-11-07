@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="all">
+<h3>ALL</h3>
+
+</div>
+
+<div class="remind">
+<h3>Remind</h3>
+
+</div>
+
+<br>
+<div class="status">
+
+</div>
+<br>
+
+
+
+<button type="button" id="remove" class="btn btn-default">Remove All from Group</button>
+<button type="button" id="add" class="btn btn-default">Add Needed to Group</button>
+<button type="button" id="send" class="btn btn-default">Send Notification to Group</button>
+
+<script>
+$(function() {
+        $.ajax({
+          url: "/reminderlist",
+          type: "GET"
+        }).done(function(msg) {
+          console.log(msg)
+          $(".all").append(JSON.stringify(msg.all));
+          $(".remind").append(JSON.stringify(msg.remind));
+          $(".status").html("<b>requesting info on first token</b>");
+
+          $.ajax({
+            url: "https://iid.googleapis.com/iid/info/" + msg.all[0] + "?details=true",
+            headers: {
+              'Authorization':'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE'
+            },
+            type: "GET",
+            dataType : "json",
+          }).done(function(firstToken) {
+            console.log(firstToken)
+            $(".status").html("<b>received token information</b>");
+          });
+
+          $('#remove, #add, #send').click(function () {
+            if (this.id == 'remove') {
+              $(".status").html("<b>removing all tokens from PhoenixNow group</b>");
+              $.ajax({
+                headers: {
+                  'Authorization':'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE',
+                },
+                url: "https://iid.googleapis.com/iid/v1:batchRemove",
+                data: JSON.stringify({
+                  to: "/topics/PhoenixNow",
+                  registration_tokens: msg.all
+                }),
+                contentType: 'application/json',
+                type: "POST",
+                dataType : "json",
+                success: function (response) {
+                  $(".status").html("<b>removed tokens</b>");
+                },
+                error: function (response) {
+                  $(".status").html("<b>failed to remove tokens</b>");
+                }
+              })
+            }
+            else if (this.id == 'add') {
+              $(".status").html("<b>adding all needed tokens to PhoenixNow group</b>");
+              $.ajax({
+                headers: {
+                  'Authorization':'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE',
+                },
+                url: "https://iid.googleapis.com/iid/v1:batchAdd",
+                data: JSON.stringify({
+                  to: "/topics/PhoenixNow",
+                  registration_tokens: msg.remind
+                }),
+                contentType: 'application/json',
+                type: "POST",
+                dataType : "json",
+                success: function (response) {
+                  $(".status").html("<b>successfully added tokens</b>");
+                },
+                error: function (response) {
+                  $(".status").html("<b>failed to add tokens</b>");
+                }
+              })
+            }
+            else if (this.id == 'send') {
+              $(".status").html("<b>Sending Push Notification Out</b>");
+              $.ajax({
+                headers: {
+                  'Authorization':'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE',
+                  'Content-Type':'application/json'
+                },
+                url: "https://fcm.googleapis.com/fcm/send",
+                data: JSON.stringify({
+                  to: "/topics/PhoenixNow",
+                  notification: {"body":"Reminder to Sign In","title":"PhoenixNow","click_action":"https://phoenixnow.org"}
+                }),
+                contentType: 'application/json',
+                type: "POST",
+                dataType : "json",
+                success: function (response) {
+                  $(".status").html("<b>push notifications have been sent</b>");
+                },
+                error: function (response) {
+                  $(".status").html("<b>failed to send push notifications</b>");
+                }
+              }) 
+            }
+          });
+
+        });
+
+});
+</script>
+{% endblock %}
