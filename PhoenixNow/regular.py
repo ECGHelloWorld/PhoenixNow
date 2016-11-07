@@ -54,11 +54,13 @@ def follow(useremail):
 def remiderList():
   remindTokens = []
   allTokens = []
+  today = datetime.date.today()
   profiles = User.query.all()
   for profile in profiles:
+    checkin_today = Checkin.query.filter(Checkin.user==profile,func.date(Checkin.checkin_timestamp)==today).first()
     if profile.gcm_endpoint is not None:
       allTokens.append(profile.gcm_endpoint)
-      if not profile.checkedin:
+      if checkin_today is None:
         remindTokens.append(profile.gcm_endpoint)
   return jsonify({'remind':remindTokens,'all':allTokens})
 
