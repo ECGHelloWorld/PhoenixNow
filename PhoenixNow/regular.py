@@ -101,11 +101,11 @@ def redirecttoprofile():
 def profile(useremail):
   if request.method == 'POST':
     user = current_user
-    user.profile_monday = request.form["monday"].replace("\r\n", "<br />")
-    user.profile_tuesday = request.form["tuesday"].replace("\r\n", "<br />")
-    user.profile_wednesday = request.form["wednesday"].replace("\r\n", "<br />")
-    user.profile_thursday = request.form["thursday"].replace("\r\n", "<br />")
-    user.profile_friday = request.form["friday"].replace("\r\n", "<br />")
+    user.profile_monday = request.form["monday"]
+    user.profile_tuesday = request.form["tuesday"]
+    user.profile_wednesday = request.form["wednesday"]
+    user.profile_thursday = request.form["thursday"]
+    user.profile_friday = request.form["friday"]
     db.session.commit()
     flash("Text Saved!")
     return redirect(url_for('regular.profile',useremail=user.email))
