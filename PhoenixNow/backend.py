@@ -89,29 +89,45 @@ def login():
 
 @backend.route('/checkin', methods=['POST'])
 def checkin():
-    res = check_code(check_token(check_input(request.get_json(silent=True), 'lat', 'lon')))
+    #res = check_code(check_token(check_input(request.get_json(silent=True), 'lat', 'lon')))
+    res = check_code(check_token(check_input(request.get_json(silent=True))))
+ 
+    if request.remote_addr.rsplit('.',1)[0] in ['192.154.63']:
+      user = res['user']
+      if user is None:
+        raise InvalidUsage("This user does not exist", status_code=400)
+      if user.verified == False:
+        raise InvalidUsage("This user is not verified", status_code=400)
+      else:
+        if checkin_user(user):
+          return jsonify({"result": "success", "action": "checkin", "token": res['token']})
+        else:
+          raise InvalidUsage("Already checked in for today")
 
-    lon = float(res['lon'])
-    lat = float(res['lat'])
+    else:
+      res = check_code(check_token(check_input(request.get_json(silent=True), 'lat', 'lon')))
 
-    if lon >= -79.8921061:
-        if lon <= -79.8833942:
-            if lat <= 36.0984408:
-                if lat >= 36.0903956:
-                    user = res['user']
-                    #if user.checkedin:
-                        #raise InvalidUsage("You have already been checked in", status_code=400)
-                    if user is None:
-                        raise InvalidUsage("This user does not exist", status_code=400)
-                    if user.verified == False:
-                        raise InvalidUsage("This user is not verified", status_code=400)
-                    else:
-                        if checkin_user(user):
-                            return jsonify({"result": "success", "action": "checkin", "token": res['token']})
-                        else:
-                            raise InvalidUsage("Already checked in for today")
+      lon = float(res['lon'])
+      lat = float(res['lat'])
 
-    raise InvalidUsage("The user is not at Guilford")
+      elif lon >= -79.8921061:
+          if lon <= -79.8833942:
+              if lat <= 36.0984408:
+                  if lat >= 36.0903956:
+                      user = res['user']
+                      #if user.checkedin:
+                          #raise InvalidUsage("You have already been checked in", status_code=400)
+                      if user is None:
+                          raise InvalidUsage("This user does not exist", status_code=400)
+                      if user.verified == False:
+                          raise InvalidUsage("This user is not verified", status_code=400)
+                      else:
+                          if checkin_user(user):
+                              return jsonify({"result": "success", "action": "checkin", "token": res['token']})
+                          else:
+                              raise InvalidUsage("Already checked in for today")
+
+    raise InvalidUsage("Something is wrong in the backend or request.")
 
 @backend.route('/schedule', methods=['GET', 'POST'])
 def schedule():
