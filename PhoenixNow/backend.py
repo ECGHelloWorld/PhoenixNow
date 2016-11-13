@@ -110,7 +110,7 @@ def checkin():
       lon = float(res['lon'])
       lat = float(res['lat'])
 
-      elif lon >= -79.8921061:
+      if lon >= -79.8921061:
           if lon <= -79.8833942:
               if lat <= 36.0984408:
                   if lat >= 36.0903956:
@@ -126,7 +126,7 @@ def checkin():
                               return jsonify({"result": "success", "action": "checkin", "token": res['token']})
                           else:
                               raise InvalidUsage("Already checked in for today")
-
+      raise InvalidUsage("GPS check failed.")
     raise InvalidUsage("Something is wrong in the backend or request.")
 
 @backend.route('/schedule', methods=['GET', 'POST'])
