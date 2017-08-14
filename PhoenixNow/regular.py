@@ -5,7 +5,6 @@ from sqlalchemy.sql import func
 from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm, CalendarForm, EmailReminderForm
 from PhoenixNow.mail import generate_confirmation_token, confirm_token, send_email
 from PhoenixNow.model import db, User, Checkin
-from PhoenixNow.tasks import start_reminders, celery, count
 from flask_login import login_required, login_user, logout_user, current_user
 import datetime
 import requests
@@ -133,14 +132,12 @@ def reminder():
                 flash("Email reminder time was set.")
             else:
                 if len(user.email_reminder_id) > 0:
-                    celery.control.revoke(user.email_reminder_id, terminate=True)
                     flash("Email reminder time was changed.")
 
             user.email_reminder = form.date.data
             start_reminders.delay(user.id)
         else:
             if len(user.email_reminder_id) > 0:
-                celery.control.revoke(user.email_reminder_id, terminate=True)
             user.email_reminder = ""
             flash("Email reminder time was disabled.")
 

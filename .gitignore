@@ -72,9 +72,6 @@ target/
 # pyenv
 .python-version
 
-# celery beat schedule file
-celerybeat-schedule
-
 # dotenv
 .env
 
@@ -100,3 +97,5 @@ code.py
 
 *.env
 *.flask
+
+.vscode

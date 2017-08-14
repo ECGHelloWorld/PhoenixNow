@@ -15,9 +15,7 @@ class Config(object):
 class ProductionConfig(Config):
     #SQLALCHEMY_DATABASE_URI = 'mysql+oursql://root:pass@db/phoenixrises'
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://postgres:password@db/postgres'
-    CELERY_BROKER_URL = 'amqp://guest@rabbitmq//'
 
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///file.db'
-    CELERY_BROKER_URL = 'amqp://guest@localhost//'
