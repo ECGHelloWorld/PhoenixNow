@@ -11,11 +11,10 @@ class Config(object):
     MAIL_USE_SSL = True
     MAIL_USERNAME = os.environ.get('EMAIL')
     MAIL_PASSWORD = os.environ.get('EMAILPASS')
-
-class ProductionConfig(Config):
-    #SQLALCHEMY_DATABASE_URI = 'mysql+oursql://root:pass@db/phoenixrises'
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://postgres:password@db/postgres'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../data.db'
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///file.db'
+
+class ProductionConfig(Config):
+    DEBUG = False

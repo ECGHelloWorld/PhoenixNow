@@ -13,8 +13,6 @@ import bcrypt
 import json
 import os
 
-from PhoenixNow.config import ProductionConfig
-
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
 
 @regular.route('/beta')
@@ -137,7 +135,6 @@ def reminder():
             user.email_reminder = form.date.data
             start_reminders.delay(user.id)
         else:
-            if len(user.email_reminder_id) > 0:
             user.email_reminder = ""
             flash("Email reminder time was disabled.")
 

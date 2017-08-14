@@ -1,4 +1,3 @@
-from PhoenixNow.config import DevelopmentConfig, ProductionConfig
 from PhoenixNow.mail import mail
 from PhoenixNow.login import login_manager
 from PhoenixNow.model import db
