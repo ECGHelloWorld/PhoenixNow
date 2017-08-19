@@ -15,15 +15,6 @@ import os
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
 
-@regular.route('/beta')
-@login_required
-def beta():
-    form = EmailReminderForm()
-    user = current_user
-    form.date.data = user.email_reminder
-    form.enabled.data = True if len(user.email_reminder) > 0 else False
-    return render_template('beta.html', form=form)
-
 @regular.route('/unfollow/<useremail>')
 @login_required
 def unfollow(useremail):
@@ -117,32 +108,6 @@ def profile(useremail):
       permission = False
       return render_template('profile.html', friend=friend, user=user, permission=permission)
 
-@regular.route('/beta/reminder', methods=['POST'])
-@login_required
-def reminder():
-    form = EmailReminderForm()
-    if request.method == 'POST' and form.validate_on_submit():
-        user = current_user
-
-        if form.enabled.data:
-            # It doesn't matter if multiple reminders are created because 
-            if len(user.email_reminder) == 0:
-                flash("Email reminder time was set.")
-            else:
-                if len(user.email_reminder_id) > 0:
-                    flash("Email reminder time was changed.")
-
-            user.email_reminder = form.date.data
-            start_reminders.delay(user.id)
-        else:
-            user.email_reminder = ""
-            flash("Email reminder time was disabled.")
-
-
-        db.session.commit()
-
-        return redirect(url_for('regular.beta'))
-
 @regular.route('/saveendpoint', methods=['POST'])
 @login_required
 def save_endpoint():
@@ -152,49 +117,6 @@ def save_endpoint():
   db.session.commit()
 
   return jsonify({"title": data})
-
-@regular.route('/optout')
-@login_required
-def optout():
-  user = current_user
-  payload = {"to":"/topics/PhoenixNow",'registration_tokens':[user.gcm_endpoint]}
-  url = 'https://iid.googleapis.com/iid/v1:batchRemove'
-  headers = {"Authorization": 'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE', "Content-Type":"application/json"}
-  res = requests.post(url,headers=headers,data=json.dumps(payload))
-  user.gcm_endpoint = None
-  db.session.commit()
-  flash("Your token has been removed from the server, and you will no longer receive push notifications")
-  return redirect(url_for('regular.home'))
-
-@regular.route('/firebase-messaging-sw.js')
-def root():
-    return regular.send_static_file('firebase-messaging-sw.js')
-
-@regular.route('/manifest.json')
-def root1():
-    return regular.send_static_file('manifest.json')
-
-@regular.route('/notifications/subscribe')
-@login_required
-def notifications():
-    user = current_user
-    return render_template('notifications_beta.html',user=user)
-
-@regular.route('/notifications/test')
-@login_required
-def notifications_test():
-    user = current_user
-    payload = {"to":user.gcm_endpoint,'notification':{"body":"Reminder to Sign In","title":"PhoenixNow","click_action":"https://phoenixnow.org"}}
-    url = 'https://fcm.googleapis.com/fcm/send'
-    headers = {"Authorization": 'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE', "Content-Type":"application/json"}
-    res = requests.post(url,headers=headers,data=json.dumps(payload))
-
-# check if token is part of a group
-#    url = "https://iid.googleapis.com/iid/info/" + user.gcm_endpoint + "?details=true"
-#    headers = {"Authorization": "key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE"}
-#    res = requests.get(url,headers=headers)
-
-    return res.content
 
 @regular.route('/history', methods=['GET', 'POST'])
 @login_required
@@ -437,7 +359,15 @@ def resend_verification():
 @check_verified
 def checkin():
     user = current_user
-    if request.remote_addr.rsplit('.',1)[0] in ['192.154.63']:
+    if request.headers.get('X-Real-IP'):
+        ip = request.headers.get('X-Real-IP')
+    else:
+        ip = request.remote_addr
+
+    print(ip)
+    print(ip.rsplit('.',1)[0])
+
+    if ip.rsplit('.',1)[0] in ['192.154.63']:
         if checkin_user(user):
             flash('Successful Check-in!')
         else:
