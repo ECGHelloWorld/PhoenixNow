@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<title>PhoenixNow</title>
+    <link rel='shortcut icon' href='/static/images/phoenixnowfavicon.ico' type='image/x-icon'/ >
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body class="homebackground">
+
+<div class="container">
+<div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'message' %}
+              <div class="alert alert-warning alert-dismissable" role="alert">
+            {% else %}
+              <div class="alert alert-{{ category }} alert-dismissable" role="alert">
+            {% endif %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              {{ message }}
+            </div>
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+</div>
+
+<div class="container">
+   <div class="center-home">
+   <img src="/static/images/phoenixnowlogo.png" class="home-phoenix" alt="cool phoenix">
+   <p class="title home-title">PhoenixNow</p>
+   <p class="tagline home-tagline">Your gateway to all things ECG, with <span class="b">{{8300 + CheckinCount}}</span> check-in's and counting...</p>
+   <a href="/signin" id="SignIn" class="btn btn-default hvr-underline-from-center signin-button">Sign In </a>
+   <a href="/signup" id="Register" class="btn btn-default hvr-underline-from-center register-button">Register</a>
+   <br><br><br>
+   </div>
+</div>
+
+</body>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+</html>

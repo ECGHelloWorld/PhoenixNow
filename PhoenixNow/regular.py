@@ -55,7 +55,7 @@ def home():
     CheckinCount = Checkin.query.count()
     
     if not current_user.is_authenticated:
-        return render_template('home.html', user=current_user,
+        return render_template('unauthenticated-home.html', user=current_user,
                 CheckinCount=CheckinCount)
 
     user = current_user
