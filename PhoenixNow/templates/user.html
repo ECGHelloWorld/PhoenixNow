@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-  <div style="background: #ffffff; color: black;">
+  <div class="admin-background">
 
       <h2>{{ user.firstname }} {{ user.lastname }}</h2>
 
@@ -79,7 +79,7 @@
     <div class="col-sm-4"></div>
     <div class="col-sm-4">
 
-    <form style="margin-bottom:10px;" action="{{ url_for('admin.user', user_id=user.id) }}" method=post>
+    <form class="admin-user" action="{{ url_for('admin.user', user_id=user.id) }}" method=post>
       {{ form.hidden_tag() }}
 
       <div class="form-group">

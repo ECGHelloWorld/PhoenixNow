@@ -6,6 +6,21 @@ textarea {
     text-align: center;
 }
 
+.nav-logo {
+    width:200px;
+    height: 200px;
+}
+
+.admin-background {
+    background: #ffffff;
+    color: black;
+}
+
+.input-date {
+    color: #800000;
+    font-family: 'Cinzel Decorative', cursive;
+}
+
 .updatelog {
     position:absolute;
     bottom:0;
@@ -25,7 +40,7 @@ body.background {
 }
 
 body.homebackground {
-
+    padding-top: 30px;
     background: url(/static/images/homepagebackground.png) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -37,14 +52,20 @@ body.homebackground {
     text-align: center;
 }
 
-}
 .center-home {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-      padding-top: 0px;
+    font-family: 'Cinzel Decorative', cursive;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding-top: 0px;
 }
+
+.home-phoenix {
+    width: 290px;
+    height: 290px;
+}
+
 .table {
     text-align: left;
     color: black;
@@ -79,11 +100,59 @@ body.homebackground {
   padding: 0px;
 }
 
-.title{
-color: #800000; 
-font-family: 'Cinzel Decorative', cursive;
+.title {
+    color: #800000; 
+    font-family: 'Cinzel Decorative', cursive;
+    margin-bottom: 20px;
 }
 
+.admin-user {
+    margin-bottom:10px;
+}
+
+.password-reset {
+    color: #800000;
+    font-family: 'Cinzel Decorative', cursive;
+}
+
+.home-title {
+    font-size: 48px;
+    font-size: 5vmax;
+    margin: 0px;
+}
+
+.signin-button {
+    margin-right: 5px;
+}
+
+.register-button {
+    margin-left: 5px;
+}
+
+.small-phoenix-logo {
+    height: 45px;
+    width: 45px
+}
+
+.home-tagline {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-size: 2.5vmin;
+    font-weight: bold;
+}
+
+.question-mark {
+    width:20px;
+    height: 20px;
+}
+
+.hide {
+    display: none;
+}
+
+.history-question {
+    margin-left: 10px;
+}
 
 .content{
 color: black;
