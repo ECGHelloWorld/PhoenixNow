@@ -42,30 +42,6 @@ def home():
     weekly_checkins.update_database() # look at user.py
     return render_template('admin.html', searchdate=searchdate, form=form, users=users, checkins=checkins)
 
-@admin.route('/sendpush')
-@login_required
-@admin_required
-def sendpush():
-    return render_template('sendpush.html')
-
-@admin.route('/individualpush/<endpoint>')
-@login_required
-@admin_required
-def individual_push(endpoint):
-    payload = {"to":endpoint,'notification':{"body":"Reminder to Sign In","title":"PhoenixNow","click_action":"https://phoenixnow.org"}}
-    url = 'https://fcm.googleapis.com/fcm/send'
-    headers = {"Authorization": 'key=AIzaSyAy7SLrdQIAnauHg0lMGLwYrWaonMMxriE', "Content-Type":"application/json"}
-    res = requests.post(url,headers=headers,data=json.dumps(payload))
-    return res.content
-
-@admin.route('/push')
-@login_required
-@admin_required
-def push():
-    users = User.query.all()
-    users.sort(key=lambda user: (user.grade, user.lastname)) # sort by grade and name
-    return render_template('push.html', users=users)
-
 @admin.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
