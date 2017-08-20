@@ -1,92 +1,62 @@
 {% extends "layout.html" %}
  
 {% block content %}
-  <h2 class="title">Register</h2>
- 
-  {% for message in form.firstname.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-  {% endfor %}
-   
-  {% for message in form.lastname.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-  {% endfor %}
-
-  {% for message in form.grade.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-  {% endfor %}
-   
-  {% for message in form.email.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-  {% endfor %}
-   
-  {% for message in form.password.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-  {% endfor %}
-   
-  <div class="row">
-  <div class="col-sm-4"></div>
-  <div class="col-sm-4">
-
-  <form action="{{ url_for('regular.signup') }}" method=post>
+<main class="pa4 black-80">
+  <form class="measure center" action="{{ url_for('regular.signup') }}" method=post>
     {{ form.hidden_tag() }}
+    <fieldset id="sign_up" class="ba b--transparent ph0">
+      <legend class="fancy-font f4 fw6 ph0 mh0 black">Register</legend>
 
-    <div class="form-group">
-    {{ form.firstname.label }}
-    {{ form.firstname(class_="form-control") }}
-    </div>
-
-    <div class="form-group">
-    {{ form.lastname.label }}
-    {{ form.lastname(class_="form-control") }}
-    </div>
-
-    <div class="form-group">
-    <label for="grade">Select Grade Level</label>
-      <select class="form-control" name="grade" id="grade">
-        <option> 9</option>
-        <option>10</option>
+      <div class="mt3">
+        {{ form.firstname.label(class_="db fw6 lh-copy f6") }}
+        {{ form.firstname(class_="pa2 input-reset ba w-100") }}
+	{% for message in form.firstname.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
+      </div>
+      <div class="mt3">
+        {{ form.lastname.label(class_="db fw6 lh-copy f6") }}
+        {{ form.lastname(class_="pa2 input-reset ba w-100") }}
+	{% for message in form.lastname.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
+      </div>
+    <div class="mt3">
+    <label for="grade" class="mr2 fw6 lh-copy f6">Select Grade Level</label>
+      <select name="grade" id="grade">
         <option>11</option>
         <option>12</option>
       </select>
+	{% for message in form.grade.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
     </div>
+      <div class="mt3">
+        {{ form.email.label(class_="db fw6 lh-copy f6") }}
+        {{ form.email(class_="pa2 input-reset ba w-100") }}
+	{% for message in form.email.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
+      </div>
+      <div class="mt3">
+        {{ form.password.label(class_="db fw6 lh-copy f6") }}
+        {{ form.password(class_="pa2 input-reset ba w-100") }}
+	{% for message in form.password.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
+      </div>
+      <div class="mt3">
+        {{ form.confirmpassword.label(class_="db fw6 lh-copy f6") }}
+        {{ form.confirmpassword(class_="pa2 input-reset ba w-100") }}
+	{% for message in form.confirmpassword.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
+      </div>
 
-    <div class="form-group">
-    {{ form.email.label }}
-    {{ form.email(class_="form-control") }}
+    <div class="mt3">
+      {{ form.submit(class_="phoenix-red-bg br2 white pv2 ph3 bn dim pointer f6 input-reset mr2") }}
     </div>
-
-    <div class="form-group">
-    {{ form.password.label }}
-    {{ form.password(class_="form-control") }}
-    </div>
-
-    <div class="form-group">
-    {{ form.confirmpassword.label }}
-    {{ form.confirmpassword(class_="form-control") }}
-    </div>
-
-    {{ form.submit(class_="btn btn-default") }}
 
   </form>
-
-  </div>
-  <div class="col-sm-4"></div>
-  </div>
-
-     
+  </main>
 {% endblock %}

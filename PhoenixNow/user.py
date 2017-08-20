@@ -2,28 +2,25 @@ from PhoenixNow.mail import generate_confirmation_token, send_email
 from flask import url_for, render_template
 from PhoenixNow.model import db, User, Checkin
 from PhoenixNow.week import Week
+from sqlalchemy import func
+from sqlalchemy import and_
 import datetime
+import calendar
+import sys
 
 def week_magic(day):
-    day_of_week = day.weekday()
-
-    to_beginning_of_week = datetime.timedelta(days=day_of_week)
-    monday = day - to_beginning_of_week
-
-    to_end_of_week = datetime.timedelta(days=4 - day_of_week)
-    friday = day + to_end_of_week
-
-    tuesday = day + datetime.timedelta(days=3 - day_of_week)
-    wednesday = day + datetime.timedelta(days=2 - day_of_week)
-    thursday = day + datetime.timedelta(days=1 - day_of_week)
+    monday = day - datetime.timedelta(days=day.weekday())
+    tuesday = monday + datetime.timedelta(days=1)
+    wednesday = tuesday + datetime.timedelta(days=1)
+    thursday = wednesday + datetime.timedelta(days=1)
+    friday = thursday + datetime.timedelta(days=1)
 
     return [monday, tuesday, wednesday, thursday, friday]
 
 def weekly_checkins(date, user):
-
     week = week_magic(date)
     
-    checkins = Checkin.query.filter(Checkin.user==user, Checkin.checkin_timestamp>=week[0]).order_by('Checkin.checkin_timestamp')
+    checkins = Checkin.query.filter(Checkin.user==user, func.date(Checkin.checkin_timestamp)>=week[0]).order_by('Checkin.checkin_timestamp')
 
     user_week = [False, False, False, False, False]
 
@@ -33,6 +30,29 @@ def weekly_checkins(date, user):
                 user_week[date.weekday()] = True
 
     return user_week
+
+def admin_weekly_checkins(date, grade=None):
+    week = week_magic(date)
+    if grade is None:
+        checkins = Checkin.query.filter(and_(func.date(Checkin.checkin_timestamp)>=week[0], func.date(Checkin.checkin_timestamp)<=week[4])).order_by('Checkin.checkin_timestamp')
+    else:
+        checkins = Checkin.query.filter(and_(Checkin.user.has(grade=grade), func.date(Checkin.checkin_timestamp)>=week[0], func.date(Checkin.checkin_timestamp)<=week[4])).order_by('Checkin.checkin_timestamp')
+    return checkins
+
+def monthly_checkins(year_num, month_num, user):
+    month_range = calendar.monthrange(year_num, month_num)
+    month = [False] * month_range[1]
+
+    start_of_month = datetime.date(year_num, month_num, 1)
+
+    checkins = Checkin.query.filter(Checkin.user==user, Checkin.checkin_timestamp>=start_of_month).order_by('Checkin.checkin_timestamp')
+
+    for checkin in checkins:
+        if checkin.checkin_timestamp.date().month == month_num:
+            if checkin.checkin_timestamp.date().year == year_num:
+                month[checkin.checkin_timestamp.date().day - 1] = True
+
+    return month
 
 def create_user(first, last, grade, email, password):
     newuser = User(first, last, grade, email, password)

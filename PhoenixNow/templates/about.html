@@ -1,43 +1,13 @@
 {% extends "layout.html" %}
 
 {% block content %}
- <h2 class="title"> About </h2>
+<div class="measure center">
+ <h2 class="tc mt4 fancy-font"> About </h2>
  <br>
- <img src="/static/images/phoenixnowlogo.png" class="nav-logo" alt="cool phoenix">
- <br>
- <p class="content"> This app was made by the ECG Hello World App Club.</p>
- <br>
- <p class="content"> Programming and Design by <span class="name2">Nicholas Day</span>, <span class "name3">Varun Nair</span>, Justin Kerr, and <span class="name"></span>.</p>
-<br>
- <p class="content"> Artwork designed by Calder Brown.</p>
-<br>
- <p class="content"> Have an interest in Python, HTML/CSS, or Java? Feel free to check out the <a href="https://github.com/ECGHelloWorld/PhoenixNow">GitHub Page</a> or join the Hello World App Club!</p>
-
-
-
-<script>
-    $(document).ready(function(){
-    $(function(){
-        $(".name").typed({
-            strings: ["Ali Chaudhry^4500", "<strong>Ali Chaudhry</strong>"],
-            typeSpeed: 100,
-            backDelay: 300
-        });
-        $(".name2").typed({
-            strings: ["Nickie", "Whoops", "<strong>Nicholas Day</strong>"],
-            typeSpeed: 100,
-            backDelay: 300
-        });
-        $(".name3").typed({
-            strings: ["riaN nuraV", "Nair Varun", "<strong>Varun Nair</strong>"],
-            typeSpeed: 100,
-            backDelay: 300
-        });
-    });
-    });
-</script>
-{% endblock %}
-
-{% block js %}
-<script src="/static/typed.js"></script>
+ <img src="/static/images/phoenixnowlogo.png" class="db center about-logo">
+ <p> This app was made by the ECG Hello World App Club.</p>
+ <p> Programming and Design by <span class="name2">Nicholas Day</span>, <span class "name3">Varun Nair</span>, Justin Kerr, and <span class="name">Ali Chaudhry</span>.</p>
+ <p> Artwork designed by Calder Brown.</p>
+ <p> Have an interest in Python, HTML/CSS, or Java? Feel free to check out the <a href="https://github.com/ECGHelloWorld/PhoenixNow">GitHub Page</a> or join the Hello World App Club!</p>
+ </div>
 {% endblock %}

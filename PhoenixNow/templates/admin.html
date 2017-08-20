@@ -1,89 +1,83 @@
 {% extends "layout.html" %}
 {% block content %}
-  <div class="admin-background">
-  <form action="{{ url_for('admin.home') }}" method=post>
+  <div class="bg-white black pb5">
+  <form class="pv3 measure center" action="{{ url_for('admin.home') }}" method=post>
     {{ form.hidden_tag() }}
 
-    <div class="form-group">
-    {{ form.date.label }}
-    {{ form.date(class_="form-control", value=searchdate) }}
+    <div class="cf mw5 center">
+    {{ form.date(class_="fl w-80 ba input-reset pa3", value=searchdate) }}
+    {{ form.submit(class_="fl w-20 pv3 button-reset bn phoenix-red-bg white dim") }}
     </div>
-
-    {{ form.submit(class_="btn btn-default") }}
     
-    <br></br>
-
-    <div class="row">
-    <input class="btn btn-default" id="submit" name="submit" type="submit" value="Previous Week">
-    <input class="btn btn-default" id="submit" name="submit" type="submit" value="Next Week">
+    <div class="cf mw5 center mt2">
+    <input class="fl button-reset bn phoenix-red-bg white dim pa2" id="submit" name="submit" type="submit" value="Previous Week">
+    <input class="fr button-reset bn phoenix-red-bg white dim pa2" id="submit" name="submit" type="submit" value="Next Week">
     </div>
-
-
   </form>
 
-    <h2>Users</h2>
+    <table class="f6 w-100 mw9 center" cellspacing="0">
 
-    <div class="table-responsive">
-    <table class="table table-striped table-hover">
-
-    <tr>
-    <th>Last Name</th>
-    <th>First Name</th>
-    <th>Email</th>
-    <th>Grade</th>
-    <th>Monday</th>
-    <th>Tuesday</th>
-    <th>Wednesday</th>
-    <th>Thursday</th>
-    <th>Friday</th>
-    <th>Schedule</th>
-    <th>Schedule Verified</th>
-    </tr>
-
+    <thead>
+      <tr class="stripe-dark">
+        <th class="fw6 tl pa3 bg-white">Last Name</th>
+        <th class="fw6 tl pa3 bg-white">First Name</th>
+        <th class="fw6 tl pa3 bg-white">Email</th>
+        <th class="fw6 tl pa3 bg-white">Grade</th>
+        <th class="fw6 tl pa3 bg-white">Monday</th>
+        <th class="fw6 tl pa3 bg-white">Tuesday</th>
+        <th class="fw6 tl pa3 bg-white">Wednesday</th>
+        <th class="fw6 tl pa3 bg-white">Thursday</th>
+        <th class="fw6 tl pa3 bg-white">Friday</th>
+        <th class="fw6 tl pa3 bg-white">Schedule</th>
+        <th class="fw6 tl pa3 bg-white">Schedule Verified</th>
+      </tr>
+    </thead>
+    <tbody class="lh-copy">
     {% for user in users %}
     {% if user.verified %}
-    <tr>
-        <td><a href="/admin/user/{{user.id}}">{{ user.lastname }}</a></td>
-        <td><a href="/admin/user/{{user.id}}">{{ user.firstname }}</a></td>
-        <td>{{ user.email }}</td>
-        <td><a href="/admin/grade/{{user.grade}}">{{ user.grade }}</a></td>
-        <td>{{ user.monday }}</td>
-        <td>{{ user.tuesday }}</td>
-        <td>{{ user.wednesday }}</td>
-        <td>{{ user.thursday }}</td>
-        <td>{{ user.friday }}</td>
-        <td>{{ user.schedule }}</td>
-        <td>{{ user.schedule_verified }}</td>
+    <tr class="stripe-dark">
+        <td class="pa3"><a href="/admin/user/{{user.id}}">{{ user.lastname }}</a></td>
+        <td class="pa3"><a href="/admin/user/{{user.id}}">{{ user.firstname }}</a></td>
+        <td class="pa3">{{ user.email }}</td>
+        <td class="pa3"><a href="/admin/grade/{{user.grade}}">{{ user.grade }}</a></td>
+        <td class="pa3">{{ user.monday }}</td>
+        <td class="pa3">{{ user.tuesday }}</td>
+        <td class="pa3">{{ user.wednesday }}</td>
+        <td class="pa3">{{ user.thursday }}</td>
+        <td class="pa3">{{ user.friday }}</td>
+        <td class="pa3">{{ user.schedule }}</td>
+        <td class="pa3">{{ user.schedule_verified }}</td>
     </tr>
     {% endif %}
     {% endfor %}
 
+    </tbody>
     </table>
-    </div>
 
-    <h2>Check-ins</h2>
+    <h2 class="center mw7 mt5 ml3">Check-ins</h2>
+    <table class="f6 w-100 mw7 center" cellspacing="0">
 
-    <div class="table-responsive">
-    <table class="table table-striped table-responsive table-hover">
-
-    <tr>
-    <th>Name</th>
-    <th>Timestamp</th>
-    <th>Week</th>
-    <th>Day</th>
+    <thead>
+    <tr class="stripe-dark">
+    <th class="fw6 tl pa3 bg-white">Name</th>
+    <th class="fw6 tl pa3 bg-white">Timestamp</th>
+    <th class="fw6 tl pa3 bg-white">Week</th>
+    <th class="fw6 tl pa3 bg-white">Day</th>
     </tr>
+    </thead>
     
+    <tbody class="lh-copy">
     {% for checkin in checkins %}    
-    <tr>
-    <td> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>
-    <td> {{ checkin.checkin_timestamp.strftime('%x %X%p') }} </td>
-    <td> {{ checkin.checkin_week }} </td>
-    <td> {{ checkin.checkin_timestamp.strftime('%A') }} </td>
+    <tr class="stripe-dark">
+    <td class="pa3"> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>
+    <td class="pa3"> {{ checkin.checkin_timestamp.strftime('%x %X%p') }} </td>
+    <td class="pa3"> {{ checkin.checkin_week }} </td>
+    <td class="pa3"> {{ checkin.checkin_timestamp.strftime('%A') }} </td>
     </tr>
     {% endfor %}
+    </tbody>
 
     </table>
-    </div>
 
   </div>
 {% endblock %}

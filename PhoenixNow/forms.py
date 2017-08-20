@@ -106,11 +106,11 @@ class ScheduleForm(Form):
   wednesday = BooleanField("Wednesday")
   thursday = BooleanField("Thursday")
   friday = BooleanField("Friday")
-  submit = SubmitField("Submit")
+  submit = SubmitField("Update")
 
 class CalendarForm(Form):
   date = StringField("Date")
-  submit = SubmitField("Submit Date")
+  submit = SubmitField("Go")
 
 class EmailReminderForm(Form):
   enabled = BooleanField("Enabled")

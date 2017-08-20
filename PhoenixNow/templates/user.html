@@ -1,114 +1,132 @@
 {% extends "layout.html" %}
 {% block content %}
-  <div class="admin-background">
+  <div class="bg-white black">
 
-      <h2>{{ user.firstname }} {{ user.lastname }}</h2>
+    <span class="f3 b tc pv3 w-100 db">{{ user.firstname }} {{ user.lastname }}</span>
 
-    <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="f6 w-100 mw9 center" cellspacing="0">
 
-    <tr>
-    <th>Last Name</th>
-    <th>First Name</th>
-    <th>Email</th>
-    <th>Grade</th>
-    <th>Verified</th>
-    <th>Schedule Verified</th>
-    <th>Monday</th>
-    <th>Tuesday</th>
-    <th>Wednesday</th>
-    <th>Thursday</th>
-    <th>Friday</th>
+    <thead>
+      <tr class="stripe-dark">
+        <th class="fw6 tl pa3 bg-white">Last Name</th>
+        <th class="fw6 tl pa3 bg-white">First Name</th>
+        <th class="fw6 tl pa3 bg-white">Email</th>
+        <th class="fw6 tl pa3 bg-white">Grade</th>
+        <th class="fw6 tl pa3 bg-white">Monday</th>
+        <th class="fw6 tl pa3 bg-white">Tuesday</th>
+        <th class="fw6 tl pa3 bg-white">Wednesday</th>
+        <th class="fw6 tl pa3 bg-white">Thursday</th>
+        <th class="fw6 tl pa3 bg-white">Friday</th>
+        <th class="fw6 tl pa3 bg-white">Schedule</th>
+        <th class="fw6 tl pa3 bg-white">Schedule Verified</th>
+      </tr>
+    </thead>
+    <tbody class="lh-copy">
+    {% if user.verified %}
+    <tr class="stripe-dark">
+        <td class="pa3"><a href="/admin/user/{{user.id}}">{{ user.lastname }}</a></td>
+        <td class="pa3"><a href="/admin/user/{{user.id}}">{{ user.firstname }}</a></td>
+        <td class="pa3">{{ user.email }}</td>
+        <td class="pa3"><a href="/admin/grade/{{user.grade}}">{{ user.grade }}</a></td>
+        <td class="pa3">{{ user.monday }}</td>
+        <td class="pa3">{{ user.tuesday }}</td>
+        <td class="pa3">{{ user.wednesday }}</td>
+        <td class="pa3">{{ user.thursday }}</td>
+        <td class="pa3">{{ user.friday }}</td>
+        <td class="pa3">{{ user.schedule }}</td>
+        <td class="pa3">{{ user.schedule_verified }}</td>
     </tr>
+    {% endif %}
 
-    <tr>
-    <td>{{ user.lastname }}</td>
-    <td>{{ user.firstname }}</td>
-    <td>{{ user.email }}</td>
-    <td>{{ user.grade }}</td>
-    <td>{{ user.verified }}</td>
-    <td>{{ user.schedule_verified }}</td>
-    <td>{{ user.monday }}</td>
-    <td>{{ user.tuesday }}</td>
-    <td>{{ user.wednesday }}</td>
-    <td>{{ user.thursday }}</td>
-    <td>{{ user.friday }}</td>
-    </tr>
-
+    </tbody>
     </table>
-    </div>
+
+    <div class="cf">
+    
+    <div class="fl w-50">
 
     <h2>Schedule</h2>
+    <table class="f6 w-100 mw9 center" cellspacing="0">
 
-    <div class="table-responsive">
-    <table class="table table-striped table-hover">
-        <tr>
-            <th>Schedule</th>
-            <th>Verified</th>
-            <th>Verify?</th>
+    <thead>
+      <tr class="stripe-dark">
+        <th class="fw6 tl pa3 bg-white">Schedule</th>
+        <th class="fw6 tl pa3 bg-white">Verified</th>
+        <th class="fw6 tl pa3 bg-white">Verify?</th>
+      </tr>
+    </thead>
+      <tbody class="lh-copy">
+        <tr class="stripe-dark">
+            <td class="pa3">{{ user.schedule }}</td>
+            <td class="pa3">{{ user.schedule_verified }}</td>
+            <td class="pa3"><a href="/admin/user/{{ user.id }}/verify_schedule">Toggle Verification</a></td>
         </tr>
-        <tr>
-            <td>{{ user.schedule }}</td>
-            <td>{{ user.schedule_verified }}</td>
-            <td><a href="/admin/user/{{ user.id }}/verify_schedule">Toggle Verification</a></td>
-        </tr>
+      </tbody>
     </table>
 
-
-    <h2>Check-ins</h2>
-    <table class="table table-striped table-responsive table-hover">
-
-    <tr>
-    <th>Timestamp</th>
-    <th>Name</th>
-    </tr>
-    
-    {% for checkin in user.checkins %}    
-    <tr>
-    <td> {{ checkin.checkin_timestamp.strftime('%x %X%p') }} </td>
-    <td> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>
-    </tr>
-    {% endfor %}
-
-    </table>
     </div>
+
+    <div class="fl w-50">
+
+      <div class="measure center">
 
     <h2>Edit User Information</h2>
 
-    <div class="row">
-    <div class="col-sm-4"></div>
-    <div class="col-sm-4">
-
-    <form class="admin-user" action="{{ url_for('admin.user', user_id=user.id) }}" method=post>
+    <form class="" action="{{ url_for('admin.user', user_id=user.id) }}" method=post>
       {{ form.hidden_tag() }}
 
-      <div class="form-group">
-      {{ form.firstname.label }}
-      {{ form.firstname(class_="form-control") }}
+      <div class="mt3">
+      {{ form.firstname.label(class_="db") }}
+      {{ form.firstname(class_="form-control", value=user.firstname) }}
       </div>
 
-      <div class="form-group">
-      {{ form.lastname.label }}
-      {{ form.lastname(class_="form-control") }}
+      <div class="mt3">
+      {{ form.lastname.label(class_="db") }}
+      {{ form.lastname(class_="form-control", value=user.lastname) }}
       </div>
 
-      <div class="form-group">
+      <div class="mv3">
       <label for="grade">Select Grade Level</label>
         <select class="form-control" name="grade" id="grade">
-          <option> 9</option>
-          <option>10</option>
           <option>11</option>
           <option>12</option>
         </select>
       </div>
 
-      {{ form.submit(class_="btn btn-default") }}
+      <div class="mt2">
+      {{ form.submit(class_="button-reset bn br2 phoenix-red-bg pv2 ph3 dim white") }}
+      </div>
 
     </form>
+    </div>
 
     </div>
-    <div class="col-sm-4"></div>
-    </div>    
+    </div>
+
+    <h2 class="center mw7 mt5 ml3">Check-ins</h2>
+    <table class="f6 w-100 mw7 center" cellspacing="0">
+
+    <thead>
+    <tr class="stripe-dark">
+    <th class="fw6 tl pa3 bg-white">Name</th>
+    <th class="fw6 tl pa3 bg-white">Timestamp</th>
+    <th class="fw6 tl pa3 bg-white">Week</th>
+    <th class="fw6 tl pa3 bg-white">Day</th>
+    </tr>
+    </thead>
+    
+    <tbody class="lh-copy">
+    {% for checkin in user.checkins %}    
+    <tr class="stripe-dark">
+    <td class="pa3"> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>
+    <td class="pa3"> {{ checkin.checkin_timestamp.strftime('%x %X%p') }} </td>
+    <td class="pa3"> {{ checkin.checkin_week }} </td>
+    <td class="pa3"> {{ checkin.checkin_timestamp.strftime('%A') }} </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
 
   </div>
 {% endblock %}

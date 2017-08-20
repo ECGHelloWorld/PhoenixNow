@@ -1,45 +1,40 @@
 {% extends "layout.html" %}
  
 {% block content %}
-  <h2 class="title">Sign In</h2>
-  {% for message in form.email.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-  {% endfor %}
-   
-  {% for message in form.password.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-  {% endfor %}
-
-  <div class="row">
-  <div class="col-sm-4"></div>
-  <div class="col-sm-4">
-
-  <form action="{{ url_for('regular.signin') }}" method=post>
+<main class="pa4 black-80">
+  <form class="measure center" action="{{ url_for('regular.signin') }}" method=post>
     {{ form.hidden_tag() }}
+    <fieldset id="sign_in" class="ba b--transparent ph0">
 
-    <div class="form-group">
-    {{ form.email.label }}
-    {{ form.email(class_="form-control") }}
+      <legend class="fancy-font f4 fw6 ph0 mh0 black">Signin</legend>
+
+      <div class="mt3">
+        {{ form.email.label(class_="db fw6 lh-copy f6") }}
+        {{ form.email(class_="pa2 input-reset ba w-100") }}
+	{% for message in form.email.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
+      </div>
+
+      <div class="mv3">
+        {{ form.password.label(class_="db fw6 lh-copy f6") }}
+        {{ form.password(class_="pa2 input-reset ba w-100") }}
+	{% for message in form.password.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
+      </div>
+
+    </fieldset>
+
+    <div>
+      {{ form.submit(class_="phoenix-red-bg white pv2 ph3 bn dim br2 pointer f6 input-reset mr2") }}
     </div>
 
-    <div class="form-group">
-    {{ form.password.label }}
-    {{ form.password(class_="form-control") }}
+    <div class="lh-copy mt3">
+      <a class="f6 link dim black" href="{{ url_for('regular.requestreset') }}">Forget Your Password?</a>
     </div>
+  </form>
+</main>
 
-    {{ form.submit(class_="btn btn-default") }}
-    </form>
-    <br></br>
-    <a href="{{ url_for('regular.requestreset') }}">Forget Your Password?</a>
-
-  </div>
-  <div class="col-sm-4"></div>
-  </div>
 
 {% endblock %}

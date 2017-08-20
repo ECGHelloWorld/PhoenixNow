@@ -1,31 +1,27 @@
 {% extends "layout.html" %}
  
 {% block content %}
-  <h2 class="title">Reset Password</h2>
-  {% for message in form.email.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-  {% endfor %}
-
-  <div class="row">
-  <div class="col-sm-4"></div>
-  <div class="col-sm-4">
-
-  <form action="{{ url_for('regular.requestreset') }}" method=post>
+<main class="pa4 black-80">
+  <form class="measure center" action="{{ url_for('regular.requestreset') }}" method=post>
     {{ form.hidden_tag() }}
+    <fieldset id="sign_in" class="ba b--transparent ph0">
 
-    <div class="form-group">
-    {{ form.email.label }}
-    {{ form.email(class_="form-control") }}
+      <legend class="fancy-font f4 fw6 ph0 mh0 black">Reset Password</legend>
+
+      <div class="mt3">
+        {{ form.email.label(class_="db fw6 lh-copy f6") }}
+        {{ form.email(class_="pa2 input-reset ba w-100") }}
+    {% for message in form.email.errors %}
+      <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+    {% endfor %}
+      </div>
+
+    </fieldset>
+    <div>
+      {{ form.submit(class_="phoenix-red-bg white pv2 ph3 bn dim br2 pointer f6 input-reset mr2") }}
     </div>
-
-    {{ form.submit(class_="btn btn-default") }}
     </form>
+  </main>
 
-  </div>
-  <div class="col-sm-4"></div>
-  </div>
 
 {% endblock %}

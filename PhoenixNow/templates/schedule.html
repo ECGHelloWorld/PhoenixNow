@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<form class="pt4 center mw4" method=post action="{{ url_for('regular.schedule') }}">
+        {{ schedule_form.hidden_tag() }}
+        <fieldset id="schedule_form" class="bn">
+        <legend class="black-80 fancy-font f4 fw6 ph0 mh0 black">Schedule</legend>
+        <div class="flex items-center mt2 mb2">
+            {{ schedule_form.monday(class_="mr2", checked=user.schedule_monday) }}
+            {{ schedule_form.monday.label }}
+        </div>
+
+        <div class="flex items-center mb2">
+        {{ schedule_form.tuesday(class_="mr2", checked=user.schedule_tuesday) }}
+        {{ schedule_form.tuesday.label }}
+        </div>
+
+        <div class="flex items-center mb2">
+        {{ schedule_form.wednesday(class_="mr2", checked=user.schedule_wednesday) }}
+        {{ schedule_form.wednesday.label }}
+        </div>
+
+        <div class="flex items-center mb2">
+        {{ schedule_form.thursday(class_="mr2", checked=user.schedule_thursday) }}
+        {{ schedule_form.thursday.label }}
+        </div>
+
+        <div class="flex items-center mb3">
+        {{ schedule_form.friday(class_="mr2", checked=user.schedule_friday) }}
+        {{ schedule_form.friday.label }}
+        </div>
+        <div>
+        {{ schedule_form.submit(class_="phoenix-red-bg white pv2 ph3 bn dim br2 pointer f6 input-reset mr2") }}
+        </div>
+    </fieldset>
+</form>
+{% endblock %}  

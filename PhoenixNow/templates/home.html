@@ -1,112 +1,28 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h2 class="title">Welcome {{ user.firstname }} {{user.lastname}}!</h2>
+<div class="tc">
+<h2 class="f4 fancy-font b black-80 mv4">Welcome {{ user.firstname }} {{user.lastname}}!</h2>
 
 {% if not checkedin %}
-<div class="row">
-  <form action = "{{ url_for('regular.checkin') }}">
-      <div class="form-group">
-  {{ form.checkin(class_="btn btn-default") }}
-      </div>
-  </form>
-</div>
+  <a href="/" class="b link f5 phoenix-red-bg white pv3 ph4 br2 dim pointer fancy-font">Checkin</a>
 {% else %}
-<div class="row">
-<h4 class="title">Checked in for {{ today }}!</h4>
-</div>
+<span class="f4 phoenix-red mb4">You've checked in today.</span>
 {% endif %}
 
-<div class="row">
-
-<button type="button" class="btn btn-secondary" id="showschedule">Schedule</button>
-<img src="/static/images/questionmark.png" alt="schedule help" class="scheduletoggle question-mark" data-toggle="tooltip" data-placement="right" title="By default a 5 day schedule is selected. If your schedule differs, please indicate it below and an admin will verify the schedule change.">
-
-<a href="/history" class="btn btn-secondary">History</a>
-<img src="/static/images/questionmark.png" alt="schedule help" class="history-question question-mark scheduletoggle" data-toggle="tooltip" data-placement="right" title="View your checkin history one week at a time. Input dates in the format ( Year-Day-Month ).">
-
-</div>
-
-<div class="row scheduleform" class="hide">
-<h2 class="title">Schedule </h2> 
-<h4 class="content">Currently - {{ user.schedule }}</h4>
-</div>
-
-
-
-<form class="row scheduleform" class="hide" method=post action="{{ url_for('regular.schedule') }}">
-        {{ form.hidden_tag() }}
-        <div class="row">
-        <div class="col-sm-2 col-sm-offset-1">
-        <div class="form-group">
-        {{ schedule_form.monday.label }}
-        {{ schedule_form.monday(class_="btn btn default", checked=user.schedule_monday) }}
-        </div>
-        </div>
-
-        <div class="col-sm-2">
-        <div class="form-group">
-        {{ schedule_form.tuesday.label }}
-        {{ schedule_form.tuesday(class_="btn btn default", checked=user.schedule_tuesday) }}
-        </div>
-        </div>
-
-        <div class="col-sm-2">
-        <div class="form-group">
-        {{ schedule_form.wednesday.label }}
-        {{ schedule_form.wednesday(class_="btn btn default", checked=user.schedule_wednesday) }}
-        </div>
-        </div>
-
-        <div class="col-sm-2">
-        <div class="form-group">
-        {{ schedule_form.thursday.label }}
-        {{ schedule_form.thursday(class_="btn btn default", checked=user.schedule_thursday) }}
-        </div>
-        </div>
-
-        <div class="col-sm-2">
-        <div class="form-group">
-        {{ schedule_form.friday.label }}
-        {{ schedule_form.friday(class_="btn btn default", checked=user.schedule_friday) }}
-        </div>
-        </div>
-        </div>
-    {{ schedule_form.submit(class_="btn btn-default") }}
-</form>
-
-
-<div class="row">
-<h2 class="title">Week of {{ today }}</h2>
-</div>
-
-<div class="table-responsive">
-<table class="table table-striped">
+<table class="mt5 w-100 w-50-ns black-80 center mw8" cellspacing="0">
 <tr>
-<th>Monday</th>
-<th>Tuesday</th> 
-<th>Wednesday</th>
-<th>Thursday</th>
-<th>Friday</th>
+<th class="fw6 bb b--black-20 tc pb3 pr3">M</th>
+<th class="fw6 bb b--black-20 tc pb3 pr3">T</th> 
+<th class="fw6 bb b--black-20 tc pb3 pr3">W</th>
+<th class="fw6 bb b--black-20 tc pb3 pr3">Th</th>
+<th class="fw6 bb b--black-20 tc pb3 pr3">F</th>
 </tr>
  
 <tr>
     {% for day in user_week %}
-        <td>{{ 'Present' if day else '' }}</td>
+        <td class="pv3 pr3 bb b--black-20 h3">{{ 'X' if day else '' }}</td>
     {% endfor %}
 </tr>
 </table>
 </div>
-
-
-<script>
-$(document).ready(function(){
-$('[data-toggle="tooltip"]').tooltip(); 
-
-$("#showschedule").click(function(event){
-    $(".scheduleform").toggle();
-});
-
-});
-</script>
-
 {% endblock %}  

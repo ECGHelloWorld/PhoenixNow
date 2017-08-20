@@ -1,5 +1,5 @@
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
-from PhoenixNow.user import create_user, checkin_user, reset_password_email, weekly_checkins
+from PhoenixNow.user import create_user, checkin_user, reset_password_email, weekly_checkins, monthly_checkins
 from flask import Flask, render_template, request, flash, session, redirect, url_for, Blueprint, request, jsonify
 from sqlalchemy.sql import func
 from PhoenixNow.forms import SignupForm, SigninForm, ContactForm, CheckinForm, ScheduleForm, ResetForm, RequestResetForm, CalendarForm, EmailReminderForm
@@ -8,6 +8,7 @@ from PhoenixNow.model import db, User, Checkin
 from flask_login import login_required, login_user, logout_user, current_user
 import datetime
 import requests
+import calendar
 from datetime import timedelta
 import bcrypt
 import json
@@ -15,66 +16,91 @@ import os
 
 regular = Blueprint('regular', __name__, template_folder='templates', static_folder='static')
 
-@regular.route('/history', methods=['GET', 'POST'])
+@regular.route('/history')
+@regular.route('/history/<int:month_num>')
 @login_required
-def history():
-
-  form = CalendarForm()
+def history(month_num=None):
   user = current_user
   today = datetime.date.today()
-  chart = False
+  if month_num is None:
+    if today.month > 1:
+      prev_month = today.month - 1
+    else:
+      prev_month = 12
 
-  if request.method == 'POST':
-      chart = True
-      try:
-        stringdate = form.date.data
-        searchdate = datetime.datetime.strptime(stringdate, '%Y-%m-%d').date()
-      except:
-        return "Improper Date Format"
+    if today.month < 12:
+      next_month = today.month + 1
+    else:
+      next_month = 1
 
-      if request.form['submit'] == "Next Week":
-        searchdate = searchdate + timedelta(days=7)
-        form.date.data = searchdate
+    month = monthly_checkins(today.year, today.month, user)
+    month_range = calendar.monthrange(today.year, today.month)
+    month_name = datetime.date(today.year, today.month, 1).strftime("%B")
+  else:
+    if month_num > 12:
+      month_num = 1
+    elif month_num < 1:
+      month_num = 12
 
-      if request.form['submit'] == "Previous Week":
-        searchdate = searchdate + timedelta(days=-7)
-        form.date.data = searchdate
+    if month_num > 1:
+      prev_month = month_num - 1
+    else:
+      prev_month = 12
 
-      user_week = weekly_checkins(searchdate, user)
+    if month_num < 12:
+      next_month = month_num + 1
+    else:
+      next_month = 1
 
-      return render_template('history.html', user=user, user_week=user_week, searchdate=searchdate, form=form, chart=chart, today=today)
-                 
-  elif request.method == 'GET':
-    return render_template('history.html', form=form, today=today)
+    month = monthly_checkins(today.year, month_num, user)
+    month_range = calendar.monthrange(today.year, month_num)
+    month_name = datetime.date(today.year, month_num, 1).strftime("%B")
+
+  return render_template('history.html', user=user, start_day=month_range[0], month_name=month_name, next_month=next_month, prev_month=prev_month, month=month)
 
 @regular.route('/')
 def home():
-    form = CheckinForm()
-    schedule_form = ScheduleForm()
+    user = current_user
 
     CheckinCount = Checkin.query.count()
-    
+
     if not current_user.is_authenticated:
         return render_template('unauthenticated-home.html', user=current_user,
                 CheckinCount=CheckinCount)
 
-    user = current_user
-
+    if not user.verified:
+      return redirect(url_for('regular.unverified'))
+    
     today = datetime.date.today()
     
     checkin_today = Checkin.query.filter(Checkin.user==user,
             func.date(Checkin.checkin_timestamp)==today).first()
 
+    if request.headers.get('X-Real-IP'):
+        ip = request.headers.get('X-Real-IP')
+    else:
+        ip = request.remote_addr
+
     if checkin_today is None:
         checkedin = False
+        if ip.rsplit('.',1)[0] in ['192.154.63']:
+          if checkin_user(user):
+              flash('Successful Check-in!')
+              checkedin = True
+        else:
+            flash("We couldn't check you in. :( Are you on the Guilford network?")
     else:
         checkedin = True
-    
+
     user_week = weekly_checkins(today, user)
 
-    return render_template('home.html', user=user, form=form,
-            checkedin=checkedin, schedule_form=schedule_form,
-            user_week=user_week, today=today)
+    return render_template('home.html', user=user, checkedin=checkedin, user_week=user_week, today=today)
+
+@regular.route('/schedule', methods=['GET'])
+@login_required
+def schedule_page():
+    schedule_form = ScheduleForm()
+    return render_template('schedule.html', user=current_user, schedule_form=schedule_form)
 
 @regular.route('/schedule', methods=['POST'])
 @login_required
@@ -112,7 +138,7 @@ def schedule():
         db.session.commit()
         flash("Your schedule has been updated.")
 
-    return redirect(url_for('regular.home'))
+    return redirect(url_for('regular.schedule_page'))
 
 @regular.route('/signup', methods=['GET', 'POST'])
 @login_notrequired
@@ -167,8 +193,7 @@ def contact():
       html = render_template("contact_email.html", name=form.name.data,
               email=form.email.data, message=form.message.data)
       subject = "PhoenixNow Contact: " + form.subject.data
-      send_email("chaudhryam@guilford.edu, helloworldappclub@gmail.com, kerrj@guilford.edu, nairv@guilford.edu, daynb@guilford.edu", subject, html)
-      flash('Your contact us email has been sent.', 'success')
+      send_email("daynb@guilford.edu", subject, html)
       return render_template('contact.html', success=True)
     else:
       return render_template('contact.html', form=form)
@@ -235,7 +260,6 @@ def requestreset():
 @login_required
 @check_notverified
 def unverified():
-    flash('Please confirm your account!', 'warning')
     return render_template('unverified.html')
 
 @regular.route('/resend')
@@ -250,28 +274,6 @@ def resend_verification():
     send_email(user.email, subject, html)
     flash('A new verification email has been sent.', 'success')
     return redirect(url_for('regular.unverified'))
-
-@regular.route('/checkin')
-@login_required
-@check_verified
-def checkin():
-    user = current_user
-    if request.headers.get('X-Real-IP'):
-        ip = request.headers.get('X-Real-IP')
-    else:
-        ip = request.remote_addr
-
-    print(ip)
-    print(ip.rsplit('.',1)[0])
-
-    if ip.rsplit('.',1)[0] in ['192.154.63']:
-        if checkin_user(user):
-            flash('Successful Check-in!')
-        else:
-            flash('You are already signed in for today.')
-    else:
-        flash("Unsuccesful Check-in. Please check that you are on the Guilford College network.")
-    return redirect(url_for('regular.home'))
 
 @regular.route('/about')
 def about():

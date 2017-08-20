@@ -1,43 +1,31 @@
 {% extends "layout.html" %}
  
 {% block content %}
-  <h2 class="password-reset">Enter a new password</h2>
-  {% for message in form.password.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-  {% endfor %}
-   
-  {% for message in form.confirmpassword.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-  {% endfor %}
-
-  <div class="row">
-  <div class="col-sm-4"></div>
-  <div class="col-sm-4">
-
-  <form action="{{ url_for('regular.reset_password', token=token) }}" method=post>
+<main class="pa4 black-80">
+  <form class="measure center" action="{{ url_for('regular.reset_password', token=token) }}" method=post>
     {{ form.hidden_tag() }}
+    <fieldset id="reset" class="ba b--transparent ph0">
+      <legend class="fancy-font f4 fw6 ph0 mh0 black">Enter a new password</legend>
 
-    <div class="form-group">
-    {{ form.password.label }}
-    {{ form.password(class_="form-control") }}
+      <div class="mt3">
+        {{ form.password.label(class_="db fw6 lh-copy f6") }}
+        {{ form.password(class_="pa2 input-reset ba w-100") }}
+	{% for message in form.password.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
+      </div>
+      <div class="mt3">
+        {{ form.confirmpassword.label(class_="db fw6 lh-copy f6") }}
+        {{ form.confirmpassword(class_="pa2 input-reset ba w-100") }}
+	{% for message in form.confirmpassword.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
+      </div>
+
+    <div class="mt3">
+      {{ form.submit(class_="phoenix-red-bg br2 white pv2 ph3 bn dim pointer f6 input-reset mr2") }}
     </div>
 
-    <div class="form-group">
-    {{ form.confirmpassword.label }}
-    {{ form.confirmpassword(class_="form-control") }}
-    </div>
-
-    {{ form.submit(class_="btn btn-default") }}
-    </form>
-
-  </div>
-  <div class="col-sm-4"></div>
-  </div>
-
+  </form>
+  </main>
 {% endblock %}

@@ -6,82 +6,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 	<title>PhoenixNow</title>
-      <link rel='shortcut icon' href='/static/images/phoenixnowfavicon.ico' type='image/x-icon'/ >
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/tachyons.min.css">
-        <link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative" rel="stylesheet">
-    <link rel="stylesheet" href="/static/styles.css">
+  <link rel='shortcut icon' href='/static/images/phoenixnowfavicon.ico' type='image/x-icon'/ >
+  <link rel="stylesheet" href="/static/tachyons.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
 
     {% block head %}
     {% endblock %}
 </head>
-<body>
-
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" id="navpic" href="/"><img src="/static/images/phoenixnowlogo.png" class="small-phoenix-logo" alt="PhoenixNow"></a>
-          <a class="navbar-brand title" href="/">PhoenixNow</a>
+<body class="off-white-bg">
+    <nav class="tc bg-black-80 ph3 ph5-ns pv1">
+      <div class="cf center mw7">
+        <div class="fl w-100 w-auto-ns">
+          <div class="cf w-100 w-auto-ns">
+          <a class="fl w-25" href="/"><img src="/static/images/phoenixnowlogo.png" class="small-phoenix-logo" alt="PhoenixNow"></a>
+          <a class="fl w-50 link w-auto-ns lh-copy mv3 dim f5 fl mr3 white fancy-font" href="/">PhoenixNow</a>
+          <div class="fl mt2 clip-ns" id="hamburger-menu">
+            <div class="hamburger"></div>
+            <div class="hamburger"></div>
+            <div class="hamburger"></div>
+            </div>
+          </div>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-         <li><a href="{{ url_for('regular.home') }}">Home</a></li>
-         <li><a href="{{ url_for('regular.about') }}">About Us</a></li>
-         {% if current_user.is_active %}
-         <li><a href="{{ url_for('regular.contact') }}">Contact Us</a></li>
-         {% if current_user.is_admin() %}
-	 <li><a href="{{ url_for('admin.home') }}">Admin Portal</a></li>
-	 {% endif %}
-	 {% endif %}
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            {% if current_user.is_active %}
-              <li><a href="{{ url_for('regular.signout') }}"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a></li>
-            {% else %}
-              <li><a href="{{ url_for('regular.signup') }}"><span class="glyphicon glyphicon-user"></span> Register</a></li>
-              <li><a href="{{ url_for('regular.signin') }}"><span class="glyphicon glyphicon-log-in"></span> Sign In</a></li>
-            {% endif %}
-          </ul>
-        </div><!--/.nav-collapse -->
+        <a class="nav-link dn db-ns link w-100 w-auto-ns mv2 mv3-ns dim f5 fl mr3 white" href="{{ url_for('regular.about') }}">About</a>
+        {% if current_user.is_active %}
+        <a class="nav-link dn db-ns link w-100 w-auto-ns mv2 mv3-ns dim f5 fl mr3 white" href="{{ url_for('regular.contact') }}">Contact</a>
+        <a class="nav-link dn db-ns link w-100 w-auto-ns mv2 mv3-ns dim f5 fl mr3 white" href="{{ url_for('regular.history') }}">History</a>
+        <a class="nav-link dn db-ns link w-100 w-auto-ns mv2 mv3-ns dim f5 fl mr3 white" href="{{ url_for('regular.schedule') }}">Schedule</a>
+        {% if current_user.is_admin() %}
+          <a class="nav-link dn db-ns link w-100 w-auto-ns mv2 mv3-ns dim f5 fl mr3 white" href="{{ url_for('admin.home') }}">Admin Portal</a>
+        {% endif %}
+        <a class="nav-link dn db-ns link w-100 w-auto-ns mt2 mb3 mv3-ns dim f5 fl white" href="{{ url_for('regular.signout') }}">Sign Out</a>
+        {% else %}
+        <a class="nav-link dn db-ns link w-100 w-auto-ns mv2 mv3-ns dim f5 fl white mr3" href="{{ url_for('regular.signin') }}">Signin</a>
+        <a class="nav-link dn db-ns link w-100 w-auto-ns mt2 mb3 mv3-ns dim f5 fl white" href="{{ url_for('regular.signup') }}">Register</a>
+        {% endif %}
       </div>
     </nav>
 
-<div class="container">
 <div>
   {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-            {% if category == 'message' %}
-              <div class="alert alert-warning alert-dismissable" role="alert">
-            {% else %}
-              <div class="alert alert-{{ category }} alert-dismissable" role="alert">
-            {% endif %}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              {{ message }}
-            </div>
+          <p class="mt4 lh-copy tc phoenix-red">{{ message }}</p>
         {% endfor %}
       {% endif %}
   {% endwith %}
 </div>
 
-<body class="background">
  {% block content %}
  {% endblock %}
-</body>
-
-</div>
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
 {% block js %}
+<script>
+document.addEventListener("DOMContentLoaded", function(event) { 
+  document.getElementById("hamburger-menu").addEventListener('click', function(e) {
+    e.preventDefault();
+    [].map.call(document.querySelectorAll('.nav-link'), function(el) {
+      el.classList.toggle('dn')
+    })
+  })
+})
+</script>
 {% endblock %}
 </body>
 

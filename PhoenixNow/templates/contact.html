@@ -1,74 +1,55 @@
 {% extends "layout.html" %}
 
 {% block content %}
-	<h2 class="title">Give Feedback / Report Bugs</h2>
 	{% if success %}
-    		<p>Thank you for your message. We'll get back to you shortly.</p>
+    		<p class="mt4 tc f5">Thank you for your message. We'll get back to you shortly.</p>
  	{% else %}
 
-	{% for message in form.name.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-	{% endfor %}
- 
-	{% for message in form.email.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-	{% endfor %}
- 
-	{% for message in form.subject.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-	{% endfor %}
- 
-	{% for message in form.message.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-	{% endfor %}
-
-    <div class="row">
-    <div class="col-sm-4"></div>
-    <div class="col-sm-4">
-	<form action = "{{ url_for('regular.contact') }}" method=post>
+<main class="pa4 black-80">
+	<form class="measure center" action = "{{ url_for('regular.contact') }}" method=post>
+    <fieldset id="contact_us" class="ba b--transparent ph0">
+      <legend class="fancy-font f4 fw6 ph0 mh0 black">Give Feedback / Report Bugs</legend>
 
 	{{ form.hidden_tag() }}
 	
 
-        <div class="form-group">
-	{{ form.name.label }}
-	{{ form.name(class_="form-control") }}
+        <div class="mt3">
+	{{ form.name.label(class_="db fw6 lh-copy f6") }}
+	{{ form.name(class_="pa2 input-reset ba w-100") }}
+	{% for message in form.name.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
         </div>
 
-        <div class="form-group">
-	{{ form.email.label }}
-	{{ form.email(class_="form-control") }}
+        <div class="mt3">
+	{{ form.email.label(class_="db fw6 lh-copy f6") }}
+	{{ form.email(class_="pa2 input-reset ba w-100") }}
+	{% for message in form.email.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
         </div>
 
-        <div class="form-group">
-	{{ form.subject.label }}
-	{{ form.subject(class_="form-control") }}
+        <div class="mt3">
+	{{ form.subject.label(class_="db fw6 lh-copy f6") }}
+	{{ form.subject(class_="pa2 input-reset ba w-100") }}
+	{% for message in form.subject.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
         </div>
 
-        <div class="form-group">
-	{{ form.message.label }}
-	{{ form.message(class_="form-control") }}
+        <div class="mv3">
+	{{ form.message.label(class_="db fw6 lh-copy f6") }}
+	{{ form.message(class_="pa2 input-reset ba w-100") }}
+	{% for message in form.message.errors %}
+    <p class="mt1 mb2 lh-title f6 phoenix-red">{{ message }}</p>
+	{% endfor %}
         </div>
-
-	{{ form.submit(class_="btn btn-default") }}
-	</form>
-
+    </fieldset>
+    <div class="">
+      {{ form.submit(class_="phoenix-red-bg white pv2 ph3 bn dim br2 pointer f6 input-reset mr2") }}
     </div>
-    <div class="col-sm-4"></div>
-    </div>
-
-	{% endif %}
+    </form>
+</main>
+{% endif %}
 {% endblock %}
 

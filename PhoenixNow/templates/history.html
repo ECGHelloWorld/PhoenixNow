@@ -1,101 +1,50 @@
 {% extends "layout.html" %}
 {% block content %}
-
-{% if chart %}
-
-
-
-<div class="row">
-<h2>Week of {{ searchdate.strftime('%A, %B %d %Y') }}</h2>
+<div class="mt3 measure center">
+  <div class="tc cf">
+    <div class="pt3 w-33 fl">
+      <a class="link br2 pv1 ph3 dim phoenix-red-bg white" href="{{ url_for('regular.history', month_num=prev_month) }}"><<</a>
+    </div>
+    <div class="pt3 w-33 fl">
+      <span class="f4 b fancy-font">{{ month_name }}</span>
+    </div>
+    <div class="pt3 w-33 fl">
+      <a class="link br2 pv1 ph3 dim phoenix-red-bg white" href="{{ url_for('regular.history', month_num=next_month) }}">>></a>
+    </div>
+  </div>
 </div>
-
-
-  <div class="row">
-  <div class="col-sm-4"></div>
-  <div class="col-sm-4">
-
-  <form action="{{ url_for('regular.history') }}" method=post>
-    {{ form.hidden_tag() }}
-
-    <div class="form-group">
-    {{ form.date.label }}
-    {{ form.date(class_="form-control") }}
-    </div>
-
-    {{ form.submit(class_="btn btn-default") }}
-    
-    <br></br>
-
-    <div class="row">
-    <input class="btn btn-default" id="submit" name="submit" type="submit" value="Previous Week">
-    <input class="btn btn-default" id="submit" name="submit" type="submit" value="Next Week">
-    </div>
-
-
-  </form>
-    <br></br>
-
-  </div>
-  <div class="col-sm-4"></div>
-  </div>
-
-<div class="table-responsive">
-<table class="table table-striped">
-<tr>
-<th>Monday</th>
-<th>Tuesday</th> 
-<th>Wednesday</th>
-<th>Thursday</th>
-<th>Friday</th>
-</tr>
- 
-<tr>
-    {% for day in user_week %}
-        <td>{{ 'Present' if day else '' }}</td>
-    {% endfor %}
-</tr>
-</table>
-</div>
-
-{% else %}
-
-  <h2 class="input-date">Input Date</h2>
-  {% for message in form.date.errors %}
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      {{ message }}
-    </div>
-  {% endfor %}
-
-  <div class="row">
-  <div class="col-sm-4"></div>
-  <div class="col-sm-4">
-
-  <form action="{{ url_for('regular.history') }}" method=post>
-    {{ form.hidden_tag() }}
-
-    <div class="form-group">
-    {{ form.date.label }}
-    {{ form.date(class_="form-control", value=today) }}
-    </div>
-
-    {{ form.submit(class_="btn btn-default") }}
-
-    <br></br>
-
-    <div class="row">
-    <input class="btn btn-default" id="submit" name="submit" type="submit" value="Previous Week">
-    <input class="btn btn-default" id="submit" name="submit" type="submit" value="Next Week">
-    </div>
-
-    </form>
-    <br></br>
-
-  </div>
-  <div class="col-sm-4"></div>
-  </div>
-
-{% endif %}
-
+    <table class="mt4 f6 w-100 mw6-ns center" cellspacing="0">
+      <thead>
+        <tr>
+          <th class="white fw6 bb b--black-20 tc pv3 phoenix-red-bg">M</th>
+          <th class="white fw6 bb b--black-20 tc pv3 phoenix-red-bg">T</th>
+          <th class="white fw6 bb b--black-20 tc pv3 phoenix-red-bg">W</th>
+          <th class="white fw6 bb b--black-20 tc pv3 phoenix-red-bg">Th</th>
+          <th class="white fw6 bb b--black-20 tc pv3 phoenix-red-bg">F</th>
+          <th class="white fw6 bb b--black-20 tc pv3 phoenix-red-bg">Sa</th>
+          <th class="white fw6 bb b--black-20 tc pv3 phoenix-red-bg">Su</th>
+        </tr>
+      </thead>
+      <tbody class="lh-copy">
+      {% set days = [7] %}
+      {% for day in month %}
+        {% if days[0] == 7 %}
+          <tr>
+        {% endif %}
+            {% if loop.index == 1 %}
+              {% for n in range(start_day) %}
+            {% if days.append(days.pop() - 1) %}{% endif %}
+                <th class="white ba b--white bg-white tc pv3"></th>
+              {% endfor %}
+            {% endif %}
+            {% if days.append(days.pop() - 1) %}{% endif %}
+          <th class="ba b--black-20 tc pv3 {{ 'white phoenix-red-bg' if day else 'black bg-white'}}">{{ loop.index }}</th>
+        {% if days[0] == 0 %}
+            {% if days.append(days.pop() + 7) %}{% endif %}
+          </tr>
+        {% endif %}
+      {% endfor %}
+      </tbody>
+      </table>
 
 {% endblock %}

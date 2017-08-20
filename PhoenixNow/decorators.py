@@ -10,7 +10,6 @@ def login_notrequired(func):
         if not current_user.is_active:
             return func(*args, **kwargs)
         else:
-            flash("Error accessing page - already logged in")
             return redirect(url_for("regular.home"))
     return wrap
 

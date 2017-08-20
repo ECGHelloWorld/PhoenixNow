@@ -2,7 +2,7 @@ from flask import Flask, render_template, Blueprint, redirect, url_for, flash, r
 from datetime import timedelta
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
 from PhoenixNow.model import db, User, Checkin
-from PhoenixNow.user import get_weekly_checkins
+from PhoenixNow.user import get_weekly_checkins, admin_weekly_checkins
 from flask_login import login_required, login_user, logout_user
 from PhoenixNow.forms import UserForm, CalendarForm
 import datetime
@@ -36,11 +36,20 @@ def home():
         searchdate = datetime.date.today()
     users = User.query.all()
     users.sort(key=lambda user: (user.grade, user.lastname)) # sort by grade and name
-    checkins = Checkin.query.filter(Checkin.checkin_timestamp>=searchdate).all()
-    checkins.sort(key=lambda checkin: (checkin.user.lastname)) # sort by grade and name
-    weekly_checkins = get_weekly_checkins(searchdate) # look at user.py
-    weekly_checkins.update_database() # look at user.py
-    return render_template('admin.html', searchdate=searchdate, form=form, users=users, checkins=checkins)
+    weekly_checkins = admin_weekly_checkins(searchdate)
+    for checkin in weekly_checkins:
+      day = checkin.checkin_timestamp.strftime("%A")
+      if day == 'Monday':
+        checkin.user.monday = "present"
+      elif day == 'Tuesday':
+        checkin.user.tuesday = "present"
+      elif day == 'Wednesday':
+        checkin.user.wednesday = "present"
+      elif day == 'Thursday':
+        checkin.user.thursday = 'present'
+      elif day == 'Friday':
+        checkin.user.friday = 'present'
+    return render_template('admin.html', searchdate=searchdate, form=form, users=users, checkins=weekly_checkins)
 
 @admin.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
@@ -80,10 +89,18 @@ def verify_schedule(user_id):
 def grade(grade):
   users = User.query.filter_by(grade=grade).all()
   users.sort(key=lambda user: user.lastname) # sort by last name
-  checkins = Checkin.query.filter(Checkin.checkin_timestamp >=
-          datetime.date.today(), Checkin.user.has(grade=grade)).all()
-  checkins.sort(key=lambda checkin: (checkin.user.lastname)) # sort by grade and name
   today = datetime.date.today()
-  weekly_checkins = get_weekly_checkins(today) # look at user.py
-  weekly_checkins.update_database() # look at user.py
-  return render_template('grade.html', users=users,user=user,checkins=checkins,grade=grade)
+  weekly_checkins = admin_weekly_checkins(datetime.date.today(), grade=grade)
+  for checkin in weekly_checkins:
+    day = checkin.checkin_timestamp.strftime("%A")
+    if day == 'Monday':
+      checkin.user.monday = "present"
+    elif day == 'Tuesday':
+      checkin.user.tuesday = "present"
+    elif day == 'Wednesday':
+      checkin.user.wednesday = "present"
+    elif day == 'Thursday':
+      checkin.user.thursday = 'present'
+    elif day == 'Friday':
+      checkin.user.friday = 'present'
+  return render_template('grade.html', users=users,user=user,checkins=weekly_checkins,grade=grade)
