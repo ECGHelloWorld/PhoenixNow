@@ -4,7 +4,7 @@
 <h2 class="f4 fancy-font b black-80 mv4">Welcome {{ user.firstname }} {{user.lastname}}!</h2>
 
 {% if not checkedin %}
-  <a href="/" class="b link f5 phoenix-red-bg white pv3 ph4 br2 dim pointer fancy-font">Checkin</a>
+  <a href="/" class="b link f5 phoenix-red-bg white pv3 ph4 br2 dim pointer fancy-font">Check-in</a>
 {% else %}
 <span class="f4 phoenix-red mb4">You've checked in today.</span>
 {% endif %}
@@ -20,7 +20,7 @@
  
 <tr>
     {% for day in user_week %}
-        <td class="pv3 pr3 bb b--black-20 h3">{{ 'X' if day else '' }}</td>
+        <td class="pv3 pr3 bb b--black-20 h3">{{ '✔' if day else '' }}</td>
     {% endfor %}
 </tr>
 </table>

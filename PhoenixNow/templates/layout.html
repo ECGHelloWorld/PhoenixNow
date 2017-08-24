@@ -14,8 +14,9 @@
     {% block head %}
     {% endblock %}
 </head>
-<body class="off-white-bg">
-    <nav class="tc bg-black-80 ph3 ph5-ns pv1">
+<body class="off-white-bg helvetica">
+  <div class="flex justify-center">
+    <nav class="tc bg-black-80 w-100 ph3 ph5-ns pv1">
       <div class="cf center mw7">
         <div class="fl w-100 w-auto-ns">
           <div class="cf w-100 w-auto-ns">
@@ -43,6 +44,7 @@
         {% endif %}
       </div>
     </nav>
+    </div>
 
 <div>
   {% with messages = get_flashed_messages(with_categories=true) %}

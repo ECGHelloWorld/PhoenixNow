@@ -234,6 +234,7 @@ def reset_password(token):
       if form.validate_on_submit():
         user.pw_hash = bcrypt.hashpw(form.password.data.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         db.session.commit()
+        login_user(user,remember=True)
         flash('Your password has been reset.')
         return redirect(url_for('regular.home'))
       else:
