@@ -2,8 +2,8 @@ import os
 
 class Config(object):
     DEBUG = False
-    SECRET_KEY = 'idontknowwhatthisis'
-    SECURITY_PASSWORD_SALT = "fortoken"
+    SECRET_KEY = os.environ.get('SECRETKEY')
+    SECURITY_PASSWORD_SALT = os.environ.get('SECURITYSALT')
     MAIL_DEFAULT_SENDER = "support@phoenixnow.org"
     MAIL_PORT = 465
     MAIL_USE_SSL = True
