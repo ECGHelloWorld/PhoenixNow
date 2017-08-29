@@ -118,6 +118,12 @@ class User(db.Model):
         else:
           return False
 
+    def is_super_admin(self):
+        if self.email in ['kiddlm@guilford.edu', 'lkiser@guilford.edu']:
+          return True
+        else:
+          return False
+
     def __repr__(self):
         return repr((self.lastname))
 
