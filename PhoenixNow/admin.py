@@ -42,7 +42,7 @@ def home(grade=None):
       users = User.query.filter_by(grade=grade).all()
 
     users.sort(key=lambda user: (user.grade, user.lastname)) # sort by grade and name
-    weekly_checkins = admin_weekly_checkins(searchdate)
+    weekly_checkins = admin_weekly_checkins(searchdate, grade)
     for checkin in weekly_checkins:
       day = checkin.checkin_timestamp.strftime("%A")
       if day == 'Monday':
