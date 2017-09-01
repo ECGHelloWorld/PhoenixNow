@@ -33,7 +33,6 @@
         {% if current_user.is_active %}
         <a class="nav-link dn db-ns link w-100 w-auto-ns mv2 mv3-ns dim f5 fl mr3 white" href="{{ url_for('regular.contact') }}">Contact</a>
         <a class="nav-link dn db-ns link w-100 w-auto-ns mv2 mv3-ns dim f5 fl mr3 white" href="{{ url_for('regular.history') }}">History</a>
-        <a class="nav-link dn db-ns link w-100 w-auto-ns mv2 mv3-ns dim f5 fl mr3 white" href="{{ url_for('regular.schedule') }}">Schedule</a>
         {% if current_user.is_admin() %}
           <a class="nav-link dn db-ns link w-100 w-auto-ns mv2 mv3-ns dim f5 fl mr3 white" href="{{ url_for('admin.home') }}">Admin Portal</a>
         {% endif %}

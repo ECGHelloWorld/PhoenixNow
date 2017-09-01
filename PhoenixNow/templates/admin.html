@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
   <div class="bg-white black pb5">
-  <form class="pv3 measure center" action="{{ url_for('admin.home') }}" method=post>
+  <form class="pv3 measure center" action="{{ url_for('admin.home', grade=grade) }}" method=post>
     {{ form.hidden_tag() }}
 
     <div class="cf mw5 center">
@@ -10,43 +10,40 @@
     </div>
     
     <div class="cf mw5 center mt2">
-    <input class="fl button-reset bn phoenix-red-bg white dim pa2" id="submit" name="submit" type="submit" value="Previous Week">
-    <input class="fr button-reset bn phoenix-red-bg white dim pa2" id="submit" name="submit" type="submit" value="Next Week">
+    <input class="fl br2 button-reset bn phoenix-red-bg white dim pa2" id="submit" name="submit" type="submit" value="Previous Week">
+    <input class="fr br2 button-reset bn phoenix-red-bg white dim pa2" id="submit" name="submit" type="submit" value="Next Week">
     </div>
   </form>
+  <div class="tc">
+    <a class="link br2 phoenix-red-bg white dim pa2" href="{{ url_for('admin.home', grade=11)}}">11</a>
+    <a class="link br2 phoenix-red-bg white dim pa2" href="{{ url_for('admin.home', grade=12)}}">12</a>
+    <a class="link br2 phoenix-red-bg white dim pa2" href="{{ url_for('admin.home', grade=None)}}">All grades</a>
+  </div>
 
-    <table class="f6 w-100 mw9 center" cellspacing="0">
+    <table class="f6 mw9 collapse tc center mt3" cellspacing="0">
 
     <thead>
       <tr class="stripe-dark">
-        <th class="fw6 tl pa3 bg-white">Last Name</th>
-        <th class="fw6 tl pa3 bg-white">First Name</th>
-        <th class="fw6 tl pa3 bg-white">Email</th>
-        <th class="fw6 tl pa3 bg-white">Grade</th>
-        <th class="fw6 tl pa3 bg-white">Monday</th>
-        <th class="fw6 tl pa3 bg-white">Tuesday</th>
-        <th class="fw6 tl pa3 bg-white">Wednesday</th>
-        <th class="fw6 tl pa3 bg-white">Thursday</th>
-        <th class="fw6 tl pa3 bg-white">Friday</th>
-        <th class="fw6 tl pa3 bg-white">Schedule</th>
-        <th class="fw6 tl pa3 bg-white">Schedule Verified</th>
+        <th class="fw6 tc pa3 bg-white">Last Name</th>
+        <th class="fw6 tl pa3 pl1 bg-white">First Name</th>
+        <th class="fw6 tl pa3 bg-white">M</th>
+        <th class="fw6 tl pa3 bg-white">T</th>
+        <th class="fw6 tl pa3 bg-white">W</th>
+        <th class="fw6 tl pa3 bg-white">R</th>
+        <th class="fw6 tl pa3 bg-white">F</th>
       </tr>
     </thead>
     <tbody class="lh-copy">
     {% for user in users %}
-    {% if user.verified and user.is_super_admin() %}
+    {% if user.verified and not user.is_super_admin() %}
     <tr class="stripe-dark">
-        <td class="pa3"><a href="/admin/user/{{user.id}}">{{ user.lastname }}</a></td>
-        <td class="pa3"><a href="/admin/user/{{user.id}}">{{ user.firstname }}</a></td>
-        <td class="pa3">{{ user.email }}</td>
-        <td class="pa3"><a href="/admin/grade/{{user.grade}}">{{ user.grade }}</a></td>
-        <td class="pa3">{{ user.monday }}</td>
-        <td class="pa3">{{ user.tuesday }}</td>
-        <td class="pa3">{{ user.wednesday }}</td>
-        <td class="pa3">{{ user.thursday }}</td>
-        <td class="pa3">{{ user.friday }}</td>
-        <td class="pa3">{{ user.schedule }}</td>
-        <td class="pa3">{{ user.schedule_verified }}</td>
+        <td class="pa1 pl3 tl"><a class="link black underline-hover" href="/admin/user/{{user.id}}">{{ user.lastname }}</a></td>
+        <td class="pa1 tl"><a class="link black underline-hover" href="/admin/user/{{user.id}}">{{ user.firstname }}</a></td>
+        <td class="pa1 ba {{ 'bg-green' if user.monday == 'present' else 'phoenix-red-bg' }} {{ '' if user.schedule_monday else 'bg-yellow2'}}">{{ 'x' if user.monday == 'present' else '' }}</td>
+        <td class="pa1 ba {{ 'bg-green' if user.tuesday == 'present' else 'phoenix-red-bg' }} {{ '' if user.schedule_tuesday else 'bg-yellow2'}}">{{ 'x' if user.tuesday == 'present' else '' }}</td>
+        <td class="pa1 ba {{ 'bg-green' if user.wednesday == 'present' else 'phoenix-red-bg' }} {{ '' if user.schedule_wednesday else 'bg-yellow2'}}">{{ 'x' if user.wednesday == 'present' else '' }}</td>
+        <td class="pa1 ba {{ 'bg-green' if user.thursday == 'present' else 'phoenix-red-bg' }} {{ '' if user.schedule_thursday else 'bg-yellow2'}}">{{ 'x' if user.thursday == 'present' else '' }}</td>
+        <td class="pa1 ba {{ 'bg-green' if user.friday == 'present' else 'phoenix-red-bg' }} {{ '' if user.schedule_friday else 'bg-yellow2'}}">{{ 'x' if user.friday == 'present' else '' }}</td>
     </tr>
     {% endif %}
     {% endfor %}
@@ -54,14 +51,13 @@
     </tbody>
     </table>
 
-    <h2 class="center mw7 mt5 ml3">Check-ins</h2>
-    <table class="f6 w-100 mw7 center" cellspacing="0">
+    <h2 class="center mw6 mt5 ml3">Check-ins</h2>
+    <table class="f6 mw7 center" cellspacing="0">
 
     <thead>
     <tr class="stripe-dark">
     <th class="fw6 tl pa3 bg-white">Name</th>
     <th class="fw6 tl pa3 bg-white">Timestamp</th>
-    <th class="fw6 tl pa3 bg-white">Week</th>
     <th class="fw6 tl pa3 bg-white">Day</th>
     </tr>
     </thead>
@@ -69,10 +65,9 @@
     <tbody class="lh-copy">
     {% for checkin in checkins %}    
     <tr class="stripe-dark">
-    <td class="pa3"> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>
-    <td class="pa3"> {{ checkin.checkin_timestamp.strftime('%x %X%p') }} </td>
-    <td class="pa3"> {{ checkin.checkin_week }} </td>
-    <td class="pa3"> {{ checkin.checkin_timestamp.strftime('%A') }} </td>
+    <td class="pa2"> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>
+    <td class="pa2"> {{ checkin.checkin_timestamp.strftime('%x %X%p') }} </td>
+    <td class="pa2"> {{ checkin.checkin_timestamp.strftime('%A') }} </td>
     </tr>
     {% endfor %}
     </tbody>
