@@ -1,78 +1,53 @@
 {% extends "layout.html" %}
 {% block content %}
-  <div class="bg-white black">
+  <div class="">
 
-    <span class="f3 b tc pv3 w-100 db">{{ user.firstname }} {{ user.lastname }}</span>
-
-    <table class="f6 w-100 mw9 center" cellspacing="0">
-
-    <thead>
-      <tr class="stripe-dark">
-        <th class="fw6 tl pa3 bg-white">Last Name</th>
-        <th class="fw6 tl pa3 bg-white">First Name</th>
-        <th class="fw6 tl pa3 bg-white">Email</th>
-        <th class="fw6 tl pa3 bg-white">Grade</th>
-        <th class="fw6 tl pa3 bg-white">Monday</th>
-        <th class="fw6 tl pa3 bg-white">Tuesday</th>
-        <th class="fw6 tl pa3 bg-white">Wednesday</th>
-        <th class="fw6 tl pa3 bg-white">Thursday</th>
-        <th class="fw6 tl pa3 bg-white">Friday</th>
-        <th class="fw6 tl pa3 bg-white">Schedule</th>
-        <th class="fw6 tl pa3 bg-white">Schedule Verified</th>
-      </tr>
-    </thead>
-    <tbody class="lh-copy">
-    {% if user.verified %}
-    <tr class="stripe-dark">
-        <td class="pa3"><a href="/admin/user/{{user.id}}">{{ user.lastname }}</a></td>
-        <td class="pa3"><a href="/admin/user/{{user.id}}">{{ user.firstname }}</a></td>
-        <td class="pa3">{{ user.email }}</td>
-        <td class="pa3"><a href="/admin/grade/{{user.grade}}">{{ user.grade }}</a></td>
-        <td class="pa3">{{ user.monday }}</td>
-        <td class="pa3">{{ user.tuesday }}</td>
-        <td class="pa3">{{ user.wednesday }}</td>
-        <td class="pa3">{{ user.thursday }}</td>
-        <td class="pa3">{{ user.friday }}</td>
-        <td class="pa3">{{ user.schedule }}</td>
-        <td class="pa3">{{ user.schedule_verified }}</td>
-    </tr>
-    {% endif %}
-
-    </tbody>
-    </table>
+    <span class="f3 b fancy-font tc pv3 mt3 w-100 db">{{ user.firstname }} {{ user.lastname }}</span>
 
     <div class="cf">
     
-    <div class="fl w-50">
+    <div class="fl w-33">
 
-    <h2>Schedule</h2>
-    <table class="f6 w-100 mw9 center" cellspacing="0">
+<form class="pt4 center mw4" method=post action="{{ url_for('admin.schedule', user_id=user.id) }}">
+        {{ schedule_form.hidden_tag() }}
+        <fieldset id="schedule_form" class="bn">
+        <legend class="black-80 f4 fw6 ph0 mh0 black">Schedule</legend>
+        <div class="flex items-center mt2 mb2">
+            {{ schedule_form.monday(class_="mr2", checked=user.schedule_monday) }}
+            {{ schedule_form.monday.label }}
+        </div>
 
-    <thead>
-      <tr class="stripe-dark">
-        <th class="fw6 tl pa3 bg-white">Schedule</th>
-        <th class="fw6 tl pa3 bg-white">Verified</th>
-        <th class="fw6 tl pa3 bg-white">Verify?</th>
-      </tr>
-    </thead>
-      <tbody class="lh-copy">
-        <tr class="stripe-dark">
-            <td class="pa3">{{ user.schedule }}</td>
-            <td class="pa3">{{ user.schedule_verified }}</td>
-            <td class="pa3"><a href="/admin/user/{{ user.id }}/verify_schedule">Toggle Verification</a></td>
-        </tr>
-      </tbody>
-    </table>
+        <div class="flex items-center mb2">
+        {{ schedule_form.tuesday(class_="mr2", checked=user.schedule_tuesday) }}
+        {{ schedule_form.tuesday.label }}
+        </div>
 
+        <div class="flex items-center mb2">
+        {{ schedule_form.wednesday(class_="mr2", checked=user.schedule_wednesday) }}
+        {{ schedule_form.wednesday.label }}
+        </div>
+
+        <div class="flex items-center mb2">
+        {{ schedule_form.thursday(class_="mr2", checked=user.schedule_thursday) }}
+        {{ schedule_form.thursday.label }}
+        </div>
+
+        <div class="flex items-center mb3">
+        {{ schedule_form.friday(class_="mr2", checked=user.schedule_friday) }}
+        {{ schedule_form.friday.label }}
+        </div>
+        <div>
+        {{ schedule_form.submit(class_="phoenix-red-bg white pv2 ph3 bn dim br2 pointer f6 input-reset mr2") }}
+        </div>
+    </fieldset>
+</form>
     </div>
 
-    <div class="fl w-50">
+    <div class="fl w-33">
 
-      <div class="measure center">
 
-    <h2>Edit User Information</h2>
-
-    <form class="" action="{{ url_for('admin.user', user_id=user.id) }}" method=post>
+    <form class="mw5 center" action="{{ url_for('admin.user', user_id=user.id) }}" method=post>
+    <h3>Edit User Information</h3>
       {{ form.hidden_tag() }}
 
       <div class="mt3">
@@ -88,8 +63,8 @@
       <div class="mv3">
       <label for="grade">Select Grade Level</label>
         <select class="form-control" name="grade" id="grade">
-          <option>11</option>
-          <option>12</option>
+          <option {{'selected=selected' if user.grade == 11 else ''}}>11</option>
+          <option {{'selected=selected' if user.grade == 12 else ''}}>12</option>
         </select>
       </div>
 
@@ -98,34 +73,32 @@
       </div>
 
     </form>
-    </div>
 
     </div>
-    </div>
 
-    <h2 class="center mw7 mt5 ml3">Check-ins</h2>
-    <table class="f6 w-100 mw7 center" cellspacing="0">
+    <div class="fl w-33">
+
+    <h3 class="tc">Check-ins</h3>
+    <table class="center f6" cellspacing="0">
 
     <thead>
     <tr class="stripe-dark">
-    <th class="fw6 tl pa3 bg-white">Name</th>
-    <th class="fw6 tl pa3 bg-white">Timestamp</th>
-    <th class="fw6 tl pa3 bg-white">Week</th>
-    <th class="fw6 tl pa3 bg-white">Day</th>
+    <th class="fw6 tl pa3 off-white-bg">Timestamp</th>
+    <th class="fw6 tl pa3 off-white-bg">Day</th>
     </tr>
     </thead>
     
     <tbody class="lh-copy">
     {% for checkin in user.checkins %}    
     <tr class="stripe-dark">
-    <td class="pa3"> {{ checkin.user.firstname }} {{ checkin.user.lastname }} </td>
-    <td class="pa3"> {{ checkin.checkin_timestamp.strftime('%x %X%p') }} </td>
-    <td class="pa3"> {{ checkin.checkin_week }} </td>
-    <td class="pa3"> {{ checkin.checkin_timestamp.strftime('%A') }} </td>
+    <td class="pa2"> {{ checkin.checkin_timestamp.strftime('%x %X%p') }} </td>
+    <td class="pa2"> {{ checkin.checkin_timestamp.strftime('%A') }} </td>
     </tr>
     {% endfor %}
     </tbody>
     </table>
+    </div>
+    </div>
 
 
   </div>

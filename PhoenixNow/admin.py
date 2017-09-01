@@ -4,7 +4,7 @@ from PhoenixNow.decorators import login_notrequired, admin_required, check_verif
 from PhoenixNow.model import db, User, Checkin
 from PhoenixNow.user import get_weekly_checkins, admin_weekly_checkins
 from flask_login import login_required, login_user, logout_user
-from PhoenixNow.forms import UserForm, CalendarForm
+from PhoenixNow.forms import UserForm, CalendarForm, ScheduleForm
 import datetime
 import requests
 import json
@@ -12,10 +12,11 @@ import os
 
 admin = Blueprint('admin', __name__, template_folder='templates', static_folder='static')
 
+@admin.route('/grade/<int:grade>', methods=['GET', 'POST'])
 @admin.route('/', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def home():
+def home(grade=None):
     form = CalendarForm()
     if request.method == 'POST':
         try:
@@ -34,7 +35,12 @@ def home():
 
     if request.method == 'GET':
         searchdate = datetime.date.today()
-    users = User.query.all()
+    
+    if grade is None:
+      users = User.query.all()
+    else:
+      users = User.query.filter_by(grade=grade).all()
+
     users.sort(key=lambda user: (user.grade, user.lastname)) # sort by grade and name
     weekly_checkins = admin_weekly_checkins(searchdate)
     for checkin in weekly_checkins:
@@ -49,7 +55,7 @@ def home():
         checkin.user.thursday = 'present'
       elif day == 'Friday':
         checkin.user.friday = 'present'
-    return render_template('admin.html', searchdate=searchdate, form=form, users=users, checkins=weekly_checkins)
+    return render_template('admin.html', searchdate=searchdate, grade=grade, form=form, users=users, checkins=weekly_checkins)
 
 @admin.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
@@ -57,6 +63,7 @@ def home():
 def user(user_id):
   
   form = UserForm()
+  schedule_form = ScheduleForm()
 
   if request.method == 'POST':
     user = User.query.filter_by(id=user_id).first_or_404()
@@ -71,36 +78,42 @@ def user(user_id):
 
   elif request.method == 'GET':
     user = User.query.filter_by(id=user_id).first_or_404()
-    return render_template('user.html', user=user, form=form)
+    return render_template('user.html', schedule_form=schedule_form, user=user, form=form)
 
-@admin.route('/user/<int:user_id>/verify_schedule')
+@admin.route('/user/<int:user_id>/schedule', methods=['POST'])
 @login_required
 @admin_required
-def verify_schedule(user_id):
-  verify_user = User.query.filter_by(id=user_id).first_or_404()
-  verify_user.schedule_verified = not verify_user.schedule_verified
-  db.session.commit()
-  flash("User schedule verified")
-  return redirect(url_for('admin.user', user_id=user_id))
+def schedule(user_id):
+    form = ScheduleForm()
 
-@admin.route('/grade/<int:grade>')
-@login_required
-@admin_required
-def grade(grade):
-  users = User.query.filter_by(grade=grade).all()
-  users.sort(key=lambda user: user.lastname) # sort by last name
-  today = datetime.date.today()
-  weekly_checkins = admin_weekly_checkins(datetime.date.today(), grade=grade)
-  for checkin in weekly_checkins:
-    day = checkin.checkin_timestamp.strftime("%A")
-    if day == 'Monday':
-      checkin.user.monday = "present"
-    elif day == 'Tuesday':
-      checkin.user.tuesday = "present"
-    elif day == 'Wednesday':
-      checkin.user.wednesday = "present"
-    elif day == 'Thursday':
-      checkin.user.thursday = 'present'
-    elif day == 'Friday':
-      checkin.user.friday = 'present'
-  return render_template('grade.html', users=users,user=user,checkins=weekly_checkins,grade=grade)
+    user = User.query.filter_by(id=user_id).first_or_404()
+
+    if form.validate_on_submit():
+        user.schedule = ""
+        user.schedule_monday = False
+        user.schedule_tuesday = False
+        user.schedule_wednesday = False
+        user.schedule_thursday = False
+        user.schedule_friday = False
+        if form.monday.data:
+            user.schedule = "M"
+            user.schedule_monday = True
+        if form.tuesday.data:
+            user.schedule = "%s:T" % (user.schedule)
+            user.schedule_tuesday = True
+        if form.wednesday.data:
+            user.schedule = "%s:W" % (user.schedule)
+            user.schedule_wednesday = True
+        if form.thursday.data:
+            user.schedule = "%s:R" % (user.schedule)
+            user.schedule_thursday = True
+        if form.friday.data:
+            user.schedule = "%s:F" % (user.schedule)
+            user.schedule_friday = True
+        if user.schedule == "M:T:W:R:F":
+            user.schedule_verified = True
+        else:
+            user.schedule_verified = False
+        db.session.commit()
+
+    return redirect(url_for('admin.user', user_id=user_id))

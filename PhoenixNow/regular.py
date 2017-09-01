@@ -85,7 +85,6 @@ def home():
         checkedin = False
         if ip.rsplit('.',1)[0] in ['192.154.63']:
           if checkin_user(user):
-              flash('Successful Check-in!')
               checkedin = True
         else:
             flash("We couldn't check you in. :( Are you on the Guilford network?")
@@ -95,50 +94,6 @@ def home():
     user_week = weekly_checkins(today, user)
 
     return render_template('home.html', user=user, checkedin=checkedin, user_week=user_week, today=today)
-
-@regular.route('/schedule', methods=['GET'])
-@login_required
-def schedule_page():
-    schedule_form = ScheduleForm()
-    return render_template('schedule.html', user=current_user, schedule_form=schedule_form)
-
-@regular.route('/schedule', methods=['POST'])
-@login_required
-def schedule():
-    form = ScheduleForm()
-
-    user = current_user
-
-    if form.validate_on_submit():
-        user.schedule = ""
-        user.schedule_monday = False
-        user.schedule_tuesday = False
-        user.schedule_wednesday = False
-        user.schedule_thursday = False
-        user.schedule_friday = False
-        if form.monday.data:
-            user.schedule = "M"
-            user.schedule_monday = True
-        if form.tuesday.data:
-            user.schedule = "%s:T" % (user.schedule)
-            user.schedule_tuesday = True
-        if form.wednesday.data:
-            user.schedule = "%s:W" % (user.schedule)
-            user.schedule_wednesday = True
-        if form.thursday.data:
-            user.schedule = "%s:R" % (user.schedule)
-            user.schedule_thursday = True
-        if form.friday.data:
-            user.schedule = "%s:F" % (user.schedule)
-            user.schedule_friday = True
-        if user.schedule == "M:T:W:R:F":
-            user.schedule_verified = True
-        else:
-            user.schedule_verified = False
-        db.session.commit()
-        flash("Your schedule has been updated.")
-
-    return redirect(url_for('regular.schedule_page'))
 
 @regular.route('/signup', methods=['GET', 'POST'])
 @login_notrequired
