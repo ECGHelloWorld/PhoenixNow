@@ -1,16 +1,38 @@
-from flask import Flask, render_template, Blueprint, redirect, url_for, flash, request
+from flask import Flask, render_template, Blueprint, redirect, url_for, flash, request, jsonify
 from datetime import timedelta
 from PhoenixNow.decorators import login_notrequired, admin_required, check_verified, check_notverified
 from PhoenixNow.model import db, User, Checkin
 from PhoenixNow.user import get_weekly_checkins, admin_weekly_checkins
+from PhoenixNow.mail import send_email
 from flask_login import login_required, login_user, logout_user
 from PhoenixNow.forms import UserForm, CalendarForm, ScheduleForm
 import datetime
 import requests
 import json
 import os
+from sqlalchemy.sql import func
+import sys
 
 admin = Blueprint('admin', __name__, template_folder='templates', static_folder='static')
+
+@admin.route('/remind')
+def remind():
+    today = datetime.date.today()
+    #today = datetime.date(2017, 8, 31)
+    day_name = today.strftime("%A")
+
+    subquery = ~Checkin.query.filter(User.id==Checkin.user_id, func.date(Checkin.checkin_timestamp)==today).exists()
+    users = db.session.query(User).filter(subquery).all()
+    html = render_template('reminderemail.html')
+    for user in users:
+        if ((day_name == 'Monday' and user.schedule_monday) or
+            (day_name == 'Tuesday' and user.schedule_tuesday) or
+            (day_name == 'Wednesday' and user.schedule_wednesday) or
+            (day_name == 'Thursday' and user.schedule_thursday) or
+            (day_name == 'Friday' and user.schedule_friday)):
+            send_email(user.email, "Please Sign In", html)
+
+    return redirect(url_for('admin.home'))
 
 @admin.route('/grade/<int:grade>', methods=['GET', 'POST'])
 @admin.route('/', methods=['GET', 'POST'])
