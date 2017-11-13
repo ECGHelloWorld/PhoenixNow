@@ -35,7 +35,7 @@ def remind():
     return redirect(url_for('admin.home'))
 
 @admin.route('/notify')
-def remind():
+def notify():
     users = db.session.query(User).all()
     html = render_template('notifyemail.html')
     for user in users:
