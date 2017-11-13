@@ -34,6 +34,15 @@ def remind():
 
     return redirect(url_for('admin.home'))
 
+@admin.route('/notify')
+def remind():
+    users = db.session.query(User).all()
+    html = render_template('notifyemail.html')
+    for user in users:
+        send_email(user.email, "PhoenixNow Status", html)
+
+    return redirect(url_for('admin.home'))
+
 @admin.route('/grade/<int:grade>', methods=['GET', 'POST'])
 @admin.route('/', methods=['GET', 'POST'])
 @login_required
