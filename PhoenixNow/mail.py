@@ -1,9 +1,12 @@
 from flask_mail import Mail, Message
 from PhoenixNow.config import ProductionConfig
-
-mail = Mail()
-
+from threading import Thread
+from PhoenixNow.factory import app, mail
 from itsdangerous import URLSafeTimedSerializer
+
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
 
 def generate_confirmation_token(email):
     serializer = URLSafeTimedSerializer(ProductionConfig.SECRET_KEY)
@@ -29,4 +32,5 @@ def send_email(to, subject, template):
         html=template,
         sender=ProductionConfig.MAIL_DEFAULT_SENDER
     )
-    mail.send(msg)
+    thr = Thread(target=send_async_email, args=[app, msg])
+    thr.start()

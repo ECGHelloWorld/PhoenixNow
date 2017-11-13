@@ -1,8 +1,11 @@
-from PhoenixNow.mail import mail
+from flask_mail import Mail
 from PhoenixNow.login import login_manager
 from PhoenixNow.model import db
 from flask import Flask
 import os
+
+app = Flask(__name__)
+mail = Mail()
 
 def create_app(config_object, register_blueprint=True):
     """
@@ -11,7 +14,6 @@ def create_app(config_object, register_blueprint=True):
     better and testing. 
     """
 
-    app = Flask(__name__)
     app.config.from_object(config_object)
     if register_blueprint:
         from PhoenixNow.regular import regular
@@ -20,10 +22,8 @@ def create_app(config_object, register_blueprint=True):
         app.register_blueprint(regular)
         app.register_blueprint(backend, url_prefix='/api')
         app.register_blueprint(admin, url_prefix='/admin')
-    
-    return app
 
-def extensions(app):
+def extensions():
     """
     Register 0 or more extensions (mutates the app passed in).
     :param app: Flask application instance
@@ -35,5 +35,3 @@ def extensions(app):
 
     with app.app_context():
         db.create_all()
-
-    return app
