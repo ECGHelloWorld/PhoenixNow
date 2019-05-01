@@ -148,3 +148,24 @@ def schedule(user_id):
         db.session.commit()
 
     return redirect(url_for('admin.user', user_id=user_id))
+
+@admin.route('/advance')
+def advance():
+    users = User.query.filter_by(grade=12).all()
+
+    for user in users:
+        id = user.id
+        checkins = Checkin.query.filter_by(user_id=id).all()
+        for checkin in checkins:
+            db.session.delete(checkin)
+        
+        db.session.delete(user)
+    
+    users = User.query.filter_by(grade=11).all()
+
+    for user in users:
+        user.grade = 12
+
+    db.session.commit()
+
+    return redirect(url_for('admin.home'))
