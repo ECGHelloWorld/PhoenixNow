@@ -150,6 +150,8 @@ def schedule(user_id):
     return redirect(url_for('admin.user', user_id=user_id))
 
 @admin.route('/advance')
+@login_required
+@admin_required
 def advance():
     users = User.query.filter_by(grade=12).all()
 
