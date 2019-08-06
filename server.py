@@ -10,5 +10,5 @@ else:
     create_app(ProductionConfig)
     extensions()
 
-http_server = wsgiserver.WSGIServer(('', 5000), app)
+http_server = wsgiserver.WSGIServer(app, port=5000)
 http_server.start()
