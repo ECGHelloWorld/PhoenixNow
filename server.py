@@ -11,4 +11,4 @@ else:
     extensions()
 
 http_server = wsgiserver.WSGIServer(('', 5000), app)
-http_server.serve_forever()
+http_server.start()
