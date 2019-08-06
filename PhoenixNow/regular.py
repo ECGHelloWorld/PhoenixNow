@@ -148,7 +148,7 @@ def contact():
       html = render_template("contact_email.html", name=form.name.data,
               email=form.email.data, message=form.message.data)
       subject = "PhoenixNow Contact: " + form.subject.data
-      send_email("daynb@guilford.edu", subject, html)
+      send_email("phoenixnow@guilford.edu", subject, html)
       return render_template('contact.html', success=True)
     else:
       return render_template('contact.html', form=form)

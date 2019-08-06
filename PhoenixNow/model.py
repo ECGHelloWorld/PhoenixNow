@@ -113,13 +113,13 @@ class User(db.Model):
         return bcrypt.checkpw(password.encode('utf-8'), self.pw_hash.encode('utf-8'))
 
     def is_admin(self):
-        if self.email in ['chaudhryam@guilford.edu', 'daynb@guilford.edu', 'admin@phoenixnow.me', 'kiddlm@guilford.edu', 'websternb@guilford.edu', 'lkiser@guilford.edu']:
+        if self.email in ['brownrm1@guilford.edu', 'daynb@guilford.edu', 'admin@phoenixnow.me', 'kiddlm@guilford.edu', 'websternb@guilford.edu', 'lkiser@guilford.edu']:
           return True
         else:
           return False
 
     def is_super_admin(self):
-        if self.email in ['kiddlm@guilford.edu', 'lkiser@guilford.edu']:
+        if self.email in ['kiddlm@guilford.edu', 'lkiser@guilford.edu', 'admin@phoenixnow.org']:
           return True
         else:
           return False
