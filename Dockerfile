@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --no-cache python3-dev openssl-dev libressl-dev libffi-dev musl-dev gcc libevent-dev && pip3 install --upgrade pip
+RUN apk add --no-cache python3-dev openssl-dev libressl-dev libffi-dev musl-dev gcc && pip3 install --upgrade pip
 
 
 WORKDIR /app

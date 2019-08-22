@@ -17,4 +17,4 @@ Flask-Login==0.3.2
 
 pyjwt==1.4.0
 
-gevent==1.2.2
+WSGIserver==1.3
